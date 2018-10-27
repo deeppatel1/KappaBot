@@ -96,12 +96,8 @@ client.on('ready', () => {
 
 
 client.on("message", function(message){
-    let role = message.guild.roles.find(role => role.name === "King in dNorF");
 
     if (message.content.startsWith("--h")) {
-        var member = message.mentions.members.first();
-	var memberID = member.id;
-	console.log(memberID);
         message.channel.send("Commands: !ice last #, !ice top hour/day/week/month/year/alltime")
     }
     if (message.content.startsWith("!ice top")){
