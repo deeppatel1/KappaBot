@@ -50,7 +50,7 @@ client.on('ready', () => {
                     isT1Live = true;
                     var hourZULU = data['data'][0]['started_at'].substring(14,16);
                     var minutesZULU = data['data'][0]['started_at'].substring(17,19);
-                    client.send("https://www.twitch.tv/loltyler1 - stream started " + (parseInt(hourZULU)+4)%12 + ':' + parseInt(minutesZULU));
+                    client.send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started " + (parseInt(hourZULU)+4)%12 + ':' + parseInt(minutesZULU));
                     t1PostedOnDiscord = false;
                 }
             }else{
@@ -76,7 +76,7 @@ client.on('ready', () => {
                                     + currentdate.getMinutes() + ":" 
                                     + currentdate.getSeconds();
                     
-                    client.send("https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
+                    client.send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
                     
                     fs.writeFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
                         if (err) throw err; 
@@ -96,6 +96,14 @@ client.on('ready', () => {
 
 
 client.on("message", function(message){
+    let role = message.guild.roles.find(role => role.name === "King in dNorF");
+
+    if (message.content.startsWith("--h")) {
+        var member = message.mentions.members.first();
+	var memberID = member.id;
+	console.log(memberID);
+        message.channel.send("Commands: !ice last #, !ice top hour/day/week/month/year/alltime")
+    }
     if (message.content.startsWith("!ice top")){
 
         var args = message.content.split(/ +/g);
