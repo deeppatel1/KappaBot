@@ -40,13 +40,13 @@ client.on('ready', () => {
         });
 
         // 51496027 t1-s ID 62804432
-        console.log("checking");
+        // console.log("checking");
         nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=17582288", args,function (data, response) {
-            console.log(data);
-            console.log(data['data']);
+           // console.log(data);
+           // console.log(data['data']);
             if(data['data'] != undefined){
-                console.log("live!");
-                console.log(data['data'][0]);
+             //   console.log("live!");
+             //   console.log(data['data'][0]);
                 //console.log("live");
                 if (!t1PostedOnDiscord){
                     // post on discord
@@ -91,7 +91,7 @@ client.on('ready', () => {
             });
         }
 
-    },500)
+    },300000)
 
 
 });
