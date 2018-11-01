@@ -3,14 +3,13 @@ const Discord = require("discord.js");
 var rest = require('node-rest-client').Client;
 const readLastLines = require('read-last-lines');
 var credentials = require('./configuration.json');
+var fs = require('fs');
 
 var client = new Discord.Client();
 var nodeRestClientForUse = new rest();
 var neatclipClient = new rest();
 var restClient = new rest();
 var restClient2 = new rest();
-
-client.login(credentials.discordclientlogin);
 
 var args = {
     headers: { "nodeRestClient-ID": credentials.twitchauth } // request headers
@@ -40,22 +39,26 @@ client.on('ready', () => {
             }
         });
 
-        // 51496027 t1-s ID
-        nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=24991333", args,function (data, response) {
+        // 51496027 t1-s ID 62804432
+        console.log("checking");
+        nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=17582288", args,function (data, response) {
+            console.log(data);
+            console.log(data['data']);
             if(data['data'] != undefined){
-            // console.log(data['data'][0]);
+                console.log("live!");
+                console.log(data['data'][0]);
                 //console.log("live");
                 if (!t1PostedOnDiscord){
                     // post on discord
                     isT1Live = true;
                     var hourZULU = data['data'][0]['started_at'].substring(14,16);
                     var minutesZULU = data['data'][0]['started_at'].substring(17,19);
-                    client.send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started " + (parseInt(hourZULU)+4)%12 + ':' + parseInt(minutesZULU));
+                    client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started " + (parseInt(hourZULU)+4)%12 + ':' + parseInt(minutesZULU));
                     t1PostedOnDiscord = false;
                 }
             }else{
                 if (isT1Live){
-                    client.send("t1 stoped streaming");
+                    client.channels.get("173611297387184129").send("t1 stoped streaming");
                 }
                 isT1Live = false;
                 // console.log("not live");
@@ -75,8 +78,7 @@ client.on('ready', () => {
                                     + currentdate.getHours() + ":"  
                                     + currentdate.getMinutes() + ":" 
                                     + currentdate.getSeconds();
-                    
-                    client.send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
+                    client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
                     
                     fs.writeFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
                         if (err) throw err; 
@@ -89,7 +91,7 @@ client.on('ready', () => {
             });
         }
 
-    },300000)
+    },500)
 
 
 });
@@ -129,3 +131,5 @@ client.on("message", function(message){
     }
 });
 
+
+client.login(credentials.discordclientlogin);
