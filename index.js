@@ -11,9 +11,13 @@ var neatclipClient = new rest();
 var restClient = new rest();
 var restClient2 = new rest();
 
+var gKey = credentials.gKey;
+
 var args = {
-    headers: { "nodeRestClient-ID": credentials.twitchauth } // request headers
+    headers: { "Client-ID": credentials.twitchauth } // request headers
 };
+
+//console.log(args);
 
 var t1PostedOnDiscord = false;
 var isT1Live = false;
@@ -22,10 +26,12 @@ var postedToDiscord = false;
 
 
 client.on('ready', () => {
+    //console.log("checking api");
     //runs whatevers in this funtion every 20 seconds
     setInterval(function(){
         restClient.get("https://www.youtube.com/ice_poseidon/live",function (data,response){
             data = String(data);
+        //    console.log(data);
         //if JSON response doesn't have "Live stream offline", than ice is online"
             if (data.search("Live stream offline") == -1){
                 //setting online true will trigger other function
@@ -39,22 +45,28 @@ client.on('ready', () => {
             }
         });
 
-        // 51496027 t1-s ID 62804432
-        // console.log("checking");
-        nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=17582288", args,function (data, response) {
-           // console.log(data);
-           // console.log(data['data']);
-            if(data['data'] != undefined){
-             //   console.log("live!");
-             //   console.log(data['data'][0]);
+        // 51496027 t1-s ID 62804432 is priyams 17582288 is itachipower
+        //console.log("checking");
+        nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=62804432", args,function (data, response) {
+           //console.log(data);
+           //console.log(data['data']);
+           //console.log(data['data'].length);
+            if(data['data'].length != 0){
+                //console.log("live!");
+                //console.log(data['data'][0]);
                 //console.log("live");
                 if (!t1PostedOnDiscord){
                     // post on discord
                     isT1Live = true;
-                    var hourZULU = data['data'][0]['started_at'].substring(14,16);
-                    var minutesZULU = data['data'][0]['started_at'].substring(17,19);
-                    client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started " + (parseInt(hourZULU)+4)%12 + ':' + parseInt(minutesZULU));
-                    t1PostedOnDiscord = false;
+                    var hourZULU = data['data'][0]['started_at'].substring(11,13);
+                    var minutesZULU = parseInt(data['data'][0]['started_at'].substring(14,16));
+                    var hourEST = (parseInt(hourZULU) - 5 + 24) % 12;
+                    
+                    if (minutesZULU < 10){
+                        minutesZULU = '0' + minutesZULU;
+                    }
+                    client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU));
+                    t1PostedOnDiscord = true;
                 }
             }else{
                 if (isT1Live){
@@ -67,13 +79,14 @@ client.on('ready', () => {
         });
 
         if ((online) && (!postedToDiscord)){
-        //    console.log("checking main googleapi");
-            restClient2.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCv9Edl_WbtbPeURPtFDo-uA&type=video&eventType=live&key=AIzaSyC4Zz-s5eXNylep06MYBb8xsceQJZ2QLxw", function(data2,response2){
+            //console.log("checking main googleapi");
+            restClient2.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCv9Edl_WbtbPeURPtFDo-uA&type=video&eventType=live&key=" + gKey, function(data2,response2){
                 data2STRING = String(data2);
+                //console.log(data2STRING);
                 if (data2.items != null){  //confirmed live, now post it on discord!
                     var currentdate = new Date(); 
-                    var datetime = currentdate.getDate() + "/"
-                                    + (currentdate.getMonth()+1)  + "/" 
+                    var datetime = (currentdate.getMonth()+1)+ "/"
+                                    +  currentdate.getDate()  + "/" 
                                     + currentdate.getFullYear() + " @ "  
                                     + currentdate.getHours() + ":"  
                                     + currentdate.getMinutes() + ":" 
