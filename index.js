@@ -31,6 +31,7 @@ client.on('ready', () => {
     setInterval(function(){
         restClient.get("https://www.youtube.com/ice_poseidon/live",function (data,response){
             data = String(data);
+        //    console.log("HES LIVE CHECK WHAT HAPPEN NOW WITH OFFICIAL API");
         //    console.log(data);
         //if JSON response doesn't have "Live stream offline", than ice is online"
             if (data.search("Live stream offline") == -1){
@@ -48,10 +49,10 @@ client.on('ready', () => {
         // 51496027 t1-s ID 62804432 is priyams 17582288 is itachipower
         //console.log("checking");
         nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=51496027", args,function (data, response) {
-           //console.log(data);
-           //console.log(data['data']);
-           //console.log(data['data'].length);
-            if(data['data'].length != 0){
+        //   console.log(data);
+        //   console.log(data['data']);
+        //   console.log(data['data'].length);
+            if((data['data'].length != 0) && (!isT1Live)){
                 //console.log("live!");
                 //console.log(data['data'][0]);
                 //console.log("live");
@@ -79,10 +80,10 @@ client.on('ready', () => {
         });
 
         if ((online) && (!postedToDiscord)){
-            //console.log("checking main googleapi");
+        //    console.log("checking main googleapi");
             restClient2.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCv9Edl_WbtbPeURPtFDo-uA&type=video&eventType=live&key=" + gKey, function(data2,response2){
                 data2STRING = String(data2);
-                //console.log(data2STRING);
+        //        console.log(data2STRING);
                 if (data2.items != null){  //confirmed live, now post it on discord!
                     var currentdate = new Date(); 
                     var datetime = (currentdate.getMonth()+1)+ "/"
