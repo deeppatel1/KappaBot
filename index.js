@@ -69,7 +69,7 @@ client.on('ready', () => {
                     client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU));
                     t1PostedOnDiscord = true;
                 }
-            }else{
+            }else if (data['data'].length == 0){
                 if (isT1Live){
                     client.channels.get("284157566693539851").send("t1 stoped streaming");
                 }
