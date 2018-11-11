@@ -29,17 +29,20 @@ client.on('ready', () => {
     //console.log("checking api");
     //runs whatevers in this funtion every 20 seconds
     setInterval(function(){
+        console.log("[ICE] checking youtube ice / live  --- " + new Date());
         restClient.get("https://www.youtube.com/ice_poseidon/live",function (data,response){
             data = String(data);
         //    console.log("HES LIVE CHECK WHAT HAPPEN NOW WITH OFFICIAL API");
         //    console.log(data);
         //if JSON response doesn't have "Live stream offline", than ice is online"
             if (data.search("Live stream offline") == -1){
+                console.log("[ICE] ice/live said is live ----  --- " + new Date());
                 //setting online true will trigger other function
                 online = true;
 
         //ice is offline
             }else{
+                console.log("[ICE] ice/live success now checking main api --- " + new Date());
                 online = false;
                 //postedToDiscord false means don't need to post a message to discord since offline, and won't trigger other function
                 postedToDiscord = false;
@@ -47,28 +50,29 @@ client.on('ready', () => {
         });
 
         // 51496027 t1-s ID 62804432 is priyams 17582288 is itachipower
-        //console.log("checking");
+        console.log("[T1] checking t1s twitch --- " + new Date());
         nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=51496027", args,function (data, response) {
         //   console.log(data);
-            console.log(data['data']);
+        //    console.log(data['data']);
         //   console.log(data['data'].length);
             if((data['data'].length != 0) && (!isT1Live)){
-                //console.log("live!");
+                console.log("[T1] live! on twitch, trying to post if not already posted --- " + new Date());
                 //console.log(data['data'][0]);
                 //console.log("live");
-		    if (!t1PostedOnDiscord){
-                    // post on discord
-                    isT1Live = true;
-                    var hourZULU = data['data'][0]['started_at'].substring(11,13);
-                    var minutesZULU = parseInt(data['data'][0]['started_at'].substring(14,16));
-                    var hourEST = (parseInt(hourZULU) - 5 + 24) % 12;
-                    
-                    if (minutesZULU < 10){
-                        minutesZULU = '0' + minutesZULU;
+                if (!t1PostedOnDiscord){
+                        console.log("[T1] t1 not posted on discod, posting now  --- " + new Date());
+                        // post on discord
+                        isT1Live = true;
+                        var hourZULU = data['data'][0]['started_at'].substring(11,13);
+                        var minutesZULU = parseInt(data['data'][0]['started_at'].substring(14,16));
+                        var hourEST = (parseInt(hourZULU) - 5 + 24) % 12;
+                        
+                        if (minutesZULU < 10){
+                            minutesZULU = '0' + minutesZULU;
+                        }
+                        client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU));
+                        t1PostedOnDiscord = true;
                     }
-                    client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU));
-                    t1PostedOnDiscord = true;
-                }
             }else if (data['data'].length == 0){
                 if (isT1Live){
                     client.channels.get("284157566693539851").send("t1 stoped streaming");
@@ -80,11 +84,12 @@ client.on('ready', () => {
         });
 
         if ((online) && (!postedToDiscord)){
-        //    console.log("checking main googleapi");
+            console.log("checking main googleapi for ice --- " + new Date());
             restClient2.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCv9Edl_WbtbPeURPtFDo-uA&type=video&eventType=live&key=" + gKey, function(data2,response2){
                 data2STRING = String(data2);
         //        console.log(data2STRING);
                 if (data2.items != null){  //confirmed live, now post it on discord!
+                    console.log("[ICE] ice is live posting on discord now  --- " + new Date())
                     var currentdate = new Date(); 
                     var datetime = (currentdate.getMonth()+1)+ "/"
                                     +  currentdate.getDate()  + "/" 
@@ -94,18 +99,19 @@ client.on('ready', () => {
                                     + currentdate.getSeconds();
                     client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
                     
-                    fs.writeFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
-                        if (err) throw err; 
+                    fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
+                        if (err) throw err;
                     });
                     postedToDiscord = true;
                 }else{  //confirmed not live!
+                    console.log("[ICE] main api says offline fo ice  --- " + new Date());
                     //console.log("checked main api, offline");
                 }
 
             });
         }
 
-    },300000)
+    },30000)
 
 
 });
