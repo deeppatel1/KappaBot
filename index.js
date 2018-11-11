@@ -48,15 +48,15 @@ client.on('ready', () => {
 
         // 51496027 t1-s ID 62804432 is priyams 17582288 is itachipower
         //console.log("checking");
-        nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=51496027", args,function (data, response) {
+        nodeRestClientForUse.get("https://api.twitch.tv/helix/streams?user_id=51496028", args,function (data, response) {
         //   console.log(data);
-        //   console.log(data['data']);
+            console.log(data['data']);
         //   console.log(data['data'].length);
             if((data['data'].length != 0) && (!isT1Live)){
                 //console.log("live!");
                 //console.log(data['data'][0]);
                 //console.log("live");
-                if (!t1PostedOnDiscord){
+		    if (!t1PostedOnDiscord){
                     // post on discord
                     isT1Live = true;
                     var hourZULU = data['data'][0]['started_at'].substring(11,13);
@@ -72,10 +72,10 @@ client.on('ready', () => {
             }else if (data['data'].length == 0){
                 if (isT1Live){
                     client.channels.get("284157566693539851").send("t1 stoped streaming");
+                    isT1Live = false;
+                    // console.log("not live");
+                    t1PostedOnDiscord = false;
                 }
-                isT1Live = false;
-                // console.log("not live");
-                t1PostedOnDiscord = false;
             }
         });
 
