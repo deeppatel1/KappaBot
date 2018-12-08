@@ -4,6 +4,7 @@ var rest = require('node-rest-client').Client;
 const readLastLines = require('read-last-lines');
 var credentials = require('./configuration.json');
 var fs = require('fs');
+var Twitter = require('twitter');
 
 var client = new Discord.Client();
 var nodeRestClientForUse = new rest();
@@ -11,13 +12,19 @@ var neatclipClient = new rest();
 var restClient = new rest();
 var restClient2 = new rest();
 
+var Twitterclient = new Twitter({
+    consumer_key: credentials.twitterApiKey,
+    consumer_secret: credentials.twitterApiSecretKey,
+    access_token_key: credentials.twitterAccessToken,
+    access_token_secret: credentials.twitterTokenSecret
+});
+
 var gKey = credentials.gKey;
 
 var args = {
     headers: { "Client-ID": credentials.twitchauth } // request headers
 };
 
-//console.log(args);
 
 var t1PostedOnDiscord = false;
 var isT1Live = false;
@@ -26,6 +33,17 @@ var postedToDiscord = false;
 
 
 client.on('ready', () => {
+
+    Twitterclient.stream('statuses/filter', {follow: '4833803780,736784706486734852,344538810,873949601522487297'},  function(stream) {
+        stream.on('data', function(tweet) {
+            client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name +"/status/" + tweet.id_str);
+        });
+      
+        stream.on('error', function(error) {
+          console.log(error);
+        });
+      });
+    
     //console.log("checking api");
     //runs whatevers in this funtion every 20 seconds
     setInterval(function(){
@@ -149,6 +167,7 @@ client.on("message", function(message){
         readLastLines.read('icevods.txt',numberofVods).then((lines) => 
             message.channel.send(lines));
     }
+    
 });
 
 
