@@ -36,7 +36,9 @@ client.on('ready', () => {
 
     Twitterclient.stream('statuses/filter', {follow: '4833803780,736784706486734852,344538810,873949601522487297'},  function(stream) {
         stream.on('data', function(tweet) {
-            client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name +"/status/" + tweet.id_str);
+            if ((tweet.user.screen_name != 'loltyler1') || (tweet.user.screen_name != 'REALIcePoseidon') || (tweet.user.screen_name != 'TLDoublelift') || (tweet.user.screen_name != 'JacobK_Cx')){
+                client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name +"/status/" + tweet.id_str);
+            }
         });
       
         stream.on('error', function(error) {
