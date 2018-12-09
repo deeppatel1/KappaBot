@@ -36,7 +36,7 @@ client.on('ready', () => {
 
     Twitterclient.stream('statuses/filter', {follow: '4833803780,736784706486734852,344538810,873949601522487297'},  function(stream) {
         stream.on('data', function(tweet) {
-            client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name +"/status/" + tweet.id_str);
+            client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name +"/status/" + tweet.id_str);
         });
       
         stream.on('error', function(error) {
@@ -88,12 +88,12 @@ client.on('ready', () => {
                         if (minutesZULU < 10){
                             minutesZULU = '0' + minutesZULU;
                         }
-                        client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU));
+                        client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU));
                         t1PostedOnDiscord = true;
                     }
             }else if (data['data'].length == 0){
                 if (isT1Live){
-                    client.channels.get("284157566693539851").send("t1 stoped streaming");
+                    client.channels.get("173611297387184129").send("t1 stoped streaming");
                     isT1Live = false;
                     // console.log("not live");
                     t1PostedOnDiscord = false;
@@ -115,7 +115,7 @@ client.on('ready', () => {
                                     + currentdate.getHours() + ":"  
                                     + currentdate.getMinutes() + ":" 
                                     + currentdate.getSeconds();
-                    client.channels.get("284157566693539851").send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
+                    client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
                     
                     fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
                         if (err) throw err;
@@ -169,6 +169,5 @@ client.on("message", function(message){
     }
     
 });
-
 
 client.login(credentials.discordclientlogin);
