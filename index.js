@@ -1,12 +1,12 @@
 require('dotenv').config();
-const Discord = require("discord.js");
+var { Client, RichEmbed } = require("discord.js");
 var rest = require('node-rest-client').Client;
 const readLastLines = require('read-last-lines');
 var credentials = require('./configuration.json');
 var fs = require('fs');
 var Twitter = require('twitter');
 
-var client = new Discord.Client();
+var client = new Client();
 var nodeRestClientForUse = new rest();
 var neatclipClient = new rest();
 var restClient = new rest();
@@ -142,7 +142,7 @@ client.on('ready', () => {
             });
         }
 
-    },30000)
+    },300000)
 
 
 });
@@ -150,8 +150,14 @@ client.on('ready', () => {
 
 client.on("message", function(message){
 
-    if (message.content.startsWith("--h")) {
-        message.channel.send("Commands: !ice last #, !ice top hour/day/week/month/year/alltime")
+    if (message.content.startsWith("--h") || message.content.startsWith("?help")) {
+        const embed = new RichEmbed()
+            .setTitle('Commands')
+            .setColor("#67279C")
+            .addField("!ice last #", "Get the last {#} of vod urls")
+            .addField("!ice top hour/day/week/month/year/alltime", "Get most popular clips for the last hour/day/week/month/year/alltime")
+
+        message.channel.send(embed)
     }
     if (message.content.startsWith("!ice top")){
 
