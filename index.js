@@ -5,6 +5,7 @@ const readLastLines = require('read-last-lines');
 var credentials = require('./configuration.json');
 var fs = require('fs');
 var Twitter = require('twitter');
+var dbQuery = require('./db.js');
 
 var client = new Client();
 var nodeRestClientForUse = new rest();
@@ -121,14 +122,11 @@ client.on('ready', () => {
                     
                     const { Client } = require('pg')
                     const pgClient = new Client()
-                    const date = new Date();
+                    // const date = new Date();
                     const url = "https://www.youtube.com/watch?v=" + data2.items[0].id.videoId;
 
-                    var sql_query = 'INSERT INTO ice (date, url) SELECT \'' + date +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ice WHERE url=\''+ url +'\');'
-                    console.log(sql_query)
-                    pgClient.query(sql_query)
-                    .then(res => console.log(res.rows[0]))
-                    .catch(e => console.error(e.stack))
+                    var sql_query = 'INSERT INTO ice (date, url) SELECT \'' + datetime +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ice WHERE url=\''+ url +'\');'
+                    dbQuery.query(sql_query);
 
                     fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
                         if (err) throw err;
