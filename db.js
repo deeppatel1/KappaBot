@@ -20,7 +20,10 @@ module.exports = {
         await client.query(query)
             .then(res => {
                 // console.log(res['rows']);
-                const num = parseInt(number);
+                var num = parseInt(number);
+                if (res['rows'].length < num) {
+                    num = res['rows'].length;
+                }
                 var i = 0;
                 var mToSend = "";
                 

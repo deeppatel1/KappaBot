@@ -1,4 +1,4 @@
 #!/bin/bash/
 sleep 30
 cd ~/KappaBot/KappaBot/
-forever -w index.js
+forever start index.js -p 8000

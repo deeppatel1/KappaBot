@@ -128,9 +128,9 @@ client.on('ready', () => {
                     var sql_query = 'INSERT INTO ice (date, url) SELECT \'' + datetime +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ice WHERE url=\''+ url +'\');'
                     dbQuery.query(sql_query);
 
-                    fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
-                        if (err) throw err;
-                    });
+                    // fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
+                    //     if (err) throw err;
+                    // });
                     postedToDiscord = true;
                 }else{  //confirmed not live!
                     console.log("[ICE] main api says offline fo ice  --- " + new Date());
