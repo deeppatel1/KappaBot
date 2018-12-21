@@ -180,9 +180,13 @@ client.on("message", function(message){
         });
     } else if (message.content.startsWith('!ice last')){
 
-        var numberofVods = message.content[2];
-        readLastLines.read('icevods.txt',numberofVods).then((lines) => 
-            message.channel.send(lines));
+        var numberofVods = message.content.split(" ");
+        const num = numberofVods[2];
+        if (numberofVods.length == 3) {
+            dbQuery.queryVod(num, message);
+        }
+        // readLastLines.read('icevods.txt',numberofVods).then((lines) => 
+        //     message.channel.send(lines));
     }
     
 });
