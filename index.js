@@ -43,13 +43,13 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
         //    console.log(data);
         //if JSON response doesn't have "Live stream offline", than this user is online"
             if (data.search("Live stream offline") == -1){
-                console.log("["+ YTer +"] " + " is live per GET request" + new Date());
+                console.log("["+ YTer +"] " + " is live per GET request --- " + new Date());
                 //setting online true will trigger other function
                 online = true;
 
         //this dude is offline
             }else{
-                console.log("["+ YTer +"] " + " is offline per GET request" + new Date());
+                console.log("["+ YTer +"] " + " is offline per GET request --- " + new Date());
                 online = false;
                 //postedToDiscord false means don't need to post a message to discord since offline, and won't trigger other function
                 postedToDiscord = false;
@@ -84,7 +84,7 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
                     // });
                     postedToDiscord = true;
                 }else{  //confirmed not live!
-                    console.log("["+ YTer +"] main api says offline --- " + new Date());
+                    console.log("["+ YTer +"] Main API says offline --- " + new Date());
                     //console.log("checked main api, offline");
                 }
 
@@ -99,20 +99,22 @@ client.on('ready', () => {
     // main discord channel is 173611297387184129
     // secondary discord channel is 284157566693539851
 
+    //checkifYTFunction paramters are 1) name of YTer, 2) YT Channel ID, 3) Discord Channel to post to, 4)Millisecond to refresh, 5) discord client passed in
+
     // ICE's channel ID is UCv9Edl_WbtbPeURPtFDo-uA
-    checkifYTisLive("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","173611297387184129", 3000, client);
+    checkifYTisLive("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","173611297387184129", 300000, client);
 
     // EBZz channel ID is UCkR8ndH0NypMYtVYARnQ-_g
-    checkifYTisLive("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g","284157566693539851", 3000, client);
+    checkifYTisLive("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g","284157566693539851", 300000, client);
 
     // SAMs channel ID is UCdSr4xliU8yDyS1aGnCUMTA
-    checkifYTisLive("SAM", "UCdSr4xliU8yDyS1aGnCUMTA","284157566693539851", 3000, client);
+    checkifYTisLive("SAM", "UCdSr4xliU8yDyS1aGnCUMTA","284157566693539851", 300000, client);
 
     // SJCs channel ID is UC4YYNTbzt3X1uxdTCJaYWdg
-    checkifYTisLive("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg","284157566693539851", 3000, client);
+    checkifYTisLive("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg","284157566693539851", 300000, client);
 
     // CXNews channel ID is UCStEQ9BjMLjHTHLNA6cY9vg
-    checkifYTisLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", 3000, client);
+    checkifYTisLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", 300000, client);
 
     // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
     checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 3000, client);
@@ -166,7 +168,7 @@ client.on("message", function(message){
 
         });
     } else if (message.content.startsWith('!ice last')){
-
+        
         var numberofVods = message.content.split(" ");
         const num = numberofVods[2];
         if (numberofVods.length == 3) {
