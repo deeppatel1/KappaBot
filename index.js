@@ -1,12 +1,13 @@
 require('dotenv').config();
-const Discord = require("discord.js");
+var { Client, RichEmbed } = require("discord.js");
 var rest = require('node-rest-client').Client;
 const readLastLines = require('read-last-lines');
 var credentials = require('./configuration.json');
 var fs = require('fs');
 var Twitter = require('twitter');
+var dbQuery = require('./db.js');
 
-var client = new Discord.Client();
+var client = new Client();
 var nodeRestClientForUse = new rest();
 var neatclipClient = new rest();
 var restClient = new rest();
@@ -119,9 +120,17 @@ client.on('ready', () => {
                                     + currentdate.getSeconds();
                     client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> ICE LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
                     
-                    fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
-                        if (err) throw err;
-                    });
+                    const { Client } = require('pg')
+                    const pgClient = new Client()
+                    // const date = new Date();
+                    const url = "https://www.youtube.com/watch?v=" + data2.items[0].id.videoId;
+
+                    var sql_query = 'INSERT INTO ice (date, url) SELECT \'' + datetime +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ice WHERE url=\''+ url +'\');'
+                    dbQuery.query(sql_query);
+
+                    // fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
+                    //     if (err) throw err;
+                    // });
                     postedToDiscord = true;
                 }else{  //confirmed not live!
                     console.log("[ICE] main api says offline fo ice  --- " + new Date());
@@ -131,7 +140,7 @@ client.on('ready', () => {
             });
         }
 
-    },30000)
+    },300000)
 
 
 });
@@ -139,8 +148,14 @@ client.on('ready', () => {
 
 client.on("message", function(message){
 
-    if (message.content.startsWith("--h")) {
-        message.channel.send("Commands: !ice last #, !ice top hour/day/week/month/year/alltime")
+    if (message.content.startsWith("--h") || message.content.startsWith("?help")) {
+        const embed = new RichEmbed()
+            .setTitle('Commands')
+            .setColor("#67279C")
+            .addField("!ice last #", "Get the last {#} of vod urls")
+            .addField("!ice top hour/day/week/month/year/alltime", "Get most popular clips for the last hour/day/week/month/year/alltime")
+
+        message.channel.send(embed)
     }
     if (message.content.startsWith("!ice top")){
 
@@ -165,9 +180,13 @@ client.on("message", function(message){
         });
     } else if (message.content.startsWith('!ice last')){
 
-        var numberofVods = message.content[2];
-        readLastLines.read('icevods.txt',numberofVods).then((lines) => 
-            message.channel.send(lines));
+        var numberofVods = message.content.split(" ");
+        const num = numberofVods[2];
+        if (numberofVods.length == 3) {
+            dbQuery.queryVod(num, message);
+        }
+        // readLastLines.read('icevods.txt',numberofVods).then((lines) => 
+        //     message.channel.send(lines));
     }
     
 });
