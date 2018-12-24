@@ -76,7 +76,14 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
                     // const date = new Date();
                     const url = "https://www.youtube.com/watch?v=" + data2.items[0].id.videoId;
 
-                    var sql_query = 'INSERT INTO ' + YTer + ' (date, url) SELECT \'' + datetime +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ' + YTer + ' WHERE url=\''+ url +'\');'
+                    var table = "ice";
+                    var sql_query = 'INSERT INTO ' + table + ' (date, url) SELECT \'' + datetime +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ' + table + ' WHERE url=\''+ url +'\');'
+
+                    if (YTer != "ICE") {
+                        table = "others";
+                        sql_query = 'INSERT INTO ' + table + ' (date, url, name) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\' WHERE NOT EXISTS (SELECT 1 FROM ' + table + ' WHERE url=\''+ url +'\');'
+                    }
+
                     dbQuery.query(sql_query);
 
                     // fs.appendFile("icevods.txt","https://www.youtube.com/watch?v=" + data2.items[0].id.videoId + "  " + datetime + '\n', (err) =>{
@@ -117,7 +124,7 @@ client.on('ready', () => {
     checkifYTisLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", 300000, client);
 
     // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
-    checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 3000, client);
+    checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 300000, client);
 
 
     Twitterclient.stream('statuses/filter', {follow: '4833803780,736784706486734852,344538810,873949601522487297'},  function(stream) {
