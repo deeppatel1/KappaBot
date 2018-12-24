@@ -192,7 +192,7 @@ client.on("message", function(message){
 
         });
 
-    } else if (message.content.startsWith('!ice last')){
+    } else if (message.content.startsWith('?Lice last')){
 
         var numberofVods = message.content.split(" ");
         const num = numberofVods[2];
