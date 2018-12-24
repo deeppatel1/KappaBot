@@ -117,7 +117,7 @@ client.on('ready', () => {
     checkifYTisLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", 300000, client);
 
     // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
-    checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 3000, client);
+    checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 300000, client);
 
 
     Twitterclient.stream('statuses/filter', {follow: '4833803780,736784706486734852,344538810,873949601522487297'},  function(stream) {
