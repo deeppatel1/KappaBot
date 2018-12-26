@@ -30,7 +30,7 @@ var t1PostedOnDiscord = false;
 var isT1Live = false;
 
 
-function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, millisecondsInterval, client){
+function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, millisecondsInterval, client, AtOrNot){
 
     var online = false;
     var postedToDiscord = false;
@@ -62,15 +62,16 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
                 data2STRING = String(data2);
                 if (data2.items.length > 0){  //confirmed live, now post it on discord!
                     console.log("["+ YTer +"] " + "is live posting on discord now  --- " + new Date())
-                    var currentdate = new Date(); 
+                    String stringtoPostWithAt = AtOrNot ? "<@173611085671170048> <@173610714433454084> " : ""
+                    var currentdate = new Date();
                     var datetime = (currentdate.getMonth()+1)+ "/"
-                                    +  currentdate.getDate()  + "/" 
-                                    + currentdate.getFullYear() + " @ "  
-                                    + currentdate.getHours() + ":"  
-                                    + currentdate.getMinutes() + ":" 
+                                    +  currentdate.getDate()  + "/"
+                                    + currentdate.getFullYear() + " @ "
+                                    + currentdate.getHours() + ":"
+                                    + currentdate.getMinutes() + ":"
                                     + currentdate.getSeconds();
-                    client.channels.get(discordChannelToPost).send(YTer + " LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
-                    
+                    client.channels.get(discordChannelToPost).send(stringtoPostWithAt + YTer + " LIVE https://www.youtube.com/watch?v=" + data2.items[0].id.videoId);
+
                     const { Client } = require('pg')
                     const pgClient = new Client()
                     // const date = new Date();
@@ -109,22 +110,22 @@ client.on('ready', () => {
     //checkifYTFunction paramters are 1) name of YTer, 2) YT Channel ID, 3) Discord Channel to post to, 4)Millisecond to refresh, 5) discord client passed in
 
     // ICE's channel ID is UCv9Edl_WbtbPeURPtFDo-uA
-    checkifYTisLive("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","173611297387184129", 300000, client);
+    checkifYTisLive("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","173611297387184129", 300000, client, true);
 
     // EBZz channel ID is UCkR8ndH0NypMYtVYARnQ-_g
-    checkifYTisLive("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g","284157566693539851", 300000, client);
+    checkifYTisLive("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g","284157566693539851", 300000, client, false);
 
     // SAMs channel ID is UCdSr4xliU8yDyS1aGnCUMTA
-    checkifYTisLive("SAM", "UCdSr4xliU8yDyS1aGnCUMTA","284157566693539851", 300000, client);
+    checkifYTisLive("SAM", "UCdSr4xliU8yDyS1aGnCUMTA","284157566693539851", 300000, client, false);
 
     // SJCs channel ID is UC4YYNTbzt3X1uxdTCJaYWdg
-    checkifYTisLive("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg","284157566693539851", 300000, client);
+    checkifYTisLive("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg","284157566693539851", 300000, client, false);
 
     // CXNews channel ID is UCStEQ9BjMLjHTHLNA6cY9vg
-    checkifYTisLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", 300000, client);
+    checkifYTisLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", 300000, client, true);
 
     // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
-    checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 300000, client);
+    checkifYTisLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg","284157566693539851", 300000, client, false);
 
 
     Twitterclient.stream('statuses/filter', {follow: '4833803780,736784706486734852,344538810,873949601522487297'},  function(stream) {
@@ -133,12 +134,12 @@ client.on('ready', () => {
                 client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name +"/status/" + tweet.id_str);
             }
         });
-      
+
         stream.on('error', function(error) {
           console.log(error);
         });
       });
-    
+
 });
 
 
@@ -160,9 +161,9 @@ client.on("message", function(message){
         var howManyClips = args[2]; //how many clips to show
         var stringToSend = "";
         neatclipClient.get("https://neatclip.com/api/v1/clips.php?streamer_url=https://www.youtube.com/channel/UCv9Edl_WbtbPeURPtFDo-uA&time=" + inHowLongDuration + "&sort=top", arguments, function (data, response){
-        
+
             var size = howManyClips;
-            
+
             if (data.length < size) size = data.length;
             for (var x = 0; x < size; x++){
                 var entry = [data[x]["slugID"], data[x]["viewsAll"]];
@@ -172,16 +173,16 @@ client.on("message", function(message){
             message.channel.send(stringToSend);
 
         });
-    
+
     } else if (message.content.startsWith('!clips')){
         var args = message.content.split(/ +/g);
         var inHowLongDuration = args[1]; //can be hour for last hour, day..., week..., month..., year..., alltime
         var howManyClips = args[2]; //how many clips to show
         var stringToSend = "";
         neatclipClient.get("https://neatclip.com/api/v1/clips.php?time=" + inHowLongDuration + "&sort=top", arguments, function (data, response){
-        
+
             var size = howManyClips;
-            
+
             if (data.length < size) size = data.length;
             for (var x = 0; x < size; x++){
                 var entry = [data[x]["slugID"], data[x]["viewsAll"]];
@@ -199,7 +200,7 @@ client.on("message", function(message){
         if (numberofVods.length == 3) {
             dbQuery.queryVod(num, message);
         }
-        // readLastLines.read('icevods.txt',numberofVods).then((lines) => 
+        // readLastLines.read('icevods.txt',numberofVods).then((lines) =>
         //     message.channel.send(lines));
     } else if (message.content.startsWith('?vod')) {
         var numberofVods = message.content.split(" ");
