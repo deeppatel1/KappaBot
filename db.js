@@ -14,12 +14,12 @@ module.exports = {
         const { Client } = require('pg');
         const client = new Client();
 
-        var query = "select * from ice order by date desc limit " + number;
+        var query = "select * from cxnetwork WHERE LOWER(name)=LOWER('ice') order by date desc limit " + number;
 
         await client.connect();
         await client.query(query)
             .then(res => {
-                // console.log(res['rows']);
+                console.log(res['rows']);
                 var num = parseInt(number);
                 if (res['rows'].length < num) {
                     num = res['rows'].length;
@@ -41,7 +41,7 @@ module.exports = {
     queryOthers : async function(number, name, message) {
         const { Client } = require('pg');
         const client = new Client();
-        var query = "select * from others WHERE name=\'" + name + "\' order by date desc limit" + number;
+        var query = "select * from cxnetwork WHERE LOWER(name)=LOWER(\'" + name + "\') order by date desc limit " + number;
 
         await client.connect();
         await client.query(query)
@@ -56,7 +56,7 @@ module.exports = {
                 
                 while (i < num) {
                     mToSend += res['rows'][i]['url'] + "\t" + res['rows'][i]['date'] + "\n"
-                    // console.log(res['rows'][i]['url']);
+                    console.log(res['rows'][i]['url']);
                     i++;
                 }
                 message.channel.send(mToSend);

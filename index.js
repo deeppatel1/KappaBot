@@ -77,13 +77,7 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
                     // const date = new Date();
                     const url = "https://www.youtube.com/watch?v=" + data2.items[0].id.videoId;
 
-                    var table = "ice";
-                    var sql_query = 'INSERT INTO ' + table + ' (date, url) SELECT \'' + datetime +'\', \'' + url + '\' WHERE NOT EXISTS (SELECT 1 FROM ' + table + ' WHERE url=\''+ url +'\');'
-
-                    if (YTer != "ICE") {
-                        table = "others";
-                        sql_query = 'INSERT INTO ' + table + ' (date, url, name) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\' WHERE NOT EXISTS (SELECT 1 FROM ' + table + ' WHERE url=\''+ url +'\');'
-                    }
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
 
                     dbQuery.query(sql_query);
 
@@ -149,7 +143,7 @@ client.on("message", function(message){
         const embed = new RichEmbed()
             .setTitle('Commands')
             .setColor("#67279C")
-            .addField("!ice last #", "Get the last {#} of vod urls")
+            .addField("?ice last #", "Get the last {#} of vod urls")
             .addField("!clips hour/day/week/month/year/alltime #", "Get most popular clips for last hour/day/week/month/year/alltime")
             .addField("!ice hour/day/week/month/year/alltime #", "Get most popular clips for ice for the last hour/day/week/month/year/alltime")
             .addField("?vod {name} {number}", "Gets the last {number} of vods for a particular streamer.\n{name}: EBZ, SAM, SJC, CXNews, MexicanAcne")
@@ -193,8 +187,8 @@ client.on("message", function(message){
 
         });
 
-    } else if (message.content.startsWith('!ice last')){
-
+    } else if (message.content.startsWith('?ice last')){
+        console.log("TEST")
         var numberofVods = message.content.split(" ");
         const num = numberofVods[2];
         if (numberofVods.length == 3) {
