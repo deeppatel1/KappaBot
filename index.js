@@ -39,15 +39,15 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
         console.log("[" + YTer + " FUNC] checking youtube for " + YTer + " / live  --- " + new Date());
         restClient.get("https://www.youtube.com/channel/"+ YTChannelName+ "/live",function (data,response){
             data = String(data);
-        //    console.log("HES LIVE CHECK WHAT HAPPEN NOW WITH OFFICIAL API");
-        //    console.log(data);
-        //if JSON response doesn't have "Live stream offline", than this user is online"
+            //    console.log("HES LIVE CHECK WHAT HAPPEN NOW WITH OFFICIAL API");
+            //    console.log(data);
+            //if JSON response doesn't have "Live stream offline", than this user is online"
             if (data.search("Live stream offline") == -1){
                 console.log("["+ YTer +"] " + " is live per GET request --- " + new Date());
                 //setting online true will trigger other function
                 online = true;
 
-        //this dude is offline
+                //this dude is offline
             }else{
                 console.log("["+ YTer +"] " + " is offline per GET request --- " + new Date());
                 online = false;
@@ -62,10 +62,10 @@ function checkifYTisLive(YTer, YTChannelName, discordChannelToPost, milliseconds
                 data2STRING = String(data2);
                 if (data2.items.length > 0){  //confirmed live, now post it on discord!
                     console.log("["+ YTer +"] " + "is live posting on discord now  --- " + new Date())
-                    String stringtoPostWithAt = AtOrNot ? "<@173611085671170048> <@173610714433454084> " : ""
+                    var stringtoPostWithAt = (AtOrNot ? "<@173611085671170048> <@173610714433454084> " : "");
                     var currentdate = new Date();
                     var datetime = (currentdate.getMonth()+1)+ "/"
-                                    +  currentdate.getDate()  + "/"
+                                    + currentdate.getDate()  + "/"
                                     + currentdate.getFullYear() + " @ "
                                     + currentdate.getHours() + ":"
                                     + currentdate.getMinutes() + ":"
@@ -138,7 +138,7 @@ client.on('ready', () => {
         stream.on('error', function(error) {
           console.log(error);
         });
-      });
+    });
 
 });
 
