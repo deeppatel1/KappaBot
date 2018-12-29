@@ -154,12 +154,14 @@ function continuousYTCheck(){
 
         twitterFilter(clientForDiscord)
 
-        initiateLiveCheckLoop("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "284157566693539851", clientForDiscord, false, false, false, 5000000);
-        initiateLiveCheckLoop("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg", "284157566693539851", clientForDiscord, false, false, false, 50000000);
-        initiateLiveCheckLoop("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g", "284157566693539851", clientForDiscord, false, false, false, 50000000);
-        initiateLiveCheckLoop("SAM", "UCdSr4xliU8yDyS1aGnCUMTA", "284157566693539851", clientForDiscord, false, false, false, 100000000);
-
-    });
+        initiateLiveCheckLoop("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "284157566693539851", clientForDiscord, false, false, false, 300000);
+        initiateLiveCheckLoop("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg", "284157566693539851", clientForDiscord, false, false, false, 300000);
+        initiateLiveCheckLoop("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g", "284157566693539851", clientForDiscord, false, false, false, 300000);
+        initiateLiveCheckLoop("SAM", "UCdSr4xliU8yDyS1aGnCUMTA", "284157566693539851", clientForDiscord, false, false, false, 300000);
+		initiateLiveCheckLoop("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","173611297387184129", clientForDiscord, true, false, false, 300000);
+		initiateLiveCheckLoop("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","173611297387184129", clientForDiscord, true, false, false, 300000);
+	
+	});
 
 }
 
