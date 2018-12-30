@@ -1,3 +1,4 @@
+require('dotenv').config();
 var request = require('request');
 var credentials = require('./configuration.json');
 var rest = require('node-rest-client').Client;
