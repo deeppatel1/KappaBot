@@ -4,6 +4,7 @@ var rest = require('node-rest-client').Client;
 var Twitter = require('twitter');
 const Discord = require("discord.js");
 const clientForDiscord = new Discord.Client();
+var dbQuery = require('./db.js');
 
 
 var neatclipClient = new rest();
@@ -24,7 +25,7 @@ var args = {
 
 function firstYTGETRequest(YTer, YTChannelName) {
 
-    console.log("[" + YTer + "] " + "starting initial GET request " + new Date());
+    // console.log("[" + YTer + "] " + "starting initial GET request " + new Date());
 
     return new Promise(function(resolve, reject) {  
         request.get('https://youtube.com/channel/' + YTChannelName + '/live', function(err, resp, body) {
@@ -47,7 +48,7 @@ function firstYTGETRequest(YTer, YTChannelName) {
 
 function secondYTLiveAPIRequest(YTer, YTChannelName) {
 
-    console.log("[" + YTer + "] " + "starting main API request " + new Date());
+    // console.log("[" + YTer + "] " + "starting main API request " + new Date());
 
     // Return new promise 
     return new Promise(function(resolve, reject) {
@@ -62,7 +63,7 @@ function secondYTLiveAPIRequest(YTer, YTChannelName) {
                 if (parsed.items.length > 0) {
                     resolve(parsed.items[0].id.videoId);
                 }else{
-                    console.log("[" + YTer + "] Main API says offline --- " + new Date());
+                    // console.log("[" + YTer + "] Main API says offline --- " + new Date());
                     resolve("Not Live Yet")
                 }
                 
@@ -75,7 +76,7 @@ function secondYTLiveAPIRequest(YTer, YTChannelName) {
 function postToDiscord(channelId, atOrNot, stringToPost, discordClient, YTer){
     
     var stringtoPostWithAt = (atOrNot ? '<@173611085671170048> <@173610714433454084> ' : '');		                        
-    console.log("[" + YTer + "] " + "Now posting to discord he/she is live ")
+    // console.log("[" + YTer + "] " + "Now posting to discord he/she is live ")
     discordClient.channels.get(channelId).send(stringtoPostWithAt + stringToPost)
 
 }
@@ -95,6 +96,23 @@ function pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discor
                     if (secondApiResult != 'Not Live Yet') {
                         // post to discord now
                         // console.log(secondApiResult)
+
+                        // Add URL to database
+                        const { Client } = require('pg')
+                        const pgClient = new Client()
+                        var currentdate = new Date();
+                        var datetime = (currentdate.getMonth()+1)+ "/"
+                                        + currentdate.getDate()  + "/"
+                                        + currentdate.getFullYear() + " @ "
+                                        + currentdate.getHours() + ":"
+                                        + currentdate.getMinutes() + ":"
+                                        + currentdate.getSeconds();
+                        const url = "https://www.youtube.com/watch?v=" + secondApiResult;
+
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+
+                        dbQuery.query(sql_query);
+
 
                         postToDiscord(discordChannelToPost, true, "https://www.youtube.com/watch?v=" + secondApiResult, discordClient, YTer)
                         postedToDiscord = true
@@ -117,14 +135,14 @@ function pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discor
 
 function initiateLiveCheckLoop(YTer, YTChannelName, discordChannelToPost, discordClient, AtOrNot, online, postedToDiscord, intervalLength) {
 
-    console.log(intervalLength)
+    // console.log(intervalLength)
     setInterval(function() {
         pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discordClient, AtOrNot, online, postedToDiscord).then(function(result) {
             online = result[1]
             postedToDiscord = result[2]
 
-            console.log("online is " + online);
-            console.log("postedToDiscord " + postedToDiscord)
+            // console.log("online is " + online);
+            // console.log("postedToDiscord " + postedToDiscord)
         })        
     }, intervalLength)
     
@@ -185,7 +203,7 @@ function respondToMessagesLive(){
             var howManyClips = args[2]; //how many clips to show
             var stringToSend = "";
 
-            console.log(args)
+            // console.log(args)
 
             neatclipClient.get("https://neatclip.com/api/v1/clips.php?streamer_url=https://www.youtube.com/channel/UCv9Edl_WbtbPeURPtFDo-uA&time=" + inHowLongDuration + "&sort=top", arguments, function(data, response) {
 
