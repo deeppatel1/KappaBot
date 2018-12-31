@@ -277,6 +277,22 @@ function respondToMessagesLive(){
             // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
             pollToCheckYTerIsLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "284157566693539851", clientForDiscord, true, false, false);
 
+        } else if (message.content.startsWith('?vod ')) {
+            var numberofVods = message.content.split(" ");
+            const num = numberofVods[2];
+            const name = numberofVods[1];
+
+            if (numberofVods.length == 3) {
+                dbQuery.queryOthers(num, name, message);
+            }
+        } else if (message.content.startsWith('?ice last')){
+            var numberofVods = message.content.split(" ");
+            const num = numberofVods[2];
+            if (numberofVods.length == 3) {
+                dbQuery.queryVod(num, message);
+            }
+            // readLastLines.read('icevods.txt',numberofVods).then((lines) =>
+            //     message.channel.send(lines));
         }
 
     });
