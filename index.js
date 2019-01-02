@@ -236,14 +236,14 @@ function continuousYTAndTwitchCheck(){
 
         twitterFilter(clientForDiscord, "main")
 
-        initiateLiveCheckLoop("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "secondary", clientForDiscord, false, false, false, 30000);
-        initiateLiveCheckLoop("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg", "secondary", clientForDiscord, false, false, false, 30000);
-        initiateLiveCheckLoop("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g", "secondary", clientForDiscord, false, false, false, 30000);
-        initiateLiveCheckLoop("SAM", "UCdSr4xliU8yDyS1aGnCUMTA", "secondary", clientForDiscord, false, false, false, 30000);
-		initiateLiveCheckLoop("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","main", clientForDiscord, true, false, false, 30000);
-		initiateLiveCheckLoop("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","secondary", clientForDiscord, true, false, false, 30000);
+        initiateLiveCheckLoop("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "secondary", clientForDiscord, false, false, false, 300000);
+        initiateLiveCheckLoop("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg", "secondary", clientForDiscord, false, false, false, 275000);
+        initiateLiveCheckLoop("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g", "secondary", clientForDiscord, false, false, false, 285000);
+        initiateLiveCheckLoop("SAM", "UCdSr4xliU8yDyS1aGnCUMTA", "secondary", clientForDiscord, false, false, false, 270000);
+		initiateLiveCheckLoop("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","main", clientForDiscord, true, false, false, 350000);
+		initiateLiveCheckLoop("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","main", clientForDiscord, true, false, false, 250000);
         //t1s id is 51496027
-        initiateLiveCheckForTwitchLoop("T1", "51496027", "main", clientForDiscord, true, false, false, 10000)
+        initiateLiveCheckForTwitchLoop("T1", "51496027", "main", clientForDiscord, true, false, false, 250000)
         
 	});
 
