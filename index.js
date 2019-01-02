@@ -1,9 +1,11 @@
+require('dotenv').config();
 var request = require('request');
 var credentials = require('./configuration.json');
 var rest = require('node-rest-client').Client;
 var Twitter = require('twitter');
 const Discord = require("discord.js");
 const clientForDiscord = new Discord.Client();
+var dbQuery = require('./db.js');
 
 
 var neatclipClient = new rest();
@@ -103,7 +105,7 @@ function postToDiscord(channelId, atOrNot, stringToPost, discordClient, YTer){
 
     channelId = (channelId == "main") ? "173611297387184129" : "284157566693539851"
 
-    var stringtoPostWithAt = (atOrNot ? '<@173611085671170048> <@173610714433454084> ' : '');		                        
+    var stringtoPostWithAt = (atOrNot ? '<@173611085671170048> <@173610714433454084> ' : '');
     console.log("[" + YTer + "] " + "Now posting to discord he/she is live ---- " + new Date())
     discordClient.channels.get(channelId).send(stringtoPostWithAt + stringToPost)
 
@@ -125,7 +127,24 @@ function pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discor
                         // post to discord now
                         // console.log(secondApiResult)
 
-                        postToDiscord(discordChannelToPost, AtOrNot, YTer + " LIVE https://www.youtube.com/watch?v=" + secondApiResult, discordClient, YTer)
+                        // Add URL to database
+                        const { Client } = require('pg')
+                        const pgClient = new Client()
+                        var currentdate = new Date();
+                        var datetime = (currentdate.getMonth()+1)+ "/"
+                                        + currentdate.getDate()  + "/"
+                                        + currentdate.getFullYear() + " @ "
+                                        + currentdate.getHours() + ":"
+                                        + currentdate.getMinutes() + ":"
+                                        + currentdate.getSeconds();
+                        const url = "https://www.youtube.com/watch?v=" + secondApiResult;
+
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+
+                        dbQuery.query(sql_query);
+
+
+                        postToDiscord(discordChannelToPost, true, "https://www.youtube.com/watch?v=" + secondApiResult, discordClient, YTer)
                         postedToDiscord = true
                         resolve(([secondApiResult, online, postedToDiscord]))
 
@@ -195,7 +214,6 @@ function initiateLiveCheckLoop(YTer, YTChannelName, discordChannelToPost, discor
             //console.log("online is " + online);
             //console.log("postedToDiscord " + postedToDiscord)
         })
-
     }, intervalLength)
     
 }
@@ -408,6 +426,22 @@ function respondToMessagesLive(){
 
             setTimeout(postSummary, 3000, message.channel);
 
+        } else if (message.content.startsWith('?vod ')) {
+            var numberofVods = message.content.split(" ");
+            const num = numberofVods[2];
+            const name = numberofVods[1];
+
+            if (numberofVods.length == 3) {
+                dbQuery.queryOthers(num, name, message);
+            }
+        } else if (message.content.startsWith('?ice last')){
+            var numberofVods = message.content.split(" ");
+            const num = numberofVods[2];
+            if (numberofVods.length == 3) {
+                dbQuery.queryVod(num, message);
+            }
+            // readLastLines.read('icevods.txt',numberofVods).then((lines) =>
+            //     message.channel.send(lines));
         }
 
     });
