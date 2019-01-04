@@ -342,7 +342,7 @@ function postSummary(channel){
 
     for (data in streamersTracker) {
         if (streamersTracker[data].status == "Online") {
-            embed.addField(data + " - " + streamersTracker[data].emoji, "[link -- replace with YT title?](" + streamersTracker[data].url + ")")
+            embed.addField(data + " - " + streamersTracker[data].emoji, "[link -- replace with YT title?](" + streamersTracker[data].URL + ")")
         }
     }
 
