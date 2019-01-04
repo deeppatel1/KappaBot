@@ -25,13 +25,13 @@ var args = {
 };
 
 var streamersTracker = {
-    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
-    EBZ: {channelId: "UCkR8ndH0NypMYtVYARnQ-_g", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
-    SAM : {channelId: "UCdSr4xliU8yDyS1aGnCUMTA", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    SJC : {channelId: "UC4YYNTbzt3X1uxdTCJaYWdg", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    CXNews : {channelId: "UCStEQ9BjMLjHTHLNA6cY9vg", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    MexicanAcne : {channelId: "UC8EmlqXIlJJpF7dTOmSywBg", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    T1 : {channelId: "51496027", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}
+    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
+    EBZ: {channelId: "UCkR8ndH0NypMYtVYARnQ-_g", emoji: ':older_man::skin-tone-5: ', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
+    SAM : {channelId: "UCdSr4xliU8yDyS1aGnCUMTA", emoji: ':hot_pepper: ', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    SJC : {channelId: "UC4YYNTbzt3X1uxdTCJaYWdg", emoji: ':head_bandage:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    CXNews : {channelId: "UCStEQ9BjMLjHTHLNA6cY9vg", emoji: ':newspaper:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    MexicanAcne : {channelId: "UC8EmlqXIlJJpF7dTOmSywBg", emoji: ':flushed:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    T1 : {channelId: "51496027", emoji: '', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}
 };
 
 function updateStreamerTracker(YTer, status, URL, viewers){
@@ -321,21 +321,33 @@ function continuousYTAndTwitchCheck(){
 
 function postSummary(channel){
 
-    var iceEmoji = (streamersTracker['ICE'].status != "Offline") ? ':baby: ' : ''
-    var ebzEmoji = (streamersTracker['EBZ'].status != "Offline") ? ':bust_in_silhouette: ' : ''
-    var pepperPalEmoji = (streamersTracker['SAM'].status != "Offline") ? ':hot_pepper: ' : ''
-    var sjcEmoji = (streamersTracker['SJC'].status != "Offline") ? ':head_bandage: ' : ''
-    var acneEmoji = (streamersTracker['MexicanAcne'].status != "Offline") ? ':flushed: ' : ''
-    var cxNewsEmoji = (streamersTracker['CXNews'].status != "Offline") ? ':newspaper: ' : ''
+    // var iceEmoji = (streamersTracker['ICE'].status != "Offline") ? ':baby: ' : ''
+    // var ebzEmoji = (streamersTracker['EBZ'].status != "Offline") ? ':bust_in_silhouette: ' : ''
+    // var pepperPalEmoji = (streamersTracker['SAM'].status != "Offline") ? ':hot_pepper: ' : ''
+    // var sjcEmoji = (streamersTracker['SJC'].status != "Offline") ? ':head_bandage: ' : ''
+    // var acneEmoji = (streamersTracker['MexicanAcne'].status != "Offline") ? ':flushed: ' : ''
+    // var cxNewsEmoji = (streamersTracker['CXNews'].status != "Offline") ? ':newspaper: ' : ''
 
-    var stringToPost = 'ICE - ' + iceEmoji + streamersTracker['ICE'].status + "  " + streamersTracker['ICE'].URL + '\n'
-    stringToPost = stringToPost + 'EBZ - ' + ebzEmoji + streamersTracker['EBZ'].status + "  " + streamersTracker['EBZ'].URL + '\n'
-    stringToPost = stringToPost + 'SAM - ' + pepperPalEmoji + streamersTracker['SAM'].status + "  " + streamersTracker['SAM'].URL + '\n'
-    stringToPost = stringToPost + 'SJC - ' + sjcEmoji + streamersTracker['SJC'].status + "  " + streamersTracker['SJC'].URL + '\n'
-    stringToPost = stringToPost + 'CXNews - ' + cxNewsEmoji + streamersTracker['CXNews'].status + "  " + streamersTracker['CXNews'].URL + '\n'
-    stringToPost = stringToPost + 'MexicanAcne - ' + acneEmoji + streamersTracker['MexicanAcne'].status + "  " + streamersTracker['MexicanAcne'].URL + '\n'
+    // var stringToPost = 'ICE - ' + iceEmoji + streamersTracker['ICE'].status + "  " + streamersTracker['ICE'].URL + '\n'
+    // stringToPost = stringToPost + 'EBZ - ' + ebzEmoji + streamersTracker['EBZ'].status + "  " + streamersTracker['EBZ'].URL + '\n'
+    // stringToPost = stringToPost + 'SAM - ' + pepperPalEmoji + streamersTracker['SAM'].status + "  " + streamersTracker['SAM'].URL + '\n'
+    // stringToPost = stringToPost + 'SJC - ' + sjcEmoji + streamersTracker['SJC'].status + "  " + streamersTracker['SJC'].URL + '\n'
+    // stringToPost = stringToPost + 'CXNews - ' + cxNewsEmoji + streamersTracker['CXNews'].status + "  " + streamersTracker['CXNews'].URL + '\n'
+    // stringToPost = stringToPost + 'MexicanAcne - ' + acneEmoji + streamersTracker['MexicanAcne'].status + "  " + streamersTracker['MexicanAcne'].URL + '\n'
 
-    channel.send(stringToPost);
+
+    const embed = new Discord.RichEmbed()
+    .setTitle('Commands')
+    .setColor("#67279C")
+
+    for (data in streamersTracker) {
+        if (streamersTracker[data].status == "Online") {
+            embed.addField(data + " - " + streamersTracker[data].emoji, "[link -- replace with YT title?](" + streamersTracker[data].url + ")")
+        }
+    }
+
+
+    channel.send(embed);
 
     /*
     const embed = {
