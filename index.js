@@ -3,13 +3,13 @@ var request = require('request');
 var credentials = require('./configuration.json');
 var rest = require('node-rest-client').Client;
 var Twitter = require('twitter');
-const Discord = require("discord.js");
-const clientForDiscord = new Discord.Client();
+var Discord = require("discord.js");
 var dbQuery = require('./db.js');
 
-
+var discordClientGlobalVar;
 var neatclipClient = new rest();
 var gKey = credentials.gKey;
+var clientForDiscord = new Discord.Client();
 var Twitterclient = new Twitter({
     consumer_key: credentials.twitterApiKey,
     consumer_secret: credentials.twitterApiSecretKey,
@@ -25,43 +25,54 @@ var args = {
 };
 
 var streamersTracker = {
-    ICE : {status: 'offline', URL: ""}, 
-    EBZ: {status: 'offline', URL: ""}, 
-    SAM : {status: 'offline', URL: ""},
-    SJC : {status: 'offline', URL: ""},
-    CXNews : {status: 'offline', URL: ""},
-    MexicanAcne : {status: 'offline', URL: ""},
-    T1 : {status: 'offline', URL: ""}
+    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
+    EBZ: {channelId: "UCkR8ndH0NypMYtVYARnQ-_g", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
+    SAM : {channelId: "UCdSr4xliU8yDyS1aGnCUMTA", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    SJC : {channelId: "UC4YYNTbzt3X1uxdTCJaYWdg", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    CXNews : {channelId: "UCStEQ9BjMLjHTHLNA6cY9vg", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    MexicanAcne : {channelId: "UC8EmlqXIlJJpF7dTOmSywBg", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    T1 : {channelId: "51496027", status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}
 };
 
-function updateStreamerTracker(YTer, status, URL){
+function updateStreamerTracker(YTer, status, URL, viewers){
+
+    if (viewers != -1) streamersTracker[YTer].viewers = viewers;
 
     if ((streamersTracker[YTer].status != 'Online') || (status != 'Live, getting link soon')){
-
         streamersTracker[YTer].status = status;
         streamersTracker[YTer].URL = URL;
     }
+
+    if ((streamersTracker[YTer].MoreThan10kPostedDiscord == false) && (viewers > 10000)){
+        postToDiscord("main", true, YTer + ' HAS MORE THAN 10k VIEWERS', YTer);
+        streamersTracker[YTer].MoreThan10kPostedDiscord = true;
+    }
+
+    if ((streamersTracker[YTer].MoreThan10kPostedDiscord == true) && (viewers < 10000)){
+        streamersTracker[YTer].MoreThan10kPostedDiscord = false
+    }
+
     //console.log(streamersTracker);
 
 }
 
-function firstYTGETRequest(YTer, YTChannelName) {
+function firstYTGETRequest(YTer) {
 
     console.log("[" + YTer + "] " + "starting initial GET request ---- " + new Date());
 
     return new Promise(function(resolve, reject) {  
-        request.get('https://youtube.com/channel/' + YTChannelName + '/live', function(err, resp, body) {
+        request.get('https://youtube.com/channel/' + streamersTracker[YTer].channelId + '/live', function(err, resp, body) {
             if (err) {
                 reject(err);
             } else {
                 var isOnline;
                 if (body.search("Live stream offline") == -1) {
                     console.log("[" + YTer + "] " + "initial GET says ONLINE ---- " + new Date())
-                    updateStreamerTracker(YTer, "Live, getting link soon", "")
+                    updateStreamerTracker(YTer, "Live, getting link soon", "", 0)
                     isOnline = true
                 } else {
                     console.log("[" + YTer + "] " + "initial GET says OFFLINE ---- " + new Date())
-                    updateStreamerTracker(YTer, "Offline", "")
+                    updateStreamerTracker(YTer, "Offline", "", 0)
                     isOnline = false
                 }
                 resolve(isOnline);
@@ -70,14 +81,14 @@ function firstYTGETRequest(YTer, YTChannelName) {
     })
 }
 
-function secondYTLiveAPIRequest(YTer, YTChannelName) {
+function secondYTLiveAPIRequest(YTer) {
 
     console.log("[" + YTer + "] " + "starting main API request ---- " + new Date());
 
     // Return new promise 
     return new Promise(function(resolve, reject) {
     	// Do async job
-        request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + YTChannelName + "&type=video&eventType=live&key=" + gKey, function(err, resp, body) {
+        request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + streamersTracker[YTer].channelId + "&type=video&eventType=live&key=" + gKey, function(err, resp, body) {
             if (err) {  
                 reject(err);
             } else {
@@ -85,11 +96,11 @@ function secondYTLiveAPIRequest(YTer, YTChannelName) {
                 var parsed = JSON.parse(body);
                 //utube API says live, now return result
                 if (parsed.items.length > 0) {
-                    updateStreamerTracker(YTer, "Online", "https://www.youtube.com/watch?v=" + parsed.items[0].id.videoId)
+                    updateStreamerTracker(YTer, "Online", "https://www.youtube.com/watch?v=" + parsed.items[0].id.videoId, -1)
                     resolve(parsed.items[0].id.videoId);
                 }else{
                     console.log("[" + YTer + "] Main API says offline --- " + new Date());
-                    updateStreamerTracker(YTer, "Getting link soon", "")
+                    updateStreamerTracker(YTer, "Getting link soon", "", 0)
                     resolve("Not Live Yet")
                 }
                 
@@ -99,29 +110,63 @@ function secondYTLiveAPIRequest(YTer, YTChannelName) {
 
 }
 
-function postToDiscord(channelId, atOrNot, stringToPost, discordClient, YTer){
+function getLiveViewers(YTer){
+    
+    return new Promise(function(resolve, reject) {
+    	console.log('-----------------:::' + "https://www.youtube.com/live_stats?v=" + streamersTracker[YTer].URL.split("https://www.youtube.com/watch?v=").pop())
+        request.get("https://www.youtube.com/live_stats?v=" + streamersTracker[YTer].URL.split("https://www.youtube.com/watch?v=").pop(), function(err, resp, body) {
+            if (err) {  
+                reject(err);
+            } else {
+                body = parseInt(body)
+                console.log("NUMBER OF VIEWERS " + body)
+                resolve(body)
+            }
+        })
+    })
+}
+
+function updateIfMoreThan10kViewers(YTer, millisecondInterval){
+    
+    setInterval(function() {
+        console.log("SDFJSLFJSDLKF" + streamersTracker[YTer].status + streamersTracker[YTer].URL)
+        if (streamersTracker[YTer].status == 'Online'){
+            getLiveViewers(YTer).then(function(result) {
+                console.log("updating streamer tracker ith viewers " + result)
+                updateStreamerTracker(YTer, streamersTracker[YTer].status, streamersTracker[YTer].URL, result);
+            }, function(err) {
+                console.log(err);
+            })
+        }
+
+    }, millisecondInterval)
+    
+}
+
+function postToDiscord(discordChannel, atOrNot, stringToPost, YTer){
     // main discord channel is 173611297387184129
     // secondary discord channel is 284157566693539851
 
-    channelId = (channelId == "main") ? "173611297387184129" : "284157566693539851"
+    discordChannel = (discordChannel == "main") ? "173611297387184129" : "284157566693539851"
 
     var stringtoPostWithAt = (atOrNot ? '<@173611085671170048> <@173610714433454084> ' : '');
     console.log("[" + YTer + "] " + "Now posting to discord he/she is live ---- " + new Date())
-    discordClient.channels.get(channelId).send(stringtoPostWithAt + stringToPost)
+    
+    discordClientGlobalVar.channels.get(discordChannel).send(stringtoPostWithAt + stringToPost)
 
 }
 
-function pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discordClient, AtOrNot, online, postedToDiscord) {
+function pollToCheckYTerIsLive(YTer, discordChannelToPost, AtOrNot, online, postedToDiscord) {
     
     return new Promise(function(resolve, reject) {
         //A Get request is initially made cuz uTube API sucks. If live, then we do main API request which is a couple minutes delayed
-        firstYTGETRequest(YTer, YTChannelName).then(function(result) {
+        firstYTGETRequest(YTer).then(function(result) {
             online = result
             if (!online) postedToDiscord = false
 
             if ((online) && (!postedToDiscord)) {
                 //console.log("[" + YTer + "] " + "starting main YT request " + new Date());
-                secondYTLiveAPIRequest(YTer, YTChannelName).then(function(secondApiResult){
+                secondYTLiveAPIRequest(YTer).then(function(secondApiResult){
                     
                     if (secondApiResult != 'Not Live Yet') {
                         // post to discord now
@@ -144,7 +189,7 @@ function pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discor
                         dbQuery.query(sql_query);
 
 
-                        postToDiscord(discordChannelToPost, true, "https://www.youtube.com/watch?v=" + secondApiResult, discordClient, YTer)
+                        postToDiscord(discordChannelToPost, AtOrNot, "https://www.youtube.com/watch?v=" + secondApiResult, YTer)
                         postedToDiscord = true
                         resolve(([secondApiResult, online, postedToDiscord]))
 
@@ -163,16 +208,16 @@ function pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discor
     })
 }
 
-function pollToCheckTwitcherIsLive(Twitcher, Id, AtorNot, isT1CurrentlyLive, t1LivePostedOnDiscord, discordChannelToPost, discordClient){
+function pollToCheckTwitcherIsLive(Twitcher, AtorNot, isT1CurrentlyLive, t1LivePostedOnDiscord, discordChannelToPost){
     
     var options = {
-        url: "https://api.twitch.tv/helix/streams?user_id=" + Id,
+        url: "https://api.twitch.tv/helix/streams?user_id=" +  streamersTracker[Twitcher].channelId,
         headers: {
             "Client-ID": credentials.twitchauth
         }
     };
 
-    return new Promise(function(resolve, reject) {  
+    return new Promise(function(resolve, reject) {
         request.get(options, function(err, resp, body) {
             data = JSON.parse(body);
             if((data['data'].length != 0) && (!isT1CurrentlyLive)){
@@ -186,13 +231,13 @@ function pollToCheckTwitcherIsLive(Twitcher, Id, AtorNot, isT1CurrentlyLive, t1L
                     
                     if (minutesZULU < 10)   minutesZULU = '0' + minutesZULU;
     
-                    postToDiscord(discordChannelToPost, AtorNot, "T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU), discordClient, Twitcher)
+                    postToDiscord(discordChannelToPost, AtorNot, "T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU), Twitcher)
     
                     t1LivePostedOnDiscord = true;
                 }
             }else if (data['data'].length == 0){
                 console.log('[' + Twitcher + '] Twitch API Says OFFLINE ---- ' + new Date())
-                if (isT1CurrentlyLive)  postToDiscord(discordChannelToPost, true, "T1 stopped streaming", discordClient, "T1")            
+                if (isT1CurrentlyLive)  postToDiscord(discordChannelToPost, true, "T1 stopped streaming", "T1")            
                 isT1CurrentlyLive = false;
                 // console.log("not live");
                 t1LivePostedOnDiscord = false;
@@ -203,11 +248,11 @@ function pollToCheckTwitcherIsLive(Twitcher, Id, AtorNot, isT1CurrentlyLive, t1L
     })
 }
 
-function initiateLiveCheckLoop(YTer, YTChannelName, discordChannelToPost, discordClient, AtOrNot, online, postedToDiscord, intervalLength) {
+function initiateLiveCheckLoop(YTer, discordChannelToPost, AtOrNot, online, postedToDiscord, intervalLength) {
 
     //console.log(intervalLength)
     setInterval(function() {
-        pollToCheckYTerIsLive(YTer, YTChannelName, discordChannelToPost, discordClient, AtOrNot, online, postedToDiscord).then(function(result) {
+        pollToCheckYTerIsLive(YTer, discordChannelToPost, AtOrNot, online, postedToDiscord).then(function(result) {
             online = result[1]
             postedToDiscord = result[2]
 
@@ -218,11 +263,11 @@ function initiateLiveCheckLoop(YTer, YTChannelName, discordChannelToPost, discor
     
 }
 
-function initiateLiveCheckForTwitchLoop(Twitcher, TwitchID, discordChannelToPost, discordClient, AtOrNot, online, postedToDiscord, intervalLength) {    
+function initiateLiveCheckForTwitchLoop(Twitcher, discordChannelToPost, AtOrNot, online, postedToDiscord, intervalLength) {    
 
     setInterval(function() {
         // T1's ID is 51496027
-        pollToCheckTwitcherIsLive(Twitcher, TwitchID, AtOrNot, online, postedToDiscord, discordChannelToPost, discordClient).then(function(result) {
+        pollToCheckTwitcherIsLive(Twitcher, AtOrNot, online, postedToDiscord, discordChannelToPost).then(function(result) {
             online = result[0]
             postedToDiscord = result[1]
         })
@@ -230,15 +275,18 @@ function initiateLiveCheckForTwitchLoop(Twitcher, TwitchID, discordChannelToPost
     }, intervalLength)
 }
 
-function twitterFilter(discordClient, discordChannelToPost){
+function twitterFilter(discordChannelToPost){
     
     Twitterclient.stream('statuses/filter', {
+        //solonoid12 is 1615735502
         follow: '4833803780,736784706486734852,344538810,873949601522487297'
     }, function(stream) {
+
         stream.on('data', function(tweet) {
-            if ((tweet.user.screen_name == 'loltyler1') || (tweet.user.screen_name == 'REALIcePoseidon') || (tweet.user.screen_name == 'TLDoublelift') || (tweet.user.screen_name == 'JacobK_Cx')) {
-                client.channels.get("173611297387184129").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str);
-                postToDiscord(discordChannelToPost, true, "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, discordClient, "T1")
+            //console.log(tweet)
+            if ((tweet.user.screen_name == 'solonoid12') || (tweet.user.screen_name == 'loltyler1') || (tweet.user.screen_name == 'REALIcePoseidon') || (tweet.user.screen_name == 'TLDoublelift') || (tweet.user.screen_name == 'JacobK_Cx')) {
+                //discordClient.channels.get("").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str);
+                postToDiscord(discordChannelToPost, true, "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name)
             }
         });
 
@@ -252,16 +300,20 @@ function continuousYTAndTwitchCheck(){
 
     clientForDiscord.on('ready', () => {
 
-        twitterFilter(clientForDiscord, "main")
+        discordClientGlobalVar = clientForDiscord;
 
-        initiateLiveCheckLoop("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "secondary", clientForDiscord, false, false, false, 300000);
-        initiateLiveCheckLoop("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg", "secondary", clientForDiscord, false, false, false, 275000);
-        initiateLiveCheckLoop("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g", "secondary", clientForDiscord, false, false, false, 285000);
-        initiateLiveCheckLoop("SAM", "UCdSr4xliU8yDyS1aGnCUMTA", "secondary", clientForDiscord, false, false, false, 270000);
-		initiateLiveCheckLoop("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg","main", clientForDiscord, true, false, false, 350000);
-		initiateLiveCheckLoop("ICE", "UCv9Edl_WbtbPeURPtFDo-uA","main", clientForDiscord, true, false, false, 250000);
-        //t1s id is 51496027
-        initiateLiveCheckForTwitchLoop("T1", "51496027", "main", clientForDiscord, true, false, false, 250000)
+        twitterFilter("main")
+
+        initiateLiveCheckLoop("MexicanAcne", "secondary", false, false, false, 300000);
+        initiateLiveCheckLoop("SJC", "secondary", false, false, false, 275000);
+        initiateLiveCheckLoop("EBZ", "secondary", false, false, false, 285000);
+        initiateLiveCheckLoop("SAM", "secondary", false, false, false, 270000);
+		initiateLiveCheckLoop("CXNews", "main", true, false, false, 350000);
+		initiateLiveCheckLoop("ICE", "main", true, false, false, 250000);
+
+        initiateLiveCheckForTwitchLoop("T1", "main", true, false, false, 250000)
+
+        updateIfMoreThan10kViewers("ICE", 5000)
         
 	});
 
@@ -402,27 +454,25 @@ function respondToMessagesLive(){
 
             message.channel.send(':thinking:')
 
-            // main discord channel is 173611297387184129
-            // secondary discord channel is 284157566693539851
+            // second parameter is which discord channel, main channel or secondary channel
+            // third is "at or not" ... at people or not
 
-            //checkifYTFunction paramters are 1) name of YTer, 2) YT Channel ID, 3) Discord Channel to post to, 4)Millisecond to refresh, 5) discord client passed in
-
-            pollToCheckYTerIsLive("ICE", "UCv9Edl_WbtbPeURPtFDo-uA", "main", clientForDiscord, true, false, false);
+            pollToCheckYTerIsLive("ICE", "main", true, false, false);
 
             // EBZz channel ID is UCkR8ndH0NypMYtVYARnQ-_g
-            pollToCheckYTerIsLive("EBZ", "UCkR8ndH0NypMYtVYARnQ-_g", "secondary", clientForDiscord, false, false, false);
+            pollToCheckYTerIsLive("EBZ", "secondary", false, false, false);
 
             // SAMs channel ID is UCdSr4xliU8yDyS1aGnCUMTA
-            pollToCheckYTerIsLive("SAM", "UCdSr4xliU8yDyS1aGnCUMTA", "secondary", clientForDiscord, false, false, false);
+            pollToCheckYTerIsLive("SAM", "secondary", false, false, false);
 
             // SJCs channel ID is UC4YYNTbzt3X1uxdTCJaYWdg
-            pollToCheckYTerIsLive("SJC", "UC4YYNTbzt3X1uxdTCJaYWdg", "secondary", clientForDiscord, false, false, false);
+            pollToCheckYTerIsLive("SJC", "secondary", false, false, false);
 
             // CXNews channel ID is UCStEQ9BjMLjHTHLNA6cY9vg
-            pollToCheckYTerIsLive("CXNews", "UCStEQ9BjMLjHTHLNA6cY9vg", "main", clientForDiscord, false, false, false);
+            pollToCheckYTerIsLive("CXNews", "main", false, false, false);
 
             // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
-            pollToCheckYTerIsLive("MexicanAcne", "UC8EmlqXIlJJpF7dTOmSywBg", "secondary", clientForDiscord, false, false, false);
+            pollToCheckYTerIsLive("MexicanAcne", "secondary", false, false, false);
 
             setTimeout(postSummary, 3000, message.channel);
 
