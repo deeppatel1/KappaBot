@@ -68,7 +68,7 @@ function firstYTGETRequest(YTer) {
                 var isOnline;
                 if (body.search("Live stream offline") == -1) {
                     console.log("[" + YTer + "] " + "initial GET says ONLINE ---- " + new Date())
-                    updateStreamerTracker(YTer, "Live, getting link soon", "", 0)
+                    updateStreamerTracker(YTer, "Live, getting link soon", "", -1)
                     isOnline = true
                 } else {
                     console.log("[" + YTer + "] " + "initial GET says OFFLINE ---- " + new Date())
