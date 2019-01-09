@@ -48,9 +48,10 @@ function updateStreamerTracker(YTer, status, URL, viewers){
         streamersTracker[YTer].MoreThan10kPostedDiscord = true;
     }
 
-    if ((streamersTracker[YTer].MoreThan10kPostedDiscord == true) && (viewers < 10000)){
-        streamersTracker[YTer].MoreThan10kPostedDiscord = false
-    }
+    // removed this so it doesnt keep spamming
+    // if ((streamersTracker[YTer].MoreThan10kPostedDiscord == true) && (viewers < 10000)){
+    //     streamersTracker[YTer].MoreThan10kPostedDiscord = false
+    // }
 
     //console.log(streamersTracker);
 
