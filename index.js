@@ -179,13 +179,13 @@ function pollToCheckYTerIsLive(YTer, discordChannelToPost, AtOrNot, online, post
                         var currentdate = new Date();
                         var datetime = (currentdate.getMonth()+1)+ "/"
                                         + currentdate.getDate()  + "/"
-                                        + currentdate.getFullYear() + " @ "
-                                        + currentdate.getHours() + ":"
-                                        + currentdate.getMinutes() + ":"
-                                        + currentdate.getSeconds();
+                                        + currentdate.getFullYear();
+                        var time = currentdate.getHours() + ":"
+                                    + currentdate.getMinutes() + ":"
+                                    + currentdate.getSeconds();
                         const url = "https://www.youtube.com/watch?v=" + secondApiResult;
 
-                        var sql_query = 'INSERT INTO cxnetwork (date, url, name) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
 
                         dbQuery.query(sql_query);
 
