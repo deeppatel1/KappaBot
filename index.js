@@ -31,7 +31,8 @@ var streamersTracker = {
     SJC : {channelId: "UC4YYNTbzt3X1uxdTCJaYWdg", emoji: ':head_bandage:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
     CXNews : {channelId: "UCStEQ9BjMLjHTHLNA6cY9vg", emoji: ':newspaper:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
     MexicanAcne : {channelId: "UC8EmlqXIlJJpF7dTOmSywBg", emoji: ':flushed:', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    T1 : {channelId: "51496027", emoji: '', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}
+    T1 : {channelId: "51496027", emoji: '', status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    Hyphonix : {channelId: "UCaFpm67qMk1W1wJkFhGXucA", emoji: '', status: 'offline', URL:"", viewers: 0, MoreThan10kPostedDiscord: false}
 };
 
 function updateStreamerTracker(YTer, status, URL, viewers){
@@ -49,9 +50,9 @@ function updateStreamerTracker(YTer, status, URL, viewers){
     }
 
     // removed this so it doesnt keep spamming
-    // if ((streamersTracker[YTer].MoreThan10kPostedDiscord == true) && (viewers < 10000)){
-    //     streamersTracker[YTer].MoreThan10kPostedDiscord = false
-    // }
+    if ((streamersTracker[YTer].MoreThan10kPostedDiscord == true) && (viewers < 10000)){
+        streamersTracker[YTer].MoreThan10kPostedDiscord = false
+    }
 
     //console.log(streamersTracker);
 
@@ -101,7 +102,7 @@ function secondYTLiveAPIRequest(YTer) {
                     resolve(parsed.items[0].id.videoId);
                 }else{
                     console.log("[" + YTer + "] Main API says offline --- " + new Date());
-                    updateStreamerTracker(YTer, "Getting link soon", "", 0)
+                    updateStreamerTracker(YTer, "Getting link soon", "", -1)
                     resolve("Not Live Yet")
                 }
                 
@@ -311,6 +312,7 @@ function continuousYTAndTwitchCheck(){
         initiateLiveCheckLoop("SAM", "secondary", false, false, false, 270000);
 		initiateLiveCheckLoop("CXNews", "main", true, false, false, 350000);
 		initiateLiveCheckLoop("ICE", "main", true, false, false, 250000);
+        initiateLiveCheckLoop("Hyphonix", "main", true, false, false, 250000);
 
         initiateLiveCheckForTwitchLoop("T1", "main", true, false, false, 250000)
 
@@ -322,21 +324,6 @@ function continuousYTAndTwitchCheck(){
 
 function postSummary(channel){
 
-    // var iceEmoji = (streamersTracker['ICE'].status != "Offline") ? ':baby: ' : ''
-    // var ebzEmoji = (streamersTracker['EBZ'].status != "Offline") ? ':bust_in_silhouette: ' : ''
-    // var pepperPalEmoji = (streamersTracker['SAM'].status != "Offline") ? ':hot_pepper: ' : ''
-    // var sjcEmoji = (streamersTracker['SJC'].status != "Offline") ? ':head_bandage: ' : ''
-    // var acneEmoji = (streamersTracker['MexicanAcne'].status != "Offline") ? ':flushed: ' : ''
-    // var cxNewsEmoji = (streamersTracker['CXNews'].status != "Offline") ? ':newspaper: ' : ''
-
-    // var stringToPost = 'ICE - ' + iceEmoji + streamersTracker['ICE'].status + "  " + streamersTracker['ICE'].URL + '\n'
-    // stringToPost = stringToPost + 'EBZ - ' + ebzEmoji + streamersTracker['EBZ'].status + "  " + streamersTracker['EBZ'].URL + '\n'
-    // stringToPost = stringToPost + 'SAM - ' + pepperPalEmoji + streamersTracker['SAM'].status + "  " + streamersTracker['SAM'].URL + '\n'
-    // stringToPost = stringToPost + 'SJC - ' + sjcEmoji + streamersTracker['SJC'].status + "  " + streamersTracker['SJC'].URL + '\n'
-    // stringToPost = stringToPost + 'CXNews - ' + cxNewsEmoji + streamersTracker['CXNews'].status + "  " + streamersTracker['CXNews'].URL + '\n'
-    // stringToPost = stringToPost + 'MexicanAcne - ' + acneEmoji + streamersTracker['MexicanAcne'].status + "  " + streamersTracker['MexicanAcne'].URL + '\n'
-
-
     const embed = new Discord.RichEmbed()
     .setTitle('Commands')
     .setColor("#67279C")
@@ -347,49 +334,8 @@ function postSummary(channel){
         }
     }
 
-
     channel.send(embed);
 
-    /*
-    const embed = {
-        "title": "Live Streamers",
-        "color": 14229326,
-        "timestamp": "2018-12-29T23:12:35.836Z",
-        "fields": [{
-                "name": "streamersTracker - " + streamersTracker['ICE'].status,
-                //"value": streamersTracker['ICE'].URL,
-                "value": 'https://www.youtube.com/watch?v=HlIpWA7nmM4',
-
-                "inline": true
-            },{
-                "name": "Sam - " + streamersTracker['SAM'].status,
-                //"value": streamersTracker['SAM'].URL,
-                "value": "streamersTracker['ICE'].URL,",
-
-                "inline": true
-            },{
-                "name": "MexicanAcne - " + streamersTracker['MexicanAcne'].status,
-//                "value": streamersTracker['MexicanAcne'].URL,
-                "value": "streamersTracker['ICE'].URL,",
-
-                "inline": true
-            },{
-                "name": "EBZ - " + streamersTracker['EBZ'].status,
-                //"value": streamersTracker['EBZ'].URL,
-                "value": "streamersTracker['ICE'].URL,",
-
-                "inline": true
-            },{
-                "name": "SJC - " + streamersTracker['SJC'].status,
-                //"value": streamersTracker['SJC'].URL,
-                "value": "streamersTracker['ICE'].URL,",
-
-                "inline": true
-            }
-        ]
-    };
-    channel.send({ embed });
-    */
 }
 
 function respondToMessagesLive(){
@@ -444,26 +390,7 @@ function respondToMessagesLive(){
                 message.channel.send(stringToSend);
             });
 
-        } /*else if (message.content.startsWith('!ice last')) {
-
-            var numberofVods = message.content.split(" ");
-            const num = numberofVods[2];
-            if (numberofVods.length == 3) {
-                dbQuery.queryVod(num, message);
-            }
-            // readLastLines.read('icevods.txt',numberofVods).then((lines) =>
-            //     message.channel.send(lines));
-        } else if (message.content.startsWith('?vod')) {
-            var numberofVods = message.content.split(" ");
-            const num = numberofVods[2];
-            const name = numberofVods[1];
-
-            if (numberofVods.length == 3) {
-                dbQuery.queryOthers(num, name, message);
-            }
-
-        }*/ 
-        else if (message.content.startsWith('!update')) {
+        } else if (message.content.startsWith('!update')) {
 
             message.channel.send(':thinking:')
 
@@ -486,6 +413,8 @@ function respondToMessagesLive(){
 
             // MexicanAcnes channel ID is UC8EmlqXIlJJpF7dTOmSywBg
             pollToCheckYTerIsLive("MexicanAcne", "secondary", false, false, false);
+
+            pollToCheckTwitcherIsLive("Hyphonix", "main", false, false, false);
 
             setTimeout(postSummary, 3000, message.channel);
 
