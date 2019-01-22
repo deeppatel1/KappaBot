@@ -131,7 +131,7 @@ function getLiveViewers(YTer){
 function updateIfMoreThan10kViewers(YTer, millisecondInterval){
     
     setInterval(function() {
-        console.log("SDFJSLFJSDLKF" + streamersTracker[YTer].status + streamersTracker[YTer].URL)
+        //console.log("SDFJSLFJSDLKF" + streamersTracker[YTer].status + streamersTracker[YTer].URL)
         if (streamersTracker[YTer].status == 'Online'){
             getLiveViewers(YTer).then(function(result) {
                 console.log("updating streamer tracker ith viewers " + result)
@@ -306,17 +306,17 @@ function continuousYTAndTwitchCheck(){
 
         twitterFilter("main")
 
-        initiateLiveCheckLoop("MexicanAcne", "secondary", false, false, false, 300000);
-        initiateLiveCheckLoop("SJC", "secondary", false, false, false, 275000);
-        initiateLiveCheckLoop("EBZ", "secondary", false, false, false, 285000);
-        initiateLiveCheckLoop("SAM", "secondary", false, false, false, 270000);
-		initiateLiveCheckLoop("CXNews", "main", true, false, false, 350000);
-		initiateLiveCheckLoop("ICE", "main", true, false, false, 250000);
-        initiateLiveCheckLoop("Hyphonix", "main", true, false, false, 250000);
+        initiateLiveCheckLoop("MexicanAcne", "secondary", false, false, false, 150000);
+        initiateLiveCheckLoop("SJC", "secondary", false, false, false, 135000);
+        initiateLiveCheckLoop("EBZ", "secondary", false, false, false, 137000);
+        initiateLiveCheckLoop("SAM", "secondary", false, false, false, 132000);
+		initiateLiveCheckLoop("CXNews", "main", true, false, false, 175000);
+		initiateLiveCheckLoop("ICE", "main", true, false, false, 125000);
+        initiateLiveCheckLoop("Hyphonix", "main", true, false, false, 124000);
 
-        initiateLiveCheckForTwitchLoop("T1", "main", true, false, false, 250000)
+        initiateLiveCheckForTwitchLoop("T1", "main", true, false, false, 149000);
 
-        updateIfMoreThan10kViewers("ICE", 5000)
+        updateIfMoreThan10kViewers("ICE", 250);
         
 	});
 
