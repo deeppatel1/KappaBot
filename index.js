@@ -35,6 +35,19 @@ var streamersTracker = {
     Hyphonix : {channelId: "UCaFpm67qMk1W1wJkFhGXucA", emoji: '', status: 'offline', URL:"", viewers: 0, MoreThan10kPostedDiscord: false}
 };
 
+function getFormattedDate(date) {
+    var year = date.getFullYear();
+  
+    var month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : '0' + month;
+  
+    var day = date.getDate().toString();
+    day = day.length > 1 ? day : '0' + day;
+    
+    return month + '/' + day + '/' + year;
+  }
+
+
 function updateStreamerTracker(YTer, status, URL, viewers){
 
     if (viewers != -1) streamersTracker[YTer].viewers = viewers;
@@ -178,9 +191,7 @@ function pollToCheckYTerIsLive(YTer, discordChannelToPost, AtOrNot, online, post
                         const { Client } = require('pg')
                         const pgClient = new Client()
                         var currentdate = new Date();
-                        var datetime = (currentdate.getMonth()+1)+ "/"
-                                        + currentdate.getDate()  + "/"
-                                        + currentdate.getFullYear();
+                        var datetime = getFormattedDate(datetime);
                         var time = currentdate.getHours() + ":"
                                     + currentdate.getMinutes() + ":"
                                     + currentdate.getSeconds();
