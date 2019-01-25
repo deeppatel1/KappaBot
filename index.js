@@ -45,7 +45,7 @@ function getFormattedDate(date) {
     day = day.length > 1 ? day : '0' + day;
     
     return month + '/' + day + '/' + year;
-  }
+}
 
 
 function updateStreamerTracker(YTer, status, URL, viewers){
@@ -191,7 +191,7 @@ function pollToCheckYTerIsLive(YTer, discordChannelToPost, AtOrNot, online, post
                         const { Client } = require('pg')
                         const pgClient = new Client()
                         var currentdate = new Date();
-                        var datetime = getFormattedDate(datetime);
+                        var datetime = getFormattedDate(currentdate);
                         var time = currentdate.getHours() + ":"
                                     + currentdate.getMinutes() + ":"
                                     + currentdate.getSeconds();
