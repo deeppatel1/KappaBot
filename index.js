@@ -57,10 +57,11 @@ function updateStreamerTracker(YTer, status, URL, viewers){
         streamersTracker[YTer].URL = URL;
     }
 
-    if ((streamersTracker[YTer].MoreThan10kPostedDiscord == false) && (viewers > 10000)){
-        postToDiscord("main", true, YTer + ' HAS MORE THAN 10k VIEWERS', YTer);
-        streamersTracker[YTer].MoreThan10kPostedDiscord = true;
-    }
+    // Broken feature :rage:
+    // if ((streamersTracker[YTer].MoreThan10kPostedDiscord == false) && (viewers > 10000)){
+    //     postToDiscord("main", true, YTer + ' HAS MORE THAN 10k VIEWERS', YTer);
+    //     streamersTracker[YTer].MoreThan10kPostedDiscord = true;
+    // }
 
     // removed this so it doesnt keep spamming
     if ((streamersTracker[YTer].MoreThan10kPostedDiscord == true) && (viewers < 10000)){
