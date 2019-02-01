@@ -318,17 +318,17 @@ function continuousYTAndTwitchCheck(){
 
         twitterFilter("main")
 
-        initiateLiveCheckLoop("MexicanAcne", "secondary", false, false, false, 150000);
-        initiateLiveCheckLoop("SJC", "secondary", false, false, false, 135000);
-        initiateLiveCheckLoop("EBZ", "secondary", false, false, false, 137000);
-        initiateLiveCheckLoop("SAM", "secondary", false, false, false, 132000);
+        initiateLiveCheckLoop("MexicanAcne", "secondary", false, false, false, 200000);
+        initiateLiveCheckLoop("SJC", "secondary", false, false, false, 185000);
+        initiateLiveCheckLoop("EBZ", "secondary", false, false, false, 177000);
+        initiateLiveCheckLoop("SAM", "secondary", false, false, false, 152000);
 		initiateLiveCheckLoop("CXNews", "main", true, false, false, 175000);
 		initiateLiveCheckLoop("ICE", "main", true, false, false, 125000);
         initiateLiveCheckLoop("Hyphonix", "main", true, false, false, 124000);
 
         initiateLiveCheckForTwitchLoop("T1", "main", true, false, false, 149000);
 
-        updateIfMoreThan10kViewers("ICE", 250);
+        updateIfMoreThan10kViewers("ICE", 600000);
         
 	});
 
