@@ -29,7 +29,7 @@ var args = {
 var streamersTracker = {
     DEEP : {channelId: "UC3Nlcpu-kbLmdhph_BN7OwQ", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false,
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
-    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false,
+    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: true, postedToDiscord: false,
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
     EBZ: {channelId: "UCkR8ndH0NypMYtVYARnQ-_g", emoji: ':older_man::skin-tone-5: ', discordChannelToPost: "secondary", atorNot: false, postedToDiscord: false,
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
