@@ -76,6 +76,16 @@ function updateStreamerTracker(YTer, status, videoID, viewers){
         if (streamersTracker[YTer].status == "offline"){
             var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
 
+            var currentdate = new Date();
+            var datetime = getFormattedDate(currentdate);
+            var time = currentdate.getHours() + ":"
+                        + currentdate.getMinutes() + ":"
+                        + currentdate.getSeconds();
+            var url = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+
+            var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+            dbQuery.query(sql_query);
+
             messageToPost = (streamersTracker[YTer].atorNot ? messageToPost + ' <@173611085671170048> <@173610714433454084> ' : messageToPost + ' ');
             //console.log('[' + TWITCHer + '] Twitch API Says LIVE, attempting to post now ---- ' + new Date())
             postToDiscord(YTer, messageToPost, false);
