@@ -24,13 +24,13 @@ var args = {
     } // request headers
 };
 
-// discordChannelToPost, AtOrNot, online, postedToDiscord, 
+// TO DO: Save the lastVideoId in database, and instead of checking streamersTracker[YTER][lastVideoId], check the database
 
 var streamersTracker = {
     DEEP : {channelId: "UC3Nlcpu-kbLmdhph_BN7OwQ", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
-    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, lastVideoID: '',
-        status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
+    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false, lastVideoID: '',
+        status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false, filters: []}, 
     EBZ: {channelId: "UCUn24NHjc8asGiYet1P9h5Q", emoji: ':older_man::skin-tone-5: ', discordChannelToPost: "secondary", atorNot: false, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
     SAM : {channelId: "UCdSr4xliU8yDyS1aGnCUMTA", emoji: ':hot_pepper: ', discordChannelToPost: "secondary", atorNot: false, postedToDiscord:false , lastVideoID: '',
@@ -39,14 +39,19 @@ var streamersTracker = {
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
     CXNews : {channelId: "UCStEQ9BjMLjHTHLNA6cY9vg", emoji: ':newspaper:', discordChannelToPost: "main", atorNot: true, postedToDiscord:false , lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    MexicanAcne : {channelId: "UC8EmlqXIlJJpF7dTOmSywBg", emoji: ':flushed:', discordChannelToPost: "secondary", atorNot: true, postedToDiscord:false , lastVideoID: '',
+    MexicanAcne : {channelId: "UC8EmlqXIlJJpF7dTOmSywBg", emoji: ':flushed:', discordChannelToPost: "secondary", atorNot: false, postedToDiscord:false , lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
     T1 : {channelId: "51496027", emoji: '', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, postedToDiscord : false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-    Hyphonix : {channelId: "UCaFpm67qMk1W1wJkFhGXucA", emoji: '', discordChannelToPost: "main", atorNot: true, postedToDiscord : false, lastVideoID: '',
+    Hyphonix : {channelId: "UCaFpm67qMk1W1wJkFhGXucA", emoji: '', discordChannelToPost: "main", atorNot: false, postedToDiscord : false, lastVideoID: '',
         status: 'offline', URL:"", viewers: 0, MoreThan10kPostedDiscord: false},
 
-    CXClips : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: true, lastVideoID: ''}
+    CXClips : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: []},
+    TeamLiquid : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD']},
+    Cloud9 : {channelId: "UCEkorHXUNJ5tpcH0VE77_fA", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['On Cloud9']},
+    Flyquest : {channelId: "UCy0omD6TIJklBme14VQqV6A", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['FlyVlog']},
+    TSM : {channelId: "UC4Ndz98NI_-9VQM3E7fctnQ", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['LEGENDS']},    
+    HundredT : {channelId: "UCnrX2_FoKieobtw19PiphDw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['Heist']},
 
 };
 
@@ -98,6 +103,7 @@ function updateStreamerTracker(YTer, status, videoID, viewers){
 
 function getRequest(YTer){
     request.get('https://youtube.com/channel/' + streamersTracker[YTer].channelId + '/live', function(err, resp, body) {
+        console.log('checked YT :' + YTer + ' at ' + new Date());
         if (err) {
             reject(err);
         } else {
@@ -114,9 +120,11 @@ function getRequest(YTer){
                         var secondQuotation = firstQuotation + splitted[x].trim().substring(34).indexOf('"');
                         var videoId = splitted[x].trim().substring(firstQuotation,secondQuotation);
             
-                        updateStreamerTracker(YTer, "live", videoId, -1);
-                        
-                        break;
+                        if (videoId != streamersTracker[YTer].URL){
+                            updateStreamerTracker(YTer, "live", videoId, -1);
+                            
+                            break;
+                        }
                         ///postToDiscord(YTer, true, "main", "SDFSDFSDF");
 
                         }
@@ -129,25 +137,22 @@ function getRequest(YTer){
     });
 }
 
-
 function postToDiscord(YTer, msgToPost, ifEmbed){
 
     var discordChannel = (streamersTracker[YTer].discordChannelToPost == "main") ? "173611297387184129" : "284157566693539851"
 
-    console.log(clientForDiscord.channel);
-
+    //console.log(clientForDiscord.channel);
 
     if (!ifEmbed){
         // main discord channel is 173611297387184129
         // secondary discord channel is 284157566693539851
-        console.log("[" + YTer + "] " + "Now posting to discord he/she is live ---- " + new Date())
+        console.log("[" + YTer + "] " + "Now posting  ---- " + msgToPost + "  " + new Date())
         clientForDiscord.channels.get(discordChannel).send(msgToPost)
     }else{
         clientForDiscord.channels.get(discordChannel).send(msgToPost)
     }
 
 }
-
 
 function getLiveViewers(YTer){
 
@@ -175,6 +180,7 @@ function pollToCheckTwitcherIsLive(TWITCHer){
     };
 
     request.get(options, function(err, resp, body) {
+        console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
         data = JSON.parse(body);
         if((data['data'].length != 0) && (!streamersTracker[TWITCHer].postedToDiscord)){
             if (!streamersTracker[TWITCHer].postedToDiscord){
@@ -219,42 +225,68 @@ Deeps: UC3Nlcpu-kbLmdhph_BN7OwQ
 */
 
 function queryLastYoutube(YTer, interval){
+    setInterval(function() {
+        
+        queryLastYoutubeSingle(YTer);
+
+    }, interval)
+}
+
+
+function queryLastYoutubeSingle(YTer){
 
     request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + streamersTracker[YTer].channelId + "&maxResults=1&order=date&type=video&key=" + gKey, function(err, resp, body) {
+   
+        console.log('querying youtube for vids: ' + YTer + ' at ' + new Date());
+
         if (err) {
             reject(err);
         } else {
             body = JSON.parse(body);
             var videoId = body.items[0].id.videoId;
 
-            if (videoId != streamersTracker[YTer].lastVideoID){
-                streamersTracker[YTer].lastVideoID = videoId;
+            var properVidToPost = false;
 
-                const embed = {
-                    "thumbnail": {
-                        "url": body.items[0].snippet.thumbnails.medium.url
-                    },
-                    "color": 4922096,
-                    "timestamp": body.items[0].snippet.publishedAt,
-                    "author": {
-                      "name": YTer + " - " + body.items[0].snippet.title,
-                    },
-                    "fields": [
-                        {
-                            "name": "-",
-                            "value": body.items[0].snippet.description
-                        }
-                    ]
-                };
-
-
-                console.log(embed)
-
-                postToDiscord(YTer, {embed}, true);
-
-                var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId; 
+            if (streamersTracker[YTer].filters.length == 0) {
+                console.log("in here");
+                properVidToPost = true;
+            } else {
                 
-                postToDiscord(YTer, messageToPost, false);
+                for (filter in streamersTracker[YTer].filters){
+                    console.log("in here: " + filter);
+                    if (body.items[0].snippet.title == filter){
+                        properVidToPost = true;
+                    }
+                }
+            }
+
+            if (properVidToPost){
+                if (videoId != streamersTracker[YTer].lastVideoID){
+                    streamersTracker[YTer].lastVideoID = videoId;
+
+                    const embed = {
+                        "thumbnail": {
+                            "url": body.items[0].snippet.thumbnails.medium.url
+                        },
+                        "color": 4922096,
+                        "timestamp": body.items[0].snippet.publishedAt,
+                        "author": {
+                        "name": YTer + " - " + body.items[0].snippet.title,
+                        },
+                        "fields": [
+                            {
+                                "name": "-",
+                                "value": body.items[0].snippet.description
+                            }
+                        ]
+                    };
+
+                    postToDiscord(YTer, {embed}, true);
+
+                    var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId; 
+                    
+                    postToDiscord(YTer, messageToPost, false);
+                }
             }
 
         }
@@ -274,7 +306,7 @@ function twitterFilter(discordChannelToPost){
     
     Twitterclient.stream('statuses/filter', {
         //solonoid12 is 1615735502
-        follow: '4833803780,736784706486734852,344538810,873949601522487297'
+        follow: '4833803780,736784706486734852,344538810,873949601522487297,290495509'
     }, function(stream) {
 
         stream.on('data', function(tweet) {
@@ -290,8 +322,6 @@ function twitterFilter(discordChannelToPost){
         });
     });
 }
-
-
 
 
 /*
@@ -331,21 +361,25 @@ main function
 
 respondToMessagesLive();
 twitterFilter("main");
-clientForDiscord.on('ready', () => {
+clientForDiscord.on('ready', () => {    
      
     initiateLiveCheckLoop("ICE", 20000);
-    initiateLiveCheckLoop("EBZ", 20000);
-    initiateLiveCheckLoop("SAM", 20000);
-    initiateLiveCheckLoop("SJC", 20000);
-    initiateLiveCheckLoop("CXNews", 20000);
-    initiateLiveCheckLoop("MexicanAcne", 20000);
-    initiateLiveCheckLoop("T1", 20000);
-    initiateLiveCheckLoop("Hyphonix", 20000);
+    initiateLiveCheckLoop("EBZ", 300000);
+    //initiateLiveCheckLoop("SAM", 10000000);
+    //initiateLiveCheckLoop("SJC", 10000000);
+    initiateLiveCheckLoop("CXNews", 600000);
+    initiateLiveCheckLoop("MexicanAcne", 60000);
+    initiateLiveCheckLoop("Hyphonix", 450000);
 
     initiateLiveCheckForTwitchLoop("T1", 30000);
     
-    queryLastYoutube("ICE", 250000);
-    queryLastYoutube("CXClips", 260000);
+    queryLastYoutube("ICE", 600000);
+    queryLastYoutube("CXClips", 600000);
+    queryLastYoutube("TeamLiquid", 1800000);
+    queryLastYoutube("Cloud9", 1800000);
+    queryLastYoutube("Flyquest", 1800000);
+    queryLastYoutube("TSM", 1800000);
+    queryLastYoutube("HundredT", 1800000);
 
 });
 
@@ -363,7 +397,7 @@ function postSummary(channel){
     .setColor("#67279C")
 
     for (data in streamersTracker) {
-        if (streamersTracker[data].status == "Online") {
+        if (streamersTracker[data].status == "live") {
             embed.addField(data + " - " + streamersTracker[data].emoji, "[link -- replace with YT title?](" + streamersTracker[data].URL + ")")
         }
     }
@@ -395,7 +429,7 @@ function respondToMessagesLive(){
 
             //console.log(args)
 
-            neatclipClient.get("https://neatclip.com/api/v1/clips.php?streamer_url=https://www.youtube.com/channel/UCv9Edl_WbtbPeURPtFDo-uA&time=" + inHowLongDuration + "&sort=top", arguments, function(data, response) {
+            neatclipClient.get("https://neatclip.com/api/v1/clips.php?streamer_url=https://www.youtube.com/channel/UCv9Edl_WbtbPeURPtFDo-uA&time=" + inHowLongDuration + "&sort=top", {api_key:  credentials.neatclip}, function(data, response) {
 
                 var size = howManyClips
                 if (data.length < size) size = data.length;
@@ -413,7 +447,7 @@ function respondToMessagesLive(){
             var inHowLongDuration = args[1]; //can be hour for last hour, day..., week..., month..., year..., alltime
             var howManyClips = args[2]; //how many clips to show
             var stringToSend = "";
-            neatclipClient.get("https://neatclip.com/api/v1/clips.php?time=" + inHowLongDuration + "&sort=top", arguments, function(data, response) {
+            neatclipClient.get("https://neatclip.com/api/v1/clips.php?time=" + inHowLongDuration + "&sort=top", {api_key: credentials.neatclip}, function(data, response) {
 
                 var size = howManyClips;
 
