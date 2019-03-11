@@ -74,21 +74,30 @@ function updateStreamerTracker(YTer, status, videoID, viewers){
     //post that person is live now
     if (status == "live"){
         if (streamersTracker[YTer].status == "offline"){
-            var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
 
-            var currentdate = new Date();
-            var datetime = getFormattedDate(currentdate);
-            var time = currentdate.getHours() + ":"
-                        + currentdate.getMinutes() + ":"
-                        + currentdate.getSeconds();
-            var url = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+            var urlToCheck = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+            var checkIfURLExistsInDatabase = dbQuery.checkURL(urlToCheck);
 
-            var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
-            dbQuery.query(sql_query);
-
-            messageToPost = (streamersTracker[YTer].atorNot ? messageToPost + ' <@173611085671170048> <@173610714433454084> ' : messageToPost + ' ');
-            //console.log('[' + TWITCHer + '] Twitch API Says LIVE, attempting to post now ---- ' + new Date())
-            postToDiscord(YTer, messageToPost, false);
+            checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
+                if (!checkIfURLExistsInDatabase) {
+                    var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+    
+                    var currentdate = new Date();
+                    var datetime = getFormattedDate(currentdate);
+                    var time = currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
+                                + currentdate.getSeconds();
+                    var url = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+        
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+                    dbQuery.query(sql_query);
+        
+                    messageToPost = (streamersTracker[YTer].atorNot ? messageToPost + ' <@173611085671170048> <@173610714433454084> ' : messageToPost + ' ');
+                    //console.log('[' + TWITCHer + '] Twitch API Says LIVE, attempting to post now ---- ' + new Date())
+                    postToDiscord(YTer, messageToPost, false);
+                }
+            });
+            
         }
     }
 
@@ -254,50 +263,65 @@ function queryLastYoutubeSingle(YTer){
         } else {
             body = JSON.parse(body);
             var videoId = body.items[0].id.videoId;
+            var url = "https://www.youtube.com/watch?v=" + videoId;
 
-            var properVidToPost = false;
+            var checkIfURLExistsInDatabase = dbQuery.checkURL(url);
 
-            if (streamersTracker[YTer].filters.length == 0) {
-                console.log("in here");
-                properVidToPost = true;
-            } else {
-                
-                for (filter in streamersTracker[YTer].filters){
-                    console.log("in here: " + filter);
-                    if (body.items[0].snippet.title == filter){
+            checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
+                if (!checkIfURLExistsInDatabase) {   //If the video is not in the DB, do all this
+                    // Add video to database
+                    var currentdate = new Date();
+                    var datetime = getFormattedDate(currentdate);
+                    var time = currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
+                                + currentdate.getSeconds();
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+                    dbQuery.query(sql_query);
+    
+    
+                    var properVidToPost = false;
+    
+                    if (streamersTracker[YTer].filters.length == 0) {
                         properVidToPost = true;
+                    } else {
+                        
+                        for (filter in streamersTracker[YTer].filters){
+                            if (body.items[0].snippet.title == filter){
+                                properVidToPost = true;
+                            }
+                        }
+                    }
+    
+                    if (properVidToPost){
+                        if (videoId != streamersTracker[YTer].lastVideoID){
+                            streamersTracker[YTer].lastVideoID = videoId;
+    
+                            const embed = {
+                                "thumbnail": {
+                                    "url": body.items[0].snippet.thumbnails.medium.url
+                                },
+                                "color": 4922096,
+                                "timestamp": body.items[0].snippet.publishedAt,
+                                "author": {
+                                "name": YTer + " - " + body.items[0].snippet.title,
+                                },
+                                "fields": [
+                                    {
+                                        "name": "-",
+                                        "value": body.items[0].snippet.description
+                                    }
+                                ]
+                            };
+    
+                            postToDiscord(YTer, {embed}, true);
+    
+                            var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId; 
+                            
+                            postToDiscord(YTer, messageToPost, false);
+                        }
                     }
                 }
-            }
-
-            if (properVidToPost){
-                if (videoId != streamersTracker[YTer].lastVideoID){
-                    streamersTracker[YTer].lastVideoID = videoId;
-
-                    const embed = {
-                        "thumbnail": {
-                            "url": body.items[0].snippet.thumbnails.medium.url
-                        },
-                        "color": 4922096,
-                        "timestamp": body.items[0].snippet.publishedAt,
-                        "author": {
-                        "name": YTer + " - " + body.items[0].snippet.title,
-                        },
-                        "fields": [
-                            {
-                                "name": "-",
-                                "value": body.items[0].snippet.description
-                            }
-                        ]
-                    };
-
-                    postToDiscord(YTer, {embed}, true);
-
-                    var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId; 
-                    
-                    postToDiscord(YTer, messageToPost, false);
-                }
-            }
+            });            
 
         }
     });
