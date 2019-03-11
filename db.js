@@ -63,5 +63,31 @@ module.exports = {
             })
             .catch(e => console.error(e.stack));
         await client.end();
+    },
+
+    checkURL : async function(url) {
+
+        return new Promise(async (resolve, reject) => {
+            const { Client } = require('pg');
+            const client = new Client();
+            var query = "select * from cxnetwork WHERE LOWER(url)=LOWER(\'" + url + "\');";
+    
+            await client.connect();
+            await client.query(query)
+                .then(res => {
+                    if (res['rows'].length == 0) {
+                        console.log(url)
+                        console.log("FALSE")
+                        resolve(false);
+                    } else {
+                        console.log(url)
+                        console.log("TRUE")
+                        resolve(true)
+                    }
+                })
+                .catch(e => console.error(e.stack));
+            await client.end();
+          });
+
     }
  }
