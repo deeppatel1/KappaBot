@@ -43,6 +43,8 @@ var streamersTracker = {
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
     T1 : {channelId: "51496027", emoji: '', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, postedToDiscord : false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
+    trick : {channelId: "28036688", emoji: '', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, postedToDiscord : false, lastVideoID: '',
+        status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
     Hyphonix : {channelId: "UCaFpm67qMk1W1wJkFhGXucA", emoji: '', discordChannelToPost: "main", atorNot: false, postedToDiscord : false, lastVideoID: '',
         status: 'offline', URL:"", viewers: 0, MoreThan10kPostedDiscord: false},
 
@@ -75,28 +77,37 @@ function updateStreamerTracker(YTer, status, videoID, viewers){
     if (status == "live"){
         if (streamersTracker[YTer].status == "offline"){
 
-            var urlToCheck = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
-            var checkIfURLExistsInDatabase = dbQuery.checkURL(urlToCheck);
+            if ((YTer != "T1")){
+                console.log("In IF: ");
+                var urlToCheck = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+                var checkIfURLExistsInDatabase = dbQuery.checkURL(urlToCheck);
 
-            checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
-                if (!checkIfURLExistsInDatabase) {
-                    var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
-    
-                    var currentdate = new Date();
-                    var datetime = getFormattedDate(currentdate);
-                    var time = currentdate.getHours() + ":"
-                                + currentdate.getMinutes() + ":"
-                                + currentdate.getSeconds();
-                    var url = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+                checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
+                    if (!checkIfURLExistsInDatabase) {
+                        var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
         
-                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
-                    dbQuery.query(sql_query);
-        
-                    messageToPost = (streamersTracker[YTer].atorNot ? messageToPost + ' <@173611085671170048> <@173610714433454084> ' : messageToPost + ' ');
-                    //console.log('[' + TWITCHer + '] Twitch API Says LIVE, attempting to post now ---- ' + new Date())
-                    postToDiscord(YTer, messageToPost, false);
-                }
-            });
+                        var currentdate = new Date();
+                        var datetime = getFormattedDate(currentdate);
+                        var time = currentdate.getHours() + ":"
+                                    + currentdate.getMinutes() + ":"
+                                    + currentdate.getSeconds();
+                        var url = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+            
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + YTer + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+                        dbQuery.query(sql_query);
+            
+                        messageToPost = (streamersTracker[YTer].atorNot ? messageToPost + ' <@173611085671170048> <@173610714433454084> ' : messageToPost + ' ');
+                        //console.log('[' + TWITCHer + '] Twitch API Says LIVE, attempting to post now ---- ' + new Date())
+                        postToDiscord(YTer, messageToPost, false);
+                    }
+                });
+            } else {
+                console.log('in else');
+                messageToPost = (streamersTracker[YTer].atorNot ? 'T1 IS LIVE  <@173611085671170048> <@173610714433454084> ' : 'T1 IS LIVE ');
+                messageToPost = messageToPost + streamersTracker[YTer].URL;
+                console.log('[' + YTer + '] is LIVE attempting to post now ---- ' + new Date())
+                postToDiscord("Twitch", messageToPost, false);                
+            }
             
         }
     }
@@ -119,6 +130,31 @@ function updateStreamerTracker(YTer, status, videoID, viewers){
     streamersTracker[YTer].status = status;
     if (viewers != -1) streamersTracker[YTer].viewers = viewers;
 }
+
+
+
+/*
+
+
+
+
+YOUTUBE FUNCTIONS HERE
+
+
+
+New video on youtube notification
+
+CX Clips channel ID: UCFthsIV3Bp11cRwb6R9AOOw
+Ice's channel ID: UCv9Edl_WbtbPeURPtFDo-uA
+
+Deeps: UC3Nlcpu-kbLmdhph_BN7OwQ
+
+
+
+
+*/
+
+
 
 function getRequest(YTer){
     request.get('https://youtube.com/channel/' + streamersTracker[YTer].channelId + '/live', function(err, resp, body) {
@@ -156,93 +192,6 @@ function getRequest(YTer){
     });
 }
 
-function postToDiscord(YTer, msgToPost, ifEmbed){
-
-    var discordChannel = (streamersTracker[YTer].discordChannelToPost == "main") ? "173611297387184129" : "284157566693539851"
-
-    //console.log(clientForDiscord.channel);
-
-    if (!ifEmbed){
-        // main discord channel is 173611297387184129
-        // secondary discord channel is 284157566693539851
-        console.log("[" + YTer + "] " + "Now posting  ---- " + msgToPost + "  " + new Date())
-        clientForDiscord.channels.get(discordChannel).send(msgToPost)
-    }else{
-        clientForDiscord.channels.get(discordChannel).send(msgToPost)
-    }
-
-}
-
-function getLiveViewers(YTer){
-
-    if (streamersTracker[YTer].status == "live"){
-
-        request.get("https://www.youtube.com/live_stats?v=" + streamersTracker[YTer].URL, function(err, resp, body) {
-            if (err) {
-            } else {
-                body = parseInt(body)
-                updateStreamerTracker(YTer, "live", streamersTracker[YTer].videoID, body);
-            }
-        })
-    } else {
-        updateStreamerTracker(YTer, "offline", "", 0);
-    }
-}
-
-function pollToCheckTwitcherIsLive(TWITCHer){   
-
-    var options = {
-        url: "https://api.twitch.tv/helix/streams?user_id=" +  streamersTracker[TWITCHer].channelId,
-        headers: {
-            "Client-ID": credentials.twitchauth
-        }
-    };
-
-    request.get(options, function(err, resp, body) {
-        console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
-        data = JSON.parse(body);
-        if((data['data'].length != 0) && (!streamersTracker[TWITCHer].postedToDiscord)){
-            if (!streamersTracker[TWITCHer].postedToDiscord){
-                // post on discord
-                
-                updateStreamerTracker(TWITCHer, "live", "twitch.tv/loltyler1", 0);
-
-                isT1CurrentlyLive = true;
-                var hourZULU = data['data'][0]['started_at'].substring(11,13);
-                var minutesZULU = parseInt(data['data'][0]['started_at'].substring(14,16));
-                var hourEST = (parseInt(hourZULU) - 5 + 24) % 12;
-                
-                if (minutesZULU < 10)   minutesZULU = '0' + minutesZULU;
-
-                //postToDiscord(discordChannelToPost, AtorNot, "T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU), Twitcher)
-
-                //t1LivePostedOnDiscord = true;
-            }
-        }else if (data['data'].length == 0){
-            
-            updateStreamerTracker(TWITCHer, "offline", "", 0);
-            
-            //console.log('[' + Twitcher + '] Twitch API Says OFFLINE ---- ' + new Date())
-            //if (isT1CurrentlyLive)  postToDiscord(discordChannelToPost, true, "T1 stopped streaming", "T1")            
-            //isT1CurrentlyLive = false;
-            // console.log("not live");
-            //t1LivePostedOnDiscord = false;
-        }
-    });
-}
-
-
-/*
-
-New video on youtube notification
-
-CX Clips channel ID: UCFthsIV3Bp11cRwb6R9AOOw
-Ice's channel ID: UCv9Edl_WbtbPeURPtFDo-uA
-
-Deeps: UC3Nlcpu-kbLmdhph_BN7OwQ
-
-*/
-
 function queryLastYoutube(YTer, interval){
     setInterval(function() {
         
@@ -261,10 +210,12 @@ function queryLastYoutubeSingle(YTer){
         if (err) {
             reject(err);
         } else {
+            //console.log("Body of VID IS: " + body);
             body = JSON.parse(body);
             var videoId = body.items[0].id.videoId;
             var url = "https://www.youtube.com/watch?v=" + videoId;
 
+            console.log(videoId);
             var checkIfURLExistsInDatabase = dbQuery.checkURL(url);
 
             checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
@@ -281,6 +232,7 @@ function queryLastYoutubeSingle(YTer){
     
                     var properVidToPost = false;
     
+                    console.log("Checking filters");
                     if (streamersTracker[YTer].filters.length == 0) {
                         properVidToPost = true;
                     } else {
@@ -328,41 +280,21 @@ function queryLastYoutubeSingle(YTer){
 
 }
 
+function getLiveViewers(YTer){
 
-/*
+    if (streamersTracker[YTer].status == "live"){
 
-Twitter filter
-
-*/
-
-
-function twitterFilter(discordChannelToPost){
-    
-    Twitterclient.stream('statuses/filter', {
-        //solonoid12 is 1615735502
-        follow: '4833803780,736784706486734852,344538810,873949601522487297,290495509'
-    }, function(stream) {
-
-        stream.on('data', function(tweet) {
-            //console.log(tweet)
-            if ((tweet.user.screen_name == 'solonoid12') || (tweet.user.screen_name == 'loltyler1') || (tweet.user.screen_name == 'REALIcePoseidon') || (tweet.user.screen_name == 'TLDoublelift') || (tweet.user.screen_name == 'JacobK_Cx')) {
-                //discordClient.channels.get("").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str);
-                postToDiscord(discordChannelToPost, true, "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false)
+        request.get("https://www.youtube.com/live_stats?v=" + streamersTracker[YTer].URL, function(err, resp, body) {
+            if (err) {
+            } else {
+                body = parseInt(body)
+                updateStreamerTracker(YTer, "live", streamersTracker[YTer].videoID, body);
             }
-        });
-
-        stream.on('error', function(error) {
-            console.log(error);
-        });
-    });
+        })
+    } else {
+        updateStreamerTracker(YTer, "offline", "", 0);
+    }
 }
-
-
-/*
-
-interval functions that main function will run
-
-*/
 
 function initiateLiveCheckLoop(YTer, intervalLength) {
 
@@ -376,6 +308,64 @@ function initiateLiveCheckLoop(YTer, intervalLength) {
     
 }
 
+
+
+
+/*
+
+
+
+
+TWITCH 
+
+
+
+
+*/
+
+function pollToCheckTwitcherIsLive(TWITCHer){   
+
+    var options = {
+        url: "https://api.twitch.tv/helix/streams?user_id=" +  streamersTracker[TWITCHer].channelId,
+        headers: {
+            "Client-ID": credentials.twitchauth
+        }
+    };
+
+    request.get(options, function(err, resp, body) {
+        console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
+        data = JSON.parse(body);
+        if((data['data'].length != 0) && (!streamersTracker[TWITCHer].postedToDiscord)){
+            if (!streamersTracker[TWITCHer].postedToDiscord){
+                // post on discord
+                console.log(TWITCHer + " is LIVE " );
+                updateStreamerTracker(TWITCHer, "live", "twitch.tv/loltyler1", 0);
+
+                isT1CurrentlyLive = true;
+                var hourZULU = data['data'][0]['started_at'].substring(11,13);
+                var minutesZULU = parseInt(data['data'][0]['started_at'].substring(14,16));
+                var hourEST = (parseInt(hourZULU) - 5 + 24) % 12;
+                
+                if (minutesZULU < 10)   minutesZULU = '0' + minutesZULU;
+
+                //postToDiscord(discordChannelToPost, AtorNot, "T1 LIVE  https://www.twitch.tv/loltyler1 - stream started at " + hourEST + ':' + (minutesZULU), Twitcher)
+
+                //t1LivePostedOnDiscord = true;
+            }
+        }else if (data['data'].length == 0){
+            
+            updateStreamerTracker(TWITCHer, "offline", "", 0);
+            
+            //console.log('[' + Twitcher + '] Twitch API Says OFFLINE ---- ' + new Date())
+            //if (isT1CurrentlyLive)  postToDiscord(discordChannelToPost, true, "T1 stopped streaming", "T1")            
+            //isT1CurrentlyLive = false;
+            // console.log("not live");
+            //t1LivePostedOnDiscord = false;
+        }
+    });
+}
+
+
 function initiateLiveCheckForTwitchLoop(Twitcher, intervalLength) {    
 
     setInterval(function() {
@@ -386,9 +376,79 @@ function initiateLiveCheckForTwitchLoop(Twitcher, intervalLength) {
     }, intervalLength)
 }
 
+
+function postToDiscord(YTer, msgToPost, ifEmbed){
+
+    if (YTer == 'Twitch') {
+        var channel = "173611297387184129";
+        clientForDiscord.channels.get(channel).send(msgToPost);
+        return;
+    }
+    var discordChannel = (streamersTracker[YTer].discordChannelToPost == "main") ? "173611297387184129" : "284157566693539851"
+
+    //console.log(clientForDiscord.channel);
+
+    if (!ifEmbed){
+        // main discord channel is 173611297387184129
+        // secondary discord channel is 284157566693539851
+        console.log("[" + YTer + "] " + "Now posting  ---- " + msgToPost + "  " + new Date())
+        clientForDiscord.channels.get(discordChannel).send(msgToPost)
+    }else{
+        clientForDiscord.channels.get(discordChannel).send(msgToPost)
+    }
+
+}
+
+
+
+
 /*
 
+
+
+Twitter filter
+
+
+
+*/
+
+
+function twitterFilter(discordChannelToPost){
+    
+    Twitterclient.stream('statuses/filter', {
+        //solonoid12 is 1615735502
+        follow: '1615735502,4833803780,736784706486734852,344538810,873949601522487297,290495509'
+    }, function(stream) {
+
+        stream.on('data', function(tweet) {
+            //console.log(tweet)
+            if ((tweet.user.screen_name == 'solonoid12') || (tweet.user.screen_name == 'loltyler1') || (tweet.user.screen_name == 'REALIcePoseidon') || (tweet.user.screen_name == 'TLDoublelift') || (tweet.user.screen_name == 'JacobK_Cx')) {
+                //discordClient.channels.get("").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str);
+                console.log("stuff !!!" + tweet);
+                postToDiscord("Twitter", "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false)
+            }
+        });
+
+        stream.on('error', function(error) {
+            console.log(error);
+        });
+    });
+}
+
+
+
+
+/*
+
+
+
+/*
+
+
+
 main function
+
+
 
 */
 
@@ -406,7 +466,8 @@ clientForDiscord.on('ready', () => {
     initiateLiveCheckLoop("Hyphonix", 450000);
 
     initiateLiveCheckForTwitchLoop("T1", 30000);
-    
+//    initiateLiveCheckForTwitchLoop("trick", 1000);
+    /*
     queryLastYoutube("ICE", 600000);
     queryLastYoutube("CXClips", 600000);
     queryLastYoutube("TeamLiquid", 1800000);
@@ -414,13 +475,22 @@ clientForDiscord.on('ready', () => {
     queryLastYoutube("Flyquest", 1800000);
     queryLastYoutube("TSM", 1800000);
     queryLastYoutube("HundredT", 1800000);
+*/
+    queryLastYoutube("ICE", 1000);
+
 
 });
 
 
 /*
 
+
+
+
 reply based on intial commands
+
+
+
 
 */
 
