@@ -5,6 +5,7 @@ var rest = require('node-rest-client').Client;
 var Twitter = require('twitter');
 var Discord = require("discord.js");
 var dbQuery = require('./db.js');
+var getLeagueMatches = require('./getLeagueMatches.js');
 
 var discordClientGlobalVar;
 var neatclipClient = new rest();
@@ -201,6 +202,72 @@ function queryLastYoutube(YTer, interval){
 }
 
 
+function getAndPostAllMatches(){
+    var leagueMatchesPromise = getLeagueMatches.getAllMatches();
+    leagueMatchesPromise.then(returnArrayOfMatches => {
+        if (returnArrayOfMatches.length != 0){
+            for (var a = 0; (a < returnArrayOfMatches.length) && (a < 5); a++){
+
+                var myDate = new Date( returnArrayOfMatches[a]['dayAndTimeEPOC']*1000);
+                var dateString = myDate.toLocaleString();
+
+                const embed = {
+                    "description": "```\n" + dateString + "```",
+                    "color": 9336950,
+                    "timestamp": dateString,
+                    "footer": {
+                    "icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon'],//cdn.leagueofgraphs.com/img/lcs/leagues/64/2.png",
+                    "text": "LCS"
+                    },
+                    "thumbnail": {
+                    "url": "https:" + returnArrayOfMatches[a]['leagueIcon']
+                    },
+                    "image": {
+                    "url": "https:" + returnArrayOfMatches[a]['team1Icon']
+                    },
+                    "author": {
+                    "name": returnArrayOfMatches[a]['league'],
+                    "icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon']
+                    },
+                    "fields": [
+                    {
+                        "name": "_",
+                        "value": "C9                    vs",
+                        "inline": true
+                    },
+                    {
+                        "name": "_",
+                        "value": "TSM",
+                        "inline": true
+                    }
+                    ]
+                };
+                
+                postToDiscord('',{ embed: embed },true);
+
+                
+                /*
+                console.log('asldkjflaskdflajsdf');
+                console.log('https:' + returnArrayOfMatches[0]['team1Icon']);
+                const versusEmbed = new Discord.RichEmbed()
+                    .setTitle('hi')
+                    .setAuthor(returnArrayOfMatches[0]['league'])
+                    .setThumbnail('https:' + returnArrayOfMatches[0]['leagueIcon'])
+
+                    .setImage('https:' + returnArrayOfMatches[0]['team1Icon'])
+                    .setImage('https:' + returnArrayOfMatches[0]['team2Icon']);
+
+                console.log('asdfasdfasdf');
+                console.log(returnArrayOfMatches[0]);
+                postToDiscord('',versusEmbed,true);
+                */
+                
+        }
+    }
+    });
+}
+
+
 function queryLastYoutubeSingle(YTer){
 
     request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + streamersTracker[YTer].channelId + "&maxResults=1&order=date&type=video&key=" + gKey, function(err, resp, body) {
@@ -379,7 +446,7 @@ function initiateLiveCheckForTwitchLoop(Twitcher, intervalLength) {
 
 function postToDiscord(YTer, msgToPost, ifEmbed){
 
-    if (YTer == 'Twitch') {
+    if ((YTer == 'Twitch') || (YTer == '')) {
         var channel = "173611297387184129";
         clientForDiscord.channels.get(channel).send(msgToPost);
         return;
@@ -464,6 +531,7 @@ clientForDiscord.on('ready', () => {
     initiateLiveCheckLoop("CXNews", 600000);
     initiateLiveCheckLoop("MexicanAcne", 60000);
     initiateLiveCheckLoop("Hyphonix", 450000);
+    getAndPostAllMatches();
 
     initiateLiveCheckForTwitchLoop("T1", 30000);
 //    initiateLiveCheckForTwitchLoop("trick", 1000);
@@ -476,7 +544,7 @@ clientForDiscord.on('ready', () => {
     queryLastYoutube("TSM", 1800000);
     queryLastYoutube("HundredT", 1800000);
 */
-    queryLastYoutube("ICE", 1000);
+    queryLastYoutube("ICE", 100000);
 
 
 });

@@ -6,7 +6,7 @@ var allMatchesArray = [];
 
 module.exports = {
 
-  getAllMatches = function(){
+  getAllMatches : function(){
     return new Promise(async (resolve, reject) => {
       request('https://www.leagueofgraphs.com/lcs/lcs-schedule', function(error, response, html) {
 
