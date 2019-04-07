@@ -5,6 +5,7 @@ var rest = require('node-rest-client').Client;
 var Twitter = require('twitter');
 var Discord = require("discord.js");
 var dbQuery = require('./db.js');
+var moment = require('moment');
 var getLeagueMatches = require('./getLeagueMatches.js');
 
 var discordClientGlobalVar;
@@ -206,62 +207,52 @@ function getAndPostAllMatches(){
     var leagueMatchesPromise = getLeagueMatches.getAllMatches();
     leagueMatchesPromise.then(returnArrayOfMatches => {
         if (returnArrayOfMatches.length != 0){
-            for (var a = 0; (a < returnArrayOfMatches.length) && (a < 5); a++){
+            for (var a = 0; (a < returnArrayOfMatches.length) && (a < 10); a++){
 
-                var myDate = new Date( returnArrayOfMatches[a]['dayAndTimeEPOC']*1000);
-                var dateString = myDate.toLocaleString();
+                if ((returnArrayOfMatches[a]['league'] == 'cblol 2019 1st split') || (returnArrayOfMatches[a]['league'] == '2019 LMS Spring Split') || (returnArrayOfMatches[a]['league'] == 'LJL 2019 Spring Split') || (returnArrayOfMatches[a]['league'] == '2019 LMS Spring Split')){ 
+                    //a = a - 1;
+                } else{
+                    
+                    var newDate = moment.unix( returnArrayOfMatches[a]['dayAndTimeEPOC']);
+                    console.log(myDate);
+                    
+                    console.log(newDate);
+                    var dateString = myDate.toLocaleString();
 
-                const embed = {
-                    "description": "```\n" + dateString + "```",
-                    "color": 9336950,
-                    "timestamp": dateString,
-                    "footer": {
-                    "icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon'],//cdn.leagueofgraphs.com/img/lcs/leagues/64/2.png",
-                    "text": "LCS"
-                    },
-                    "thumbnail": {
-                    "url": "https:" + returnArrayOfMatches[a]['leagueIcon']
-                    },
-                    "image": {
-                    "url": "https:" + returnArrayOfMatches[a]['team1Icon']
-                    },
-                    "author": {
-                    "name": returnArrayOfMatches[a]['league'],
-                    "icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon']
-                    },
-                    "fields": [
-                    {
-                        "name": "_",
-                        "value": "C9                    vs",
-                        "inline": true
-                    },
-                    {
-                        "name": "_",
-                        "value": "TSM",
-                        "inline": true
-                    }
-                    ]
-                };
-                
-                postToDiscord('',{ embed: embed },true);
-
-                
-                /*
-                console.log('asldkjflaskdflajsdf');
-                console.log('https:' + returnArrayOfMatches[0]['team1Icon']);
-                const versusEmbed = new Discord.RichEmbed()
-                    .setTitle('hi')
-                    .setAuthor(returnArrayOfMatches[0]['league'])
-                    .setThumbnail('https:' + returnArrayOfMatches[0]['leagueIcon'])
-
-                    .setImage('https:' + returnArrayOfMatches[0]['team1Icon'])
-                    .setImage('https:' + returnArrayOfMatches[0]['team2Icon']);
-
-                console.log('asdfasdfasdf');
-                console.log(returnArrayOfMatches[0]);
-                postToDiscord('',versusEmbed,true);
-                */
-                
+                    const embed = {
+                        "description": "```\n"+ myDate  + "```",
+                        "color": 9336950,
+                        "timestamp": new Date(),
+                        "footer": {
+                        "icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon'],//cdn.leagueofgraphs.com/img/lcs/leagues/64/2.png",
+                        "text": "LCS"
+                        },
+                        "thumbnail": {
+                        "url": "https:" + returnArrayOfMatches[a]['leagueIcon']
+                        },
+                        "image": {
+                        "url": "https:" + returnArrayOfMatches[a]['team1Icon']
+                        },
+                        "author": {
+                        "name": returnArrayOfMatches[a]['league'],
+                        "icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon']
+                        },
+                        "fields": [
+                        {
+                            "name": "_",
+                            "value": returnArrayOfMatches[a]['team1'],
+                            "inline": true
+                        },
+                        {
+                            "name": "_",
+                            "value": returnArrayOfMatches[a]['team2'],
+                            "inline": true
+                        }
+                        ]
+                    };
+                    
+                    postToDiscord('',{ embed: embed },true);
+                }
         }
     }
     });
@@ -531,7 +522,7 @@ clientForDiscord.on('ready', () => {
     initiateLiveCheckLoop("CXNews", 600000);
     initiateLiveCheckLoop("MexicanAcne", 60000);
     initiateLiveCheckLoop("Hyphonix", 450000);
-    getAndPostAllMatches();
+    //getAndPostAllMatches();
 
     initiateLiveCheckForTwitchLoop("T1", 30000);
 //    initiateLiveCheckForTwitchLoop("trick", 1000);
@@ -675,6 +666,8 @@ function respondToMessagesLive(){
             }
             // readLastLines.read('icevods.txt',numberofVods).then((lines) =>
             //     message.channel.send(lines));
+        } else if (message.content.startsWith('!league games')){
+            getAndPostAllMatches();
         }
 
     });
