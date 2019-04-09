@@ -1,8 +1,9 @@
 var request = require('request');
 var dbQuery = require('./db');
 var discordPost = require('./discordPost');
+var credentials = require('./configuration.json');
 
-
+gKey = credentials.gKey;
 var streamersTracker = {
     ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false, filters: []},
