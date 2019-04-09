@@ -26,6 +26,7 @@ module.exports = {
 						if (!recentGames) {
 
 							var timeOfMatch = ($(this).children().last().attr('data-timestamp-time'));
+							// console.log("time: " + timeOfMatch)
 
 							var leagueIcon = ($(this).prev().prev().children().children().children().children().attr('src'));
 							var leagueName = ($(this).prev().prev().children().children().children().children().attr('title'));
@@ -77,12 +78,12 @@ module.exports = {
 						//a = a - 1;
 					} else {
 
-						var newDate = moment.unix(returnArrayOfMatches[a]['dayAndTimeEPOC']);
-						console.log(newDate);
+						var newDate = new Date(0); // The 0 there is the key, which sets the date to the epoch
+						newDate.setUTCSeconds(returnArrayOfMatches[a]['dayAndTimeEPOC']/1000);
+
 						const embed = {
-							"description": "```\n" + newDate + "```",
 							"color": 9336950,
-							"timestamp": new Date(),
+							"timestamp": newDate,
 							"footer": {
 								"icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon'], //cdn.leagueofgraphs.com/img/lcs/leagues/64/2.png",
 								"text": "LCS"
