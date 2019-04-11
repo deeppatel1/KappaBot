@@ -53,7 +53,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
     request.get(options, function(err, resp, body) {
         console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
         data = JSON.parse(body);
-        console.log(data);
+        //console.log(data);
         if((data['data'].length != 0) && (!twitchStreamerTracker[TWITCHer].postedToDiscord)){
             if (!twitchStreamerTracker[TWITCHer].postedToDiscord){
                 // post on discord

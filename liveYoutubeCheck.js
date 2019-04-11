@@ -7,7 +7,7 @@ var dbQuery = require('./db');
 var streamersTracker = {
     DEEP : {channelId: "UC3Nlcpu-kbLmdhph_BN7OwQ", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
-    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false, lastVideoID: '',
+    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false, filters: []}, 
     EBZ: {channelId: "UCUn24NHjc8asGiYet1P9h5Q", emoji: ':older_man::skin-tone-5: ', discordChannelToPost: "secondary", atorNot: false, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false}, 
@@ -108,8 +108,11 @@ function updateStreamerTracker(clientForDiscord, YTer, status, videoID){
         if (streamersTracker[YTer].status == "offline"){
                 console.log("In IF: ");
                 var urlToCheck = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
+                console.log("After urlAToCheck:");
                 var checkIfURLExistsInDatabase = dbQuery.checkURL(urlToCheck);
+                console.log("After dbQuery.checkURL");
                 checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
+                    console.log("In checkURLExistsInDatabase");
                     if (!checkIfURLExistsInDatabase) {
                         var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
         

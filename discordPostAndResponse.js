@@ -18,6 +18,7 @@ module.exports = {
                     .addField("!clips hour/day/week/month/year/alltime #", "Get most popular clips for last hour/day/week/month/year/alltime")
                     .addField("!ice hour/day/week/month/year/alltime #", "Get most popular clips for ice for the last hour/day/week/month/year/alltime")
                     .addField("?vod {name} {number}", "Gets the last {number} of vods for a particular streamer.\n{name}: EBZ, SAM, SJC, CXNews, MexicanAcne")
+                    .addField("!league games post upcoming league games")
     
                 message.channel.send(embed)
             } else if (message.content.startsWith("!ice")) {

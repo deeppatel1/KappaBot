@@ -1,10 +1,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
 
-var discordFuncs = require('./discordPostAndResponse.js');
 var discordPost = require('./discordPost');
-
-var moment = require('moment');
 
 var allMatchesArray = [];
 
@@ -71,8 +68,8 @@ module.exports = {
 		var leagueMatchesPromise = this.getAllMatches();
 		leagueMatchesPromise.then(returnArrayOfMatches => {
 			if (returnArrayOfMatches.length != 0) {
-				for (var a = 0;
-					(a < returnArrayOfMatches.length) && (a < 10); a++) {
+				var counter = 0;
+				for (var a = 0; (a < returnArrayOfMatches.length) && (counter < 5); a++) {
 
 					if ((returnArrayOfMatches[a]['league'] == 'cblol 2019 1st split') || (returnArrayOfMatches[a]['league'] == '2019 LMS Spring Split') || (returnArrayOfMatches[a]['league'] == 'LJL 2019 Spring Split') || (returnArrayOfMatches[a]['league'] == '2019 LMS Spring Split')) {
 						//a = a - 1;
@@ -86,7 +83,7 @@ module.exports = {
 							"timestamp": newDate,
 							"footer": {
 								"icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon'], //cdn.leagueofgraphs.com/img/lcs/leagues/64/2.png",
-								"text": "LCS"
+								"text": returnArrayOfMatches[a]['league']
 							},
 							"thumbnail": {
 								"url": "https:" + returnArrayOfMatches[a]['leagueIcon']
@@ -99,20 +96,20 @@ module.exports = {
 								"icon_url": "https:" + returnArrayOfMatches[a]['leagueIcon']
 							},
 							"fields": [{
-									"name": "_",
-									"value": returnArrayOfMatches[a]['team1'],
+									"name": returnArrayOfMatches[a]['team1'],
+									"value": "^",
 									"inline": true
 								},
 								{
-									"name": "_",
-									"value": returnArrayOfMatches[a]['team2'],
+									"name": returnArrayOfMatches[a]['team2'],
+									"value": "^",
 									"inline": true
 								}
 							]
 						};
 
 						discordPost.postToDiscord(clientForDiscord, '', {embed: embed}, true);
-
+						counter++;
 					}
 				}
 			}
