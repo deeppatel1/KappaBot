@@ -47,8 +47,9 @@ clientForDiscord.on('ready', () => {
     discordFuncs.respondToMessagesLive(clientForDiscord);
     twitterFunc.twitterFilter(clientForDiscord);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "T1", 30000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
-    liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
+    //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
     queryYoutueVods.queryLastYoutube(clientForDiscord, 'CXClips', 600000);
     /*
     initiateLiveCheckLoop("ICE", 20000);

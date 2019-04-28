@@ -22,6 +22,16 @@ twitchStreamerTracker = {
         status: 'offline', 
         URL: "https://www.twitch.tv/trick2g",
         MoreThan10kPostedDiscord: false
+    },
+    ragen : {channelId: "17582288", 
+        emoji: '', 
+        discordChannelToPost: "main", 
+        atorNot: true, 
+        postedToDiscord: false,
+        lastVideoID: '',
+        status: 'offline', 
+        URL: "https://www.twitch.tv/itachipower",
+        MoreThan10kPostedDiscord: false
     }
 
 }
