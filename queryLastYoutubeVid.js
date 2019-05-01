@@ -14,7 +14,10 @@ var streamersTracker = {
     
     CXClips2 : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['EBZ']},
 
-    TeamLiquid : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD']},
+    TeamLiquid : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD','FORTNITE']},
+    TeamLiquid2 : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD']},
+
+
     Cloud9 : {channelId: "UCEkorHXUNJ5tpcH0VE77_fA", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['On Cloud9']},
     Flyquest : {channelId: "UCy0omD6TIJklBme14VQqV6A", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['FlyVlog']},
     TSM : {channelId: "UC4Ndz98NI_-9VQM3E7fctnQ", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['LEGENDS']},    
