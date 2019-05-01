@@ -72,7 +72,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer){
                     } else {
                         
                         for (filter in streamersTracker[YTer].filters){
-                            if (body.items[0].snippet.title.contains(filter)){
+                            if (body.items[0].snippet.title.includes(filter)){
                                 properVidToPost = true;
                             }
                         }
