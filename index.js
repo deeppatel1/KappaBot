@@ -9,6 +9,27 @@ var queryYoutueVods = require('./queryLastYoutubeVid');
 
 var clientForDiscord = new Discord.Client();
 
+
+clientForDiscord.on('ready', () => {    
+    discordFuncs.respondToMessagesLive(clientForDiscord);
+    //twitterFunc.twitterFilter(clientForDiscord);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "T1", 30000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
+    liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
+    //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
+    queryYoutueVods.queryLastYoutube(clientForDiscord, 'CXClips', 5000);
+});
+
+
+clientForDiscord.login(credentials.discordclientlogin);
+
+
+
+
+
+
+
+
 // TO DO: Save the lastVideoId in database, and instead of checking streamersTracker[YTER][lastVideoId], check the database
 /*
 var streamersTracker = {
@@ -42,44 +63,6 @@ var streamersTracker = {
 
 };
 */
-
-clientForDiscord.on('ready', () => {    
-    discordFuncs.respondToMessagesLive(clientForDiscord);
-    twitterFunc.twitterFilter(clientForDiscord);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "T1", 30000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
-    liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
-    //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
-    queryYoutueVods.queryLastYoutube(clientForDiscord, 'CXClips', 600000);
-    /*
-    initiateLiveCheckLoop("ICE", 20000);
-    initiateLiveCheckLoop("EBZ", 300000);
-    //initiateLiveCheckLoop("SAM", 10000000);
-    //initiateLiveCheckLoop("SJC", 10000000);
-    initiateLiveCheckLoop("CXNews", 600000);
-    initiateLiveCheckLoop("MexicanAcne", 60000);
-    initiateLiveCheckLoop("Hyphonix", 450000);
-    //getAndPostAllMatches();
-
-    //initiateLiveCheckForTwitchLoop("T1", 30000);
-//    initiateLiveCheckForTwitchLoop("trick", 1000);
-    /*
-    queryLastYoutube("ICE", 600000);
-    queryLastYoutube("CXClips", 600000);
-    queryLastYoutube("TeamLiquid", 1800000);
-    queryLastYoutube("Cloud9", 1800000);
-    queryLastYoutube("Flyquest", 1800000);
-    queryLastYoutube("TSM", 1800000);
-    queryLastYoutube("HundredT", 1800000);
-
-    queryLastYoutube("ICE", 100000);
-*/
-
-});
-
-
-clientForDiscord.login(credentials.discordclientlogin);
-
 
 /*
 

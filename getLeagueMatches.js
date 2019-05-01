@@ -14,8 +14,11 @@ module.exports = {
 				if (!error && response.statusCode == 200) {
 					var $ = cheerio.load(html);
 					var recentGames = false;
-					$('td.lcsMatchScoreColumn').each(function(i, element) {
 
+					var lastLeagueName = '';
+					var lastLeagueIcon = '';
+
+					$('td.lcsMatchScoreColumn').each(function(i, element) {
 						if (($(this).parent().prev().children().text()) == 'Recent games') {
 							recentGames = true;
 						}
@@ -28,6 +31,14 @@ module.exports = {
 							var leagueIcon = ($(this).prev().prev().children().children().children().children().attr('src'));
 							var leagueName = ($(this).prev().prev().children().children().children().children().attr('title'));
 
+							if (leagueIcon == undefined){
+								leagueIcon = lastLeagueIcon;
+								leagueName = lastLeagueName;
+							} else {
+								lastLeagueIcon = leagueIcon;
+								lastLeagueName = leagueName;
+							}
+							
 							var leftSideTeamIconAndName = ($(this).prev().children().children().children());
 
 							var leftSideTeamIcon = leftSideTeamIconAndName.children().attr('src');
@@ -69,6 +80,7 @@ module.exports = {
 		leagueMatchesPromise.then(returnArrayOfMatches => {
 			if (returnArrayOfMatches.length != 0) {
 				var counter = 0;
+				console.log(returnArrayOfMatches);
 				for (var a = 0; (a < returnArrayOfMatches.length) && (counter < 5); a++) {
 
 					if ((returnArrayOfMatches[a]['league'] == 'cblol 2019 1st split') || (returnArrayOfMatches[a]['league'] == '2019 LMS Spring Split') || (returnArrayOfMatches[a]['league'] == 'LJL 2019 Spring Split') || (returnArrayOfMatches[a]['league'] == '2019 LMS Spring Split')) {
@@ -86,7 +98,7 @@ module.exports = {
 								"text": returnArrayOfMatches[a]['league']
 							},
 							"thumbnail": {
-								"url": "https:" + returnArrayOfMatches[a]['leagueIcon']
+								"url": "https:" + returnArrayOfMatches[a]['team2Icon']
 							},
 							"image": {
 								"url": "https:" + returnArrayOfMatches[a]['team1Icon']

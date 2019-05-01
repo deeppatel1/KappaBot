@@ -15,13 +15,13 @@ module.exports = {
                     .setTitle('Commands')
                     .setColor("#67279C")
                     .addField("?ice last #", "Get the last {#} of vod urls")
-                    .addField("!clips hour/day/week/month/year/alltime #", "Get most popular clips for last hour/day/week/month/year/alltime")
-                    .addField("!ice hour/day/week/month/year/alltime #", "Get most popular clips for ice for the last hour/day/week/month/year/alltime")
+                    //.addField("!clips hour/day/week/month/year/alltime #", "Get most popular clips for last hour/day/week/month/year/alltime")
+                    //.addField("!ice hour/day/week/month/year/alltime #", "Get most popular clips for ice for the last hour/day/week/month/year/alltime")
                     .addField("?vod {name} {number}", "Gets the last {number} of vods for a particular streamer.\n{name}: EBZ, SAM, SJC, CXNews, MexicanAcne")
                     .addField("!league games post upcoming league games")
     
                 message.channel.send(embed)
-            } else if (message.content.startsWith("!ice")) {
+            } /* else if (message.content.startsWith("!ice")) {
                 var args = message.content.split(/ +/g);
                 var inHowLongDuration = args[1]; //can be hour for last hour, day..., week..., month..., year..., alltime
                 var howManyClips = args[2]; //how many clips to show
@@ -59,7 +59,7 @@ module.exports = {
                     message.channel.send(stringToSend);
                 });
     
-            } else if (message.content.startsWith('!update')) {
+            } */else if (message.content.startsWith('!update')) {
     
                 message.channel.send(':thinking:')
 
