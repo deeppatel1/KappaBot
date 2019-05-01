@@ -11,6 +11,9 @@ var streamersTracker = {
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
 
     CXClips : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: []},
+    
+    CXClips2 : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['EBZ']},
+
     TeamLiquid : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD']},
     Cloud9 : {channelId: "UCEkorHXUNJ5tpcH0VE77_fA", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['On Cloud9']},
     Flyquest : {channelId: "UCy0omD6TIJklBme14VQqV6A", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['FlyVlog']},
@@ -66,7 +69,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer){
                     } else {
                         
                         for (filter in streamersTracker[YTer].filters){
-                            if (body.items[0].snippet.title == filter){
+                            if (body.items[0].snippet.title.contains(filter)){
                                 properVidToPost = true;
                             }
                         }

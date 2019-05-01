@@ -17,6 +17,8 @@ clientForDiscord.on('ready', () => {
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
+    queryYoutueVods.queryLastYoutube(clientForDiscord, 'CXClips2', 5000);
+
     queryYoutueVods.queryLastYoutube(clientForDiscord, 'CXClips', 5000);
 });
 
