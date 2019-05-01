@@ -73,7 +73,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer){
                         
                         for (filter in streamersTracker[YTer].filters){
                             console.log('checking filter: ' + filter + ' with this uRL: ' + body.items[0].snippet.title);
-                            if (body.items[0].snippet.title.includes(filter)){
+                            if (body.items[0].snippet.title.includes(streamersTracker[YTer].filters[filter])){
                                 console.log('checked it exists, now making properVidTOPsotTrue');
                                 properVidToPost = true;
                             }
