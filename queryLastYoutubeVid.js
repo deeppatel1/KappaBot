@@ -5,23 +5,18 @@ var credentials = require('./configuration.json');
 
 gKey = credentials.gKey;
 var streamersTracker = {
-    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: false, postedToDiscord: false, lastVideoID: '',
+    ICE : {channelId: "UCv9Edl_WbtbPeURPtFDo-uA", emoji: ':baby:', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, lastVideoID: '',
         status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false, filters: []},
-    T1 : {channelId: "51496027", emoji: '', discordChannelToPost: "main", atorNot: true, postedToDiscord: false, postedToDiscord : false, lastVideoID: '',
-        status: 'offline', URL: "", viewers: 0, MoreThan10kPostedDiscord: false},
-
-    CXClips : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: []},
+        
     
-    CXClips2 : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['EBZ']},
-
-    TeamLiquid : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD','FORTNITE']},
-    TeamLiquid2 : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['SQUAD']},
-
-
-    Cloud9 : {channelId: "UCEkorHXUNJ5tpcH0VE77_fA", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['On Cloud9']},
+    T1 : {channelId: "UCwV_0HmQkRrTcrReaMxPeDw", discordChannelToPost: "main", atorNot: true, lastVideoID: '', filters: []},
+    T1Vods : {channelId: "UCzjyMXv0jg1RBg1PAdYmHsQ", discordChannelToPost: "main", atorNot: true, lastVideoID: '', filters: []},
+    CXClips : {channelId: "UCFthsIV3Bp11cRwb6R9AOOw", discordChannelToPost: "main", atorNot: true, lastVideoID: '', filters: []},
+    TeamLiquid : {channelId: "UCLSWNf28X3mVTxTT3_nLCcw", discordChannelToPost: "main", atorNot: true, lastVideoID: '', filters: ['SQUAD']},
+    Cloud9 : {channelId: "UCEkorHXUNJ5tpcH0VE77_fA", discordChannelToPost: "main", atorNot: true, lastVideoID: '', filters: ['On Cloud9']},
     Flyquest : {channelId: "UCy0omD6TIJklBme14VQqV6A", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['FlyVlog']},
     TSM : {channelId: "UC4Ndz98NI_-9VQM3E7fctnQ", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['LEGENDS']},    
-    HundredT : {channelId: "UCnrX2_FoKieobtw19PiphDw", discordChannelToPost: "main", atorNot: false, lastVideoID: '', filters: ['Heist']},
+    HundredT : {channelId: "UCnrX2_FoKieobtw19PiphDw", discordChannelToPost: "main", atorNot: true, lastVideoID: '', filters: ['Heist']},
 };
 
 

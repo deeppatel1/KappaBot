@@ -5,21 +5,27 @@ var discordFuncs = require('./discordPostAndResponse');
 var twitterFunc = require('./twitter');
 var twitch = require('./twitchLiveAndPost');
 var liveYoutubeCheck = require('./liveYoutubeCheck');
-var queryYoutueVods = require('./queryLastYoutubeVid');
+var queryYoutubeVods = require('./queryLastYoutubeVid');
 
 var clientForDiscord = new Discord.Client();
 
 
 clientForDiscord.on('ready', () => {    
     discordFuncs.respondToMessagesLive(clientForDiscord);
-    //twitterFunc.twitterFilter(clientForDiscord);
-    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "T1", 30000);
+    twitterFunc.twitterFilter(clientForDiscord);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "T1", 30000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
-    queryYoutueVods.queryLastYoutube(clientForDiscord, 'TSM', 5000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 600000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 623000);
 
-    queryYoutueVods.queryLastYoutube(clientForDiscord, 'HundredT', 5000);
 });
 
 
