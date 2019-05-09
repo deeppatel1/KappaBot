@@ -83,6 +83,8 @@ module.exports = {
                 //     message.channel.send(lines));
             } else if (message.content.startsWith('!league games')){
                 getLeagueMatches.getAndPostAllMatches(clientForDiscord);
+            } else if (message.content.startsWith('!logs')) {
+                message.channel.send("kappabot logs", { files: ["/home/pi/kappabot.log"] });
             }
     
         });
