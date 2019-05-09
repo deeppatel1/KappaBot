@@ -1,5 +1,5 @@
 #!/bin/bash/
-sleep 30
+sleep 8
 cd ~/KappaBot/KappaBot/
 git pull --all
-forever -l kappabot.log index.js -p 8000
+forever -a -l kappabot.log index.js -p 8000
