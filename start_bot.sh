@@ -2,5 +2,4 @@
 sleep 30
 cd ~/KappaBot/KappaBot/
 git pull --all
-npm install
-forever start index.js -p 8000
+forever -l kappabot.log index.js -p 8000
