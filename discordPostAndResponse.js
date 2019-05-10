@@ -85,6 +85,8 @@ module.exports = {
                 getLeagueMatches.getAndPostAllMatches(clientForDiscord);
             } else if (message.content.startsWith('!logs')) {
                 message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
+            } else if (message.content.startsWith('!version')) {
+                message.channel.send("version ios 15.1");
             }
     
         });
