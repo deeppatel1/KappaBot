@@ -66,6 +66,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
         data = JSON.parse(body);
         
         if (data['data'].length != 0){
+            console.log('call said is live, now checking database and posting');
             //is live, but check if its already posted by checking the database
             var dateStreamStarted = data['data']['started_at'];
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
@@ -73,7 +74,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
                 if (!checkifDateStreamStartedExistsInDatabase){
                     var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
                     dbQuery.query(sql_query);
-                    var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHER]['URL'];
+                    var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHer]['URL'];
                     discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, false);
                 }                
             })
