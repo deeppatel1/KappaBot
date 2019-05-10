@@ -1,6 +1,7 @@
 var credentials = require('./configuration.json');
 var request = require('request');
 var discordPost = require('./discordPost');
+var dbQuery = require('./db');
 
 twitchStreamerTracker = {
     T1 : {channelId: "51496027", 
