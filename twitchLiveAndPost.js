@@ -72,8 +72,13 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
             checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
                 if (!checkifDateStreamStartedExistsInDatabase){
-                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + dateStreamStarted    +'\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
-                    dbQuery.query(sql_query);
+                    var currentdate = new Date();
+                    var datetime = getFormattedDate(currentdate);
+                    var time = currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
+                                + currentdate.getSeconds();
+                    
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'                    dbQuery.query(sql_query);
                     var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHer]['URL'];
                     discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, false);
                 }                
@@ -135,4 +140,16 @@ function updateStreamerTracker(clientfordiscord, twitchStreamer, status){
     }
 
     twitchStreamerTracker[twitchStreamer].status = status;
+}
+
+function getFormattedDate(date) {
+    var year = date.getFullYear();
+  
+    var month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : '0' + month;
+  
+    var day = date.getDate().toString();
+    day = day.length > 1 ? day : '0' + day;
+    
+    return year + '/' + month + '/' + day;
 }

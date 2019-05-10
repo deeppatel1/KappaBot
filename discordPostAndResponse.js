@@ -86,7 +86,7 @@ module.exports = {
             } else if (message.content.startsWith('!logs')) {
                 message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
             } else if (message.content.startsWith('!version')) {
-                message.channel.send("version ios 15.1");
+                message.channel.send("version ios 15.2");
             }
     
         });
