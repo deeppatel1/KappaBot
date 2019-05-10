@@ -63,6 +63,24 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
     request.get(options, function(err, resp, body) {
         console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
         data = JSON.parse(body);
+        
+        if (data['data'].length != 0){
+            //is live, but check if its already posted by checking the database
+            var dateStreamStarted = data['data']['started_at'];
+            var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
+            checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
+                if (!checkifDateStreamStartedExistsInDatabase){
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+                    dbQuery.query(sql_query);
+                    var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHER]['URL'];
+                    discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, false);
+                }                
+            })
+        }else{
+            //if data == 0, then offline
+        }
+
+        /*
         //console.log(data);
         if((data['data'].length != 0) && (!twitchStreamerTracker[TWITCHer].postedToDiscord)){
             if (!twitchStreamerTracker[TWITCHer].postedToDiscord){
@@ -91,6 +109,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
             // console.log("not live");
             //t1LivePostedOnDiscord = false;
         }
+        */
     });        
 }
 
