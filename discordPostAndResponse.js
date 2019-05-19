@@ -3,6 +3,7 @@ var Discord = require("discord.js");
 var dbQuery = require('./db.js');
 var getLeagueMatches = require('./getLeagueMatches.js');
 var liveYouTubeCheck = require('./liveYoutubeCheck');
+var twitchFunctions = require('./twitchLiveAndPost');
 
 module.exports = {
     
@@ -18,7 +19,10 @@ module.exports = {
                     //.addField("!clips hour/day/week/month/year/alltime #", "Get most popular clips for last hour/day/week/month/year/alltime")
                     //.addField("!ice hour/day/week/month/year/alltime #", "Get most popular clips for ice for the last hour/day/week/month/year/alltime")
                     .addField("?vod {name} {number}", "Gets the last {number} of vods for a particular streamer.\n{name}: EBZ, SAM, SJC, CXNews, MexicanAcne")
-                    .addField("!league matches post upcoming league games")
+                    .addField("!league games", "post upcoming league games")
+                    .addField("!(t1/lolesports) (day/week/month/all)", "query twitch vods for these 2 channels. tops clips per day/week/month/all")
+                    .addField("_","_")
+                    .addField("!version", "checks current version")
     
                 message.channel.send(embed)
             } /* else if (message.content.startsWith("!ice")) {
@@ -85,6 +89,16 @@ module.exports = {
                 getLeagueMatches.getAndPostAllMatches(clientForDiscord);
             } else if (message.content.startsWith('!logs')) {
                 message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
+            } else if (message.content.startsWith('!version')) {
+                message.channel.send("version ios 16.0");
+            } else if (message.content.startsWith('!clips')){
+                var extraInputs = message.content.split(" ");
+                var streamer = extraInputs[1];
+                streamer = streamer.toLowerCase();
+                var period = extraInputs[2];
+                console.log('streamer = ' + streamer);
+                console.log('period: ' + period);
+                twitchFunctions.getTopClips(clientForDiscord, streamer, period, 5);
             }
     
         });

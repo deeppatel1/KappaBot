@@ -13,7 +13,7 @@ var clientForDiscord = new Discord.Client();
 clientForDiscord.on('ready', () => {    
     discordFuncs.respondToMessagesLive(clientForDiscord);
     twitterFunc.twitterFilter(clientForDiscord);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "T1", 30000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);

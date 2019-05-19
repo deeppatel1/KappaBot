@@ -1,9 +1,11 @@
 var credentials = require('./configuration.json');
 var request = require('request');
 var discordPost = require('./discordPost');
+var dbQuery = require('./db');
 
 twitchStreamerTracker = {
-    T1 : {channelId: "51496027", 
+    t1 : {channelName: 'loltyler1', 
+        channelId: "51496027", 
         emoji: '', 
         discordChannelToPost: "main", 
         atorNot: true, 
@@ -13,7 +15,8 @@ twitchStreamerTracker = {
         URL: "https://www.twitch.tv/loltyler1",
         MoreThan10kPostedDiscord: false
     },
-    Trick : {channelId: "28036688", 
+    trick : {channelName : 'trick2g', 
+        channelId: "28036688", 
         emoji: '', 
         discordChannelToPost: "main", 
         atorNot: true, 
@@ -21,6 +24,17 @@ twitchStreamerTracker = {
         lastVideoID: '',
         status: 'offline', 
         URL: "https://www.twitch.tv/trick2g",
+        MoreThan10kPostedDiscord: false
+    },
+    riotgames : {channelName : 'riotgames',
+        channelId: "36029255", 
+        emoji: '', 
+        discordChannelToPost: "main", 
+        atorNot: true, 
+        postedToDiscord: false,
+        lastVideoID: '',
+        status: 'offline', 
+        URL: "https://www.twitch.tv/itachipower",
         MoreThan10kPostedDiscord: false
     },
     ragen : {channelId: "17582288", 
@@ -45,6 +59,29 @@ module.exports = {
             pollToCheckTwitcherIsLive(Twitcher, clientfordiscord);
     
         }, intervalLength)
+    },
+
+
+    getTopClips : function(clientForDiscord, twitchStreamer, period, numberOfClips){
+        var options = {
+            url: "https://api.twitch.tv/kraken/clips/top?limit=" + numberOfClips + "&channel=" + twitchStreamerTracker[twitchStreamer].channelName + "&period=" + period,
+            headers: {
+                "Client-ID": credentials.twitchauth,
+                "Accept": "application/vnd.twitchtv.v5+json"
+            }
+        };
+
+        console.log('Checking twitch URL for clips: ' + options.url);
+
+        request.get(options, function(err, resp, body) {
+            data = JSON.parse(body);
+            var discordPostWithAllClips = '';
+            for (clip in data["clips"]){
+                discordPostWithAllClips = discordPostWithAllClips + "\n https://clips.twitch.tv/" + data["clips"][clip]["slug"];
+            }
+            discordPost.postToDiscord(clientForDiscord, twitchStreamer, discordPostWithAllClips, false);
+        });
+
     }
 };
 
@@ -63,6 +100,31 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
     request.get(options, function(err, resp, body) {
         console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
         data = JSON.parse(body);
+        
+        if (data['data'].length != 0){
+            console.log('call said ' + TWITCHer + 'is live, now checking database and posting');
+            //is live, but check if its already posted by checking the database
+            var dateStreamStarted = data['data']['started_at'];
+            var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
+            checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
+                if (!checkifDateStreamStartedExistsInDatabase){
+                    var currentdate = new Date();
+                    var datetime = getFormattedDate(currentdate);
+                    var time = currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
+                                + currentdate.getSeconds();
+                    
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ 'twitch.tv/loltyler1' +'\');'                    
+                    dbQuery.query(sql_query);
+                    var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHer]['URL'];
+                    discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, false);
+                }                
+            })
+        }else{
+            //if data == 0, then offline
+        }
+
+        /*
         //console.log(data);
         if((data['data'].length != 0) && (!twitchStreamerTracker[TWITCHer].postedToDiscord)){
             if (!twitchStreamerTracker[TWITCHer].postedToDiscord){
@@ -91,6 +153,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
             // console.log("not live");
             //t1LivePostedOnDiscord = false;
         }
+        */
     });        
 }
 
@@ -114,4 +177,16 @@ function updateStreamerTracker(clientfordiscord, twitchStreamer, status){
     }
 
     twitchStreamerTracker[twitchStreamer].status = status;
+}
+
+function getFormattedDate(date) {
+    var year = date.getFullYear();
+  
+    var month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : '0' + month;
+  
+    var day = date.getDate().toString();
+    day = day.length > 1 ? day : '0' + day;
+    
+    return year + '/' + month + '/' + day;
 }
