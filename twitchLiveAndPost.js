@@ -46,6 +46,16 @@ twitchStreamerTracker = {
         status: 'offline', 
         URL: "https://www.twitch.tv/itachipower",
         MoreThan10kPostedDiscord: false
+    },
+    yassuo : {channelId: "121203480", 
+        emoji: '', 
+        discordChannelToPost: "main", 
+        atorNot: false, 
+        postedToDiscord: false,
+        lastVideoID: '',
+        status: 'offline', 
+        URL: "https://www.twitch.tv/yassuo",
+        MoreThan10kPostedDiscord: false
     }
 
 }

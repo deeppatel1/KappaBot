@@ -6,17 +6,28 @@ var twitterFunc = require('./twitter');
 var twitch = require('./twitchLiveAndPost');
 var liveYoutubeCheck = require('./liveYoutubeCheck');
 var queryYoutubeVods = require('./queryLastYoutubeVid');
+var animeNotifications = require('./animeNotifications');
 
 var clientForDiscord = new Discord.Client();
 
 
+
+//animeNotifications.makeAniListCall();
+
+
 clientForDiscord.on('ready', () => {    
+    
+    
+
+    
     discordFuncs.respondToMessagesLive(clientForDiscord);
     twitterFunc.twitterFilter(clientForDiscord);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 30000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
-    //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "EBZ", 300000);
+    liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
+
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 600000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
@@ -25,7 +36,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 623000);
-
+    
 });
 
 
