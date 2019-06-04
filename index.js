@@ -2,7 +2,7 @@ require('dotenv').config();
 var credentials = require('./configuration.json');
 var Discord = require("discord.js");
 var discordFuncs = require('./discordPostAndResponse');
-var twitterFunc = require('./twitter');
+//var twitterFunc = require('./twitter');
 var twitch = require('./twitchLiveAndPost');
 var liveYoutubeCheck = require('./liveYoutubeCheck');
 var queryYoutubeVods = require('./queryLastYoutubeVid');
@@ -17,9 +17,8 @@ var clientForDiscord = new Discord.Client();
 
 clientForDiscord.on('ready', () => {    
     
-    
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 10000);
 
-    
     discordFuncs.respondToMessagesLive(clientForDiscord);
     twitterFunc.twitterFilter(clientForDiscord);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
