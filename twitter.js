@@ -50,6 +50,11 @@ twitterAccounts = {
         tweeter: 'Cloud9',
         twitterId: '1452520626',
         postOnlyIfContains: ['c9lol, lol, lcs']
+    },
+    lcs : {
+        tweeter: 'LCS',
+        twitterId: '1099419521654222848',
+        postOnlyIfContains: []
     }
 } 
 
@@ -90,7 +95,7 @@ module.exports = {
                             if (postThisQuestion){
                             
                                 console.log("attemping to post to twitter now for user: " + tweet.user.screen_name);
-                                discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false);
+                                discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false, "main-channel");
                             }
                         }
                     }

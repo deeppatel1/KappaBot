@@ -120,7 +120,7 @@ module.exports = {
 							]
 						};
 
-						discordPost.postToDiscord(clientForDiscord, '', {embed: embed}, true);
+						discordPost.postToDiscord(clientForDiscord, '', {embed: embed}, true, "main-channel");
 						counter++;
 					}
 				}

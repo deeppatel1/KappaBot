@@ -1,34 +1,129 @@
-var request = require('request');
-var credentials = require('./configuration.json');
+const fetch = require("node-fetch");
+var discordPost = require('./discordPost');
 
+animesToPost = {
 
-let formData = {
-    grant_type: 'client_credentials',
-    client_id: credentials.anilistID,
-    client_secret: credentials.anilistSecret
-};
+  attackOnTitan : {
+      name: 'Shingeki-no-Kyojin-3',
+      id: 104578
+  },
+  
+  onePunchMan : {
+    name: 'One_Punch_Man',
+    id: 97668
+  },
+  
+  kimetsu : {
+    name: 'Kimetsu_no_Yaiba',
+    id: 101922
+  },
+
+  bokunohero : {
+    name: 'Boku_no_Hero_Academia',
+    id: 31964
+  }
+
+}
+
+var clientForDiscord1;
+var anime1;
+
+var variables = {}
 
 module.exports = {
-    
-    makeAniListCall : function(){
-    
-        var options = {
-            uri: 'https://graphql.anilist.co',
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer ' + 'def5020003d982a563c1c2beb4f1fbd3b6ebc73dc4eae4327a72ad838a70ab16d7da938510350fa3207df552b609523952e72c8e73fe496d0a16917773d0ae2f32fea3b068a0166ecb403854a53ea971f8ce0888e088e3d741e6620be18fed95119df8660240accf6134e910658733a56a75d879ded8237684e78ca7fe959cfe5e0abc231a28b38f2d82171e6a1d3b54532da89d85366a7902d979523ec281cd894e158f090a89df55f7282d25ec46e4faacd0621b1cf46519ce038eefb563107ed8d71e93214212bcd1fadadb8d9a7b60a7b36ab5925220c59f17f63567c749e803e396f02301e8d4b504575bd6a19c17ee78dcd09e6e3cf587b5a7ee30dacc4a2ffc822fd92de32bc617ad1651a75a85d0817354e3c62e875e7140ef58c6b5d381d253bb3bf14c9bed789879157bd41555d72112ee08cbd2fbccae8cdc5a780e6d118b9701a22872c442104c2f00102ee45b3655787d1520b9233b5b36562d682846ef423bad004e085e5b5c659e43',
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-            json: {
-              'query': query,
+  getAirTime: function (clientForDiscord, anime) {
+    clientForDiscord1 = clientForDiscord;
+    anime1 = anime;
+    variables = {
+      id: animesToPost[anime].id
+    };
+
+    console.log(variables);
+
+    var url = 'https://graphql.anilist.co',
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            query: query,
+            variables: {
+              id: animesToPost[anime1].id
             }
-          };
-          
-          request(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-              console.log(body.data);
-            }
-          });
-    }
+        })
+    };
+
+    fetch(url, options).then(handleResponse)
+                   .then(handleData)
+                   .catch(handleError);
+  }
 }
+
+// Here we define our query as a multi-line string
+// Storing it in a separate .graphql/.gql file is also possible
+const query = `
+query($id: Int!) {
+    Media(id: $id, type: ANIME) {
+      title {
+        romaji
+        english
+        native
+        userPreferred
+      }
+      nextAiringEpisode {
+        airingAt
+        timeUntilAiring
+        episode
+      }
+    }
+  }
+`;
+
+// Define our query variables and values that will be used in the query request
+
+// Define the config we'll need for our Api request
+
+
+// Make the HTTP Api request
+
+
+function handleResponse(response) {
+    return response.json().then(function (json) {
+        return response.ok ? json : Promise.reject(json);
+    });
+}
+
+function handleData(data) {
+
+    console.log(data);
+    discordPost.postToDiscord(clientForDiscord1, anime1, 'airing at : ' + timeConverter(data.data.Media.nextAiringEpisode.airingAt) + ' in this amount of days : + ' + (data.data.Media.nextAiringEpisode.timeUntilAiring)/60/60/24, false, "main-channel");
+  
+    console.log(data.data.Media.nextAiringEpisode.airingAt);
+    console.log(timeConverter(data.data.Media.nextAiringEpisode.airingAt));
+    console.log((data.data.Media.nextAiringEpisode.timeUntilAiring)/60/60/24);
+       
+}
+
+function handleError(error) {
+    //alert('Error, check console');
+    console.error(error);
+    console.log(JSON.stringify(error));
+
+}
+
+
+function timeConverter(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
+  }
+  //console.log(timeConverter(0));

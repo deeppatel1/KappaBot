@@ -1,7 +1,11 @@
+var credentials = require('./configuration.json');
 
 module.exports = {
 
-    postToDiscord : function(clientForDiscord, YTer, msgToPost, ifEmbed){
+    postToDiscord : function(clientForDiscord, YTer, msgToPost, ifEmbed, channel){
+
+
+        var postingChannel = credentials.channel;
 
         if ((YTer == 'Twitch') || (YTer == '')) {
             var channel = "173611297387184129";
@@ -16,9 +20,9 @@ module.exports = {
             // main discord channel is 173611297387184129
             // secondary discord channel is 284157566693539851
             console.log("[" + YTer + "] " + "Now posting  ---- " + msgToPost + "  " + new Date())
-            clientForDiscord.channels.get("173611297387184129").send(msgToPost)
+            clientForDiscord.channels.get(postingChannel).send(msgToPost)
         }else{
-            clientForDiscord.channels.get("173611297387184129").send(msgToPost)
+            clientForDiscord.channels.get(postingChannel).send(msgToPost)
         }
 
     }

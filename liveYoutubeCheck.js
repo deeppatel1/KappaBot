@@ -59,7 +59,7 @@ function postSummary(clientForDiscord){
     }
 
     //channel.send(embed);
-    discordPost.postToDiscord(clientForDiscord, '', embed, true);
+    discordPost.postToDiscord(clientForDiscord, '', embed, true, "main-channel");
 }
 
 function getRequest(clientForDiscord, YTer){
@@ -128,7 +128,7 @@ function updateStreamerTracker(clientForDiscord, YTer, status, videoID){
             
                         messageToPost = (streamersTracker[YTer].atorNot ? messageToPost + ' <@173611085671170048> <@173610714433454084> ' : messageToPost + ' ');
                         //console.log('[' + TWITCHer + '] Twitch API Says LIVE, attempting to post now ---- ' + new Date())
-                        discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false);
+                        discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, "main-channel");
                     }
                 });
             
@@ -138,7 +138,7 @@ function updateStreamerTracker(clientForDiscord, YTer, status, videoID){
     if (status == "offline"){
         if (streamersTracker[YTer].status == "live"){
             var messageToPost = YTer + " went offline";
-            discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false);
+            discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, "main-channel");
         }
     }
 
