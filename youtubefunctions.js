@@ -115,11 +115,11 @@ module.exports = {
                                     ]
                                 };
         
-                                postToDiscord(YTer, {embed}, true);
+                                postToDiscord(YTer, {embed}, true, "main-channel");
         
                                 var messageToPost = (streamerInformation['streamersTracker'][YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId; 
                                 
-                                postToDiscord(YTer, messageToPost, false);
+                                postToDiscord(YTer, messageToPost, false, "main-channel");
                             }
                         }
                     }

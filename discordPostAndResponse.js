@@ -4,6 +4,7 @@ var dbQuery = require('./db.js');
 var getLeagueMatches = require('./getLeagueMatches.js');
 var liveYouTubeCheck = require('./liveYoutubeCheck');
 var twitchFunctions = require('./twitchLiveAndPost');
+var animeFunctions = require('./animeNotifications.js');
 
 module.exports = {
     
@@ -99,6 +100,10 @@ module.exports = {
                 console.log('streamer = ' + streamer);
                 console.log('period: ' + period);
                 twitchFunctions.getTopClips(clientForDiscord, streamer, period, 5);
+            } else if (message.content.startsWith('!anime')){
+                var extraInputs = message.content.split(" ");
+                var anime = extraInputs[1];
+                animeFunctions.getAirTime(clientForDiscord, anime);
             }
     
         });

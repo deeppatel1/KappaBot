@@ -46,6 +46,16 @@ twitchStreamerTracker = {
         status: 'offline', 
         URL: "https://www.twitch.tv/itachipower",
         MoreThan10kPostedDiscord: false
+    },
+    yassuo : {channelId: "121203480", 
+        emoji: '', 
+        discordChannelToPost: "main", 
+        atorNot: false, 
+        postedToDiscord: false,
+        lastVideoID: '',
+        status: 'offline', 
+        URL: "https://www.twitch.tv/yassuo",
+        MoreThan10kPostedDiscord: false
     }
 
 }
@@ -71,7 +81,7 @@ module.exports = {
             }
         };
 
-        console.log('Checking twitch URL for clips: ' + options.url);
+        console.log('TWITCH CLIPS ' + TWITCHer + ' Checking twitch URL for clips: ' + options.url);
 
         request.get(options, function(err, resp, body) {
             data = JSON.parse(body);
@@ -79,7 +89,7 @@ module.exports = {
             for (clip in data["clips"]){
                 discordPostWithAllClips = discordPostWithAllClips + "\n https://clips.twitch.tv/" + data["clips"][clip]["slug"];
             }
-            discordPost.postToDiscord(clientForDiscord, twitchStreamer, discordPostWithAllClips, false);
+            discordPost.postToDiscord(clientForDiscord, twitchStreamer, discordPostWithAllClips, false, "main-channel");
         });
 
     }
@@ -98,11 +108,11 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
     };
 
     request.get(options, function(err, resp, body) {
-        console.log ("checked Twitch for: " + TWITCHer + " at " + new Date());
+        console.log ('TWITCH CLIPS ' + TWITCHer + " - checked Twitch for: " + TWITCHer + " at " + new Date());
         data = JSON.parse(body);
         
         if (data['data'].length != 0){
-            console.log('call said ' + TWITCHer + 'is live, now checking database and posting');
+            console.log('TWITCH CLIPS ' + TWITCHer + ' - call said ' + TWITCHer + 'is live, now checking database and posting');
             //is live, but check if its already posted by checking the database
             var dateStreamStarted = data['data']['started_at'];
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
@@ -117,7 +127,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
                     var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ 'twitch.tv/loltyler1' +'\');'                    
                     dbQuery.query(sql_query);
                     var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHer]['URL'];
-                    discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, false);
+                    discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, false, "main-channel");
                 }                
             })
         }else{
@@ -164,7 +174,7 @@ function updateStreamerTracker(clientfordiscord, twitchStreamer, status){
             messageToPost = (twitchStreamerTracker[twitchStreamer].atorNot ? 'T1 IS LIVE  <@173611085671170048> <@173610714433454084> ' : 'T1 IS LIVE ');
             messageToPost = messageToPost + twitchStreamerTracker[twitchStreamer].URL;
             console.log('[' + twitchStreamer + '] is LIVE attempting to post now ---- ' + new Date())
-            discordPost.postToDiscord(clientfordiscord, '', messageToPost, false);                
+            discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");                
         }
             
     }
@@ -172,7 +182,7 @@ function updateStreamerTracker(clientfordiscord, twitchStreamer, status){
     if (status == "offline"){
         if (twitchStreamerTracker[twitchStreamer].status == "live"){
             var messageToPost = twitchStreamer + " went offline";
-            discordPost.postToDiscord(clientfordiscord, '', messageToPost, false);
+            discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
         }
     }
 
