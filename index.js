@@ -11,6 +11,8 @@ var animeNotifications = require('./animeNotifications');
 var clientForDiscord = new Discord.Client();
 
 
+// TO DO: download node-schedule NPM to schedule the remidners. than use RSS on nyaa.si to link the torrent downloads.
+
 
 //animeNotifications.makeAniListCall();
 
