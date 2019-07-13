@@ -2,7 +2,7 @@ require('dotenv').config();
 var credentials = require('./configuration.json');
 var Discord = require("discord.js");
 var discordFuncs = require('./discordPostAndResponse');
-//var twitterFunc = require('./twitter');
+var twitterFunc = require('./twitter');
 var twitch = require('./twitchLiveAndPost');
 var liveYoutubeCheck = require('./liveYoutubeCheck');
 var queryYoutubeVods = require('./queryLastYoutubeVid');
