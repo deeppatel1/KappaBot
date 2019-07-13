@@ -87,7 +87,7 @@ module.exports = {
 
                             for (eachFilter in twitterAccounts[tweeter].postOnlyIfContains){
 
-                                if ((tweet.text).toLowerCase()  .includes(twitterAccounts[tweeter][postOnlyIfContains][eachFilter])){
+                                if ((tweet.text).toLowerCase().includes(twitterAccounts[tweeter].postOnlyIfContains.eachFilter)){
                                     postThisQuestion = true;
                                 }
                             }
