@@ -5,7 +5,7 @@ var streamerInformation = require('./index.js');
 module.exports = {
     getRequest : function(YTer){
         request.get('https://youtube.com/channel/' + streamerInformation['streamersTracker'][YTer].channelId + '/live', function(err, resp, body) {
-            console.log('checked YT :' + YTer + ' at ' + new Date());
+        console.log('YouTube Checking Live For - ' + YTer + ' at ' + new Date());
             if (err) {
                 reject(err);
             } else {
@@ -58,7 +58,7 @@ module.exports = {
 
         request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + streamerInformation['streamersTracker'][YTer].channelId + "&maxResults=1&order=date&type=video&key=" + gKey, function(err, resp, body) {
     
-            console.log('querying youtube for vids: ' + YTer + ' at ' + new Date());
+            console.log('YouTube Querying for Vod: - ' + YTer + ' - ' + new Date());
 
             if (err) {
                 reject(err);

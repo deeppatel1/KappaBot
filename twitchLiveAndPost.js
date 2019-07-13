@@ -57,7 +57,6 @@ twitchStreamerTracker = {
         URL: "https://www.twitch.tv/yassuo",
         MoreThan10kPostedDiscord: false
     }
-
 }
 
 module.exports = {
@@ -81,8 +80,8 @@ module.exports = {
             }
         };
 
-        console.log('TWITCH CLIPS ' + TWITCHer + ' Checking twitch URL for clips: ' + options.url);
-
+        console.log('Twitch Get Top Clips - ' + TWITCHer + ' ++ ' + options.url);
+        
         request.get(options, function(err, resp, body) {
             data = JSON.parse(body);
             var discordPostWithAllClips = '';
@@ -95,9 +94,6 @@ module.exports = {
     }
 };
 
-
-
-
 function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
 
     var options = {
@@ -108,11 +104,11 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
     };
 
     request.get(options, function(err, resp, body) {
-        console.log ('TWITCH CLIPS ' + TWITCHer + " - checked Twitch for: " + TWITCHer + " at " + new Date());
+        console.log('Twitch Check Live - ' + TWITCHer + ' ++ ' + new Date());
         data = JSON.parse(body);
         
         if (data['data'].length != 0){
-            console.log('TWITCH CLIPS ' + TWITCHer + ' - call said ' + TWITCHer + 'is live, now checking database and posting');
+            console.log('Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
             //is live, but check if its already posted by checking the database
             var dateStreamStarted = data['data']['started_at'];
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
@@ -165,28 +161,6 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
         }
         */
     });        
-}
-
-function updateStreamerTracker(clientfordiscord, twitchStreamer, status){
- 
-    if (status == "live"){
-        if (twitchStreamerTracker[twitchStreamer].status == "offline"){
-            messageToPost = (twitchStreamerTracker[twitchStreamer].atorNot ? 'T1 IS LIVE  <@173611085671170048> <@173610714433454084> ' : 'T1 IS LIVE ');
-            messageToPost = messageToPost + twitchStreamerTracker[twitchStreamer].URL;
-            console.log('[' + twitchStreamer + '] is LIVE attempting to post now ---- ' + new Date())
-            discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");                
-        }
-            
-    }
-    
-    if (status == "offline"){
-        if (twitchStreamerTracker[twitchStreamer].status == "live"){
-            var messageToPost = twitchStreamer + " went offline";
-            discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
-        }
-    }
-
-    twitchStreamerTracker[twitchStreamer].status = status;
 }
 
 function getFormattedDate(date) {

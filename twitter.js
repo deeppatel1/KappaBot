@@ -14,32 +14,32 @@ twitterAccounts = {
     deep : {
         tweeter: 'solonoid12',
         twitterId: '1615735502',
-        postOnlyIfContains: ''
+        postOnlyIfContains: []
     },
     t1 : {
         tweeter: 'loltyler1',
         twitterId: '4833803780',
-        postOnlyIfContains: ''
+        postOnlyIfContains: []
     },
     ice : {
         tweeter: 'REALIcePoseidon',
         twitterId: '736784706486734852',
-        postOnlyIfContains: ''
+        postOnlyIfContains: []
     },
     lift : {
         tweeter: 'TLDoublelift',
         twitterId: '344538810',
-        postOnlyIfContains: ''
+        postOnlyIfContains: []
     },
     jacob : {
         tweeter: 'jacobK_Cx',
         twitterId: '873949601522487297',
-        postOnlyIfContains: ''
+        postOnlyIfContains: []
     },
     reapered : {
         tweeter: 'Reapered',
         twitterId: '290495509',
-        postOnlyIfContains: ''
+        postOnlyIfContains: []
     },
     lolesports : {
         tweeter: 'lolesports',
@@ -93,16 +93,12 @@ module.exports = {
                             }
 
                             if (postThisQuestion){
-                            
-                                console.log("attemping to post to twitter now for user: " + tweet.user.screen_name);
+                                console.log("Twitter - Post - For: " + tweet.user.screen_name);
                                 discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false, "main-channel");
                             }
                         }
                     }
                 }
-                
-
-
                 /*
                 if ((tweet.user.screen_name == 'solonoid12') || (tweet.user.screen_name == 'loltyler1') || (tweet.user.screen_name == 'REALIcePoseidon') || (tweet.user.screen_name == 'TLDoublelift') || (tweet.user.screen_name == 'JacobK_Cx')) {
                     //discordClient.channels.get("").send("<@173611085671170048> <@173610714433454084> https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str);
