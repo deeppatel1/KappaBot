@@ -90,7 +90,7 @@ module.exports = {
 
                             for (eachFilter in twitterAccounts[tweeter].postOnlyIfContains){
                                 console.log("each filter " + eachFilter);
-                                if ((tweet.text).toLowerCase().includes(twitterAccounts[tweeter].postOnlyIfContains.eachFilter)){
+                                if ((tweet.text).toLowerCase().includes(twitterAccounts[tweeter].postOnlyIfContains[eachFilter]){
                                     postThisQuestion = true;
                                 }
                             }
