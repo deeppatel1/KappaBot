@@ -64,6 +64,7 @@ for (tweeter in twitterAccounts){
     twitterClientSubscribeToListDelimittedComma = twitterClientSubscribeToListDelimittedComma + twitterAccounts[tweeter].twitterId + ',';
 }
 
+console.log(twitterClientSubscribeToListDelimittedComma);
 
 module.exports = {
     
