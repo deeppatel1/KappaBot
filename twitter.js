@@ -61,7 +61,8 @@ twitterAccounts = {
 var twitterClientSubscribeToListDelimittedComma = '';
 
 for (tweeter in twitterAccounts){
-    twitterClientSubscribeToListDelimittedComma = twitterClientSubscribeToListDelimittedComma + twitterAccounts[tweeter].twitterId + ',';
+    twitterClientSubscribeToListDelimittedComma = twitterClientSubscribeToListDelimittedComma + twitterAccounts[tweeter].twitterId;
+    if (tweeter != twitterAccounts.length - 1) twitterClientSubscribeToListDelimittedComma = twitterClientSubscribeToListDelimittedComma + ',';
 }
 
 console.log(twitterClientSubscribeToListDelimittedComma);
