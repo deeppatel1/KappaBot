@@ -14,7 +14,7 @@ twitterAccounts = {
     deep : {
         tweeter: 'solonoid12',
         twitterId: '1615735502',
-        postOnlyIfContains: []
+        postOnlyIfContains: ['scrub']
     },
     t1 : {
         tweeter: 'loltyler1',
