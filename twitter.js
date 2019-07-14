@@ -77,7 +77,7 @@ module.exports = {
         }, function(stream) {
     
             stream.on('data', function(tweet) {
-                console.log(tweet)
+                //console.log(tweet)
 
                 for (tweeter in twitterAccounts){
                     if (tweet.user.screen_name == twitterAccounts[tweeter].tweeter){
