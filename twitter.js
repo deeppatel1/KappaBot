@@ -82,8 +82,8 @@ module.exports = {
                 for (tweeter in twitterAccounts){
                     if (tweet.user.screen_name == twitterAccounts[tweeter].tweeter){
                         var postThisQuestion = false;
-                        Console.log(postThisQuestion);
-                        Console.log(twitterAccounts[tweeter].postOnlyIfContains.length);
+                        console.log(postThisQuestion);
+                        console.log(twitterAccounts[tweeter].postOnlyIfContains.length);
                         if (twitterAccounts[tweeter].postOnlyIfContains.length == 0){
                             postThisQuestion = true;
                         }else{
@@ -97,7 +97,7 @@ module.exports = {
 
                 
                         }
-                         Console.log("2-: "+ postThisQuestion);
+                        console.log("2-: "+ postThisQuestion);
                         if (postThisQuestion){
                             console.log("Twitter - Post - For: " + tweet.user.screen_name);
                             discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false, "main-channel");
