@@ -80,7 +80,7 @@ module.exports = {
             }
         };
 
-        console.log('Twitch Get Top Clips - ' + TWITCHer + ' ++ ' + options.url);
+        console.log('Twitch Get Top Clips - ' + twitchStreamer + ' ++ ' + options.url);
         
         request.get(options, function(err, resp, body) {
             data = JSON.parse(body);
