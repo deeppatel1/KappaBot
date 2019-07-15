@@ -88,7 +88,7 @@ module.exports = {
             for (clip in data["clips"]){
                 discordPostWithAllClips = discordPostWithAllClips + "\n https://clips.twitch.tv/" + data["clips"][clip]["slug"];
             }
-            discordPost.postToDiscord(clientForDiscord, twitchStreamer, discordPostWithAllClips, false, "main-channel");
+            discordPost.postToDiscord(clientForDiscord, twitchStreamer, discordPostWithAllClips, twitchStreamer, false, "main-channel");
         });
 
     }
