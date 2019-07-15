@@ -88,7 +88,7 @@ module.exports = {
             for (clip in data["clips"]){
                 discordPostWithAllClips = discordPostWithAllClips + "\n https://clips.twitch.tv/" + data["clips"][clip]["slug"];
             }
-            discordPost.postToDiscord(clientForDiscord, twitchStreamer, discordPostWithAllClips, twitchStreamer, false, "main-channel");
+            discordPost.postToDiscord(clientForDiscord, '', discordPostWithAllClips, false, "main-channel");
         });
 
     }
@@ -123,7 +123,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
                     var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ 'twitch.tv/loltyler1' +'\');'                    
                     dbQuery.query(sql_query);
                     var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamer[TWITCHer]['URL'];
-                    discordPost.postToDiscord(clientForDiscord, TWITCHer, messageToPost, TWITCHer, false, "main-channel");
+                    discordPost.postToDiscord(clientForDiscord, '', messageToPost, false, "main-channel");
                 }                
             })
         }else{
