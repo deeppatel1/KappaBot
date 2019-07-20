@@ -21,10 +21,10 @@ clientForDiscord.on('ready', () => {
 
     discordFuncs.respondToMessagesLive(clientForDiscord);
     twitterFunc.twitterFilter(clientForDiscord);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 15000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 30000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 15000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 15000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 150000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 150000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     
