@@ -34,7 +34,7 @@ twitchStreamerTracker = {
         postedToDiscord: false,
         lastVideoID: '',
         status: 'offline', 
-        URL: "https://www.twitch.tv/itachipower",
+        URL: "https://www.twitch.tv/riotgames",
         MoreThan10kPostedDiscord: false
     },
     ragen : {channelId: "17582288", 
@@ -111,7 +111,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
             console.log('Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
             //console.log(data);
             var dateStreamStarted = data['data'][0]['started_at'];
-            var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL("dateStreamStarted");
+            var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
             console.log(TWITCHer + ' stream started at ' + dateStreamStarted);
             checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
                 if (!checkifDateStreamStartedExistsInDatabase){
@@ -122,10 +122,10 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
                                 + currentdate.getMinutes() + ":"
                                 + currentdate.getSeconds();
                     
-                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ 'twitch.tv/loltyler1' +'\');'                    
+                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ twitchStreamerTracker[TWITCHer]['URL'] +'\');'                    
                     dbQuery.query(sql_query);
                     var messageToPost = twitchStreamerTracker[TWITCHer]['channelName'] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
-                    messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + "<@173611085671170048> <@173610714433454084>" : messageToPost;
+                    messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084>" : messageToPost;
                     discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
                 }                
             })
