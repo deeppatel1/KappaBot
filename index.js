@@ -16,15 +16,13 @@ var clientForDiscord = new Discord.Client();
 
 clientForDiscord.on('ready', () => {    
 
-    
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 10000);
-
     discordFuncs.respondToMessagesLive(clientForDiscord);
+
     twitterFunc.twitterFilter(clientForDiscord);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 150000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 150000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 49000);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 60000);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     
