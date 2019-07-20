@@ -40,12 +40,12 @@ twitterAccounts = {
         tweeter: 'Reapered',
         twitterId: '290495509',
         postOnlyIfContains: []
-    },
+    },/*
     lolesports : {
         tweeter: 'lolesports',
         twitterId: '614754689',
         postOnlyIfContains: ['#lcs', 'na', 'lcs']
-    },
+    },*/
     c9 : {
         tweeter: 'Cloud9',
         twitterId: '1452520626',

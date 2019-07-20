@@ -10,24 +10,24 @@ var animeNotifications = require('./animeNotifications');
 
 var clientForDiscord = new Discord.Client();
 
-
 // TO DO: download node-schedule NPM to schedule the remidners. than use RSS on nyaa.si to link the torrent downloads.
 
-
 //animeNotifications.makeAniListCall();
-
 
 clientForDiscord.on('ready', () => {    
 
     
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 10000);
 
-    discordFuncs.respondToMessagesLive(clientForDiscord);
-    twitterFunc.twitterFilter(clientForDiscord);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
+    //discordFuncs.respondToMessagesLive(clientForDiscord);
+    //twitterFunc.twitterFilter(clientForDiscord);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 15000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 30000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 30000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 15000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 15000);
+
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
+    /*
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 600000);
@@ -38,7 +38,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 623000);
-    
+    */
 });
 
 
