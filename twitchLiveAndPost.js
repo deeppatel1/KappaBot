@@ -124,7 +124,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
                     
                     var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ 'twitch.tv/loltyler1' +'\');'                    
                     dbQuery.query(sql_query);
-                    var messageToPost = twitchStreamer[TWITCHer] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
+                    var messageToPost = twitchStreamerTracker[TWITCHer] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
                     discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
                 }                
             })
