@@ -112,6 +112,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
             //is live, but check if its already posted by checking the database
             var dateStreamStarted = data['data']['started_at'];
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
+            console.log(TWITCHer + ' stream started at ' + dateStreamStarted);
             checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
                 if (!checkifDateStreamStartedExistsInDatabase){
                     console.log('Twitch Check for ' + TWITCHer + ' says DB is live, now trying to post');
