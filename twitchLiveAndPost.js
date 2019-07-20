@@ -114,6 +114,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
             checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
                 if (!checkifDateStreamStartedExistsInDatabase){
+                    console.log('Twitch Check for ' + TWITCHer + ' says DB is live, now trying to post');
                     var currentdate = new Date();
                     var datetime = getFormattedDate(currentdate);
                     var time = currentdate.getHours() + ":"
