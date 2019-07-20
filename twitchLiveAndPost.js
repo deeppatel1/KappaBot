@@ -109,8 +109,8 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
         
         if (data['data'].length != 0){
             console.log('Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
-            console.log(data);
-            var dateStreamStarted = data['data']['started_at'];
+            //console.log(data);
+            var dateStreamStarted = data['data'][0]['started_at'];
             var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
             console.log(TWITCHer + ' stream started at ' + dateStreamStarted);
             checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
