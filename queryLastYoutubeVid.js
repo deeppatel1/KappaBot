@@ -152,7 +152,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                                 ]
                             };
 
-                            discordPost.postToDiscord(clientForDiscord, YTer, { embed }, true, "youtube-channel");
+                            //discordPost.postToDiscord(clientForDiscord, YTer, { embed }, true, "youtube-channel");
                             var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId;
                             discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, "youtube-channel");
                         }
