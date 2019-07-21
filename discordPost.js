@@ -4,7 +4,6 @@ module.exports = {
 
     postToDiscord : function(clientForDiscord, YTer, msgToPost, ifEmbed, channel){
 
-
         var postingChannel = credentials.channel;
 
         if ((YTer == 'Twitch') || (YTer == '')) {
@@ -17,8 +16,8 @@ module.exports = {
         //console.log(clientForDiscord.channel);
 
         if (!ifEmbed){
-            // main discord channel is 173611297387184129
-            // secondary discord channel is 284157566693539851
+            // main discord channel is          173611297387184129
+            // secondary discord channel is     284157566693539851
             console.log("[" + YTer + "] " + "Now posting  ---- " + msgToPost + "  " + new Date())
             clientForDiscord.channels.get(postingChannel).send(msgToPost)
         }else{
