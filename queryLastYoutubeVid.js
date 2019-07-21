@@ -101,7 +101,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
             var videoId = body.items[0].id.videoId;
             var url = "https://www.youtube.com/watch?v=" + videoId;
 
-            var checkIfURLExistsInDatabase = dbQuery.checkURL("url");
+            var checkIfURLExistsInDatabase = dbQuery.checkURL(url);
 
             checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
                 if (!checkIfURLExistsInDatabase) {   //If the video is not in the DB, do all this
@@ -152,9 +152,9 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                                 ]
                             };
 
-                            //discordPost.postToDiscord(clientForDiscord, YTer, { embed }, true, "youtube-channel");
+                            discordPost.postToDiscord(clientForDiscord, YTer, { embed }, true, "youtube-vids-channel");
                             var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId;
-                            discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, "youtube-channel");
+                            discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, "youtube-vids-channel");
                         }
                     }
                 }
