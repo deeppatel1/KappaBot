@@ -101,7 +101,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
             var videoId = body.items[0].id.videoId;
             var url = "https://www.youtube.com/watch?v=" + videoId;
 
-            var checkIfURLExistsInDatabase = dbQuery.checkURL(url);
+            var checkIfURLExistsInDatabase = dbQuery.checkURL("url");
 
             checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
                 if (!checkIfURLExistsInDatabase) {   //If the video is not in the DB, do all this
