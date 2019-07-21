@@ -24,7 +24,7 @@ clientForDiscord.on('ready', () => {
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 60000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
-    liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
+    //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
