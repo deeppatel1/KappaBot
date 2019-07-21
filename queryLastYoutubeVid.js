@@ -106,7 +106,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
             checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
                 if (!checkIfURLExistsInDatabase) {   //If the video is not in the DB, do all this
                     // Add video to database
-                    console.log(YTer + ' Database said this video is live and doesnt exist in data base' + url);
+                    console.log(YTer + ' Database said this video is live and doesnt exist in data base ' + url);
                     var currentdate = new Date();
                     var datetime = getFormattedDate(currentdate);
                     var time = currentdate.getHours() + ":"
@@ -116,6 +116,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                     dbQuery.query(sql_query);
 
                     var properVidToPost = false;
+                    console.log('filter check length: ' + streamersTracker[YTer].filters.length);
 
                     if (streamersTracker[YTer].filters.length == 0) {
                         properVidToPost = true;
