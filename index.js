@@ -35,7 +35,7 @@ clientForDiscord.on('ready', () => {
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 623000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 6000);
     
 });
 
