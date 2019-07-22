@@ -8,7 +8,7 @@ module.exports = {
 
         console.log("---YTeR:" + YTer + " msgToPost: " + msgToPost + " channel: " + channel + " posting channel: " + postingChannel);
         if ((YTer == 'Twitch') || (YTer == '')) {
-            var channel = "173611297387184129";
+            //var channel = "173611297387184129;
             clientForDiscord.channels.get(channel).send(msgToPost);
             return;
         }
