@@ -106,31 +106,32 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
     request.get(options, function(err, resp, body) {
         console.log('Twitch Check Live - ' + TWITCHer + ' ++ ' + new Date());
         data = JSON.parse(body);
-        
-        if (data['data'].length != 0){
-            console.log('Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
-            //console.log(data);
-            var dateStreamStarted = data['data'][0]['started_at'];
-            var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
-            console.log(TWITCHer + ' stream started at ' + dateStreamStarted);
-            checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
-                if (!checkifDateStreamStartedExistsInDatabase){
-                    console.log('Twitch Check for ' + TWITCHer + ' says DB is live, now trying to post');
-                    var currentdate = new Date();
-                    var datetime = getFormattedDate(currentdate);
-                    var time = currentdate.getHours() + ":"
-                                + currentdate.getMinutes() + ":"
-                                + currentdate.getSeconds();
-                    
-                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ twitchStreamerTracker[TWITCHer]['URL'] +'\');'                    
-                    dbQuery.query(sql_query);
-                    var messageToPost = twitchStreamerTracker[TWITCHer]['channelName'] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
-                    messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084>" : messageToPost;
-                    discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
-                }                
-            })
-        }else{
-            //if data == 0, then offline
+        if (data['data'] != undefined){
+            if (data['data'].length != 0){
+                console.log('Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
+                //console.log(data);
+                var dateStreamStarted = data['data'][0]['started_at'];
+                var checkifDateStreamStartedExistsInDatabase = dbQuery.checkURL(dateStreamStarted);
+                console.log(TWITCHer + ' stream started at ' + dateStreamStarted);
+                checkifDateStreamStartedExistsInDatabase.then(checkifDateStreamStartedExistsInDatabase => {
+                    if (!checkifDateStreamStartedExistsInDatabase){
+                        console.log('Twitch Check for ' + TWITCHer + ' says DB is live, now trying to post');
+                        var currentdate = new Date();
+                        var datetime = getFormattedDate(currentdate);
+                        var time = currentdate.getHours() + ":"
+                                    + currentdate.getMinutes() + ":"
+                                    + currentdate.getSeconds();
+                        
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ twitchStreamerTracker[TWITCHer]['URL'] +'\');'                    
+                        dbQuery.query(sql_query);
+                        var messageToPost = twitchStreamerTracker[TWITCHer]['channelName'] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
+                        messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084>" : messageToPost;
+                        discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
+                    }                
+                })
+            }else{
+                //if data == 0, then offline
+            }
         }
 
         /*
