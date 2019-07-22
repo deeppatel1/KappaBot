@@ -21,14 +21,14 @@ clientForDiscord.on('ready', () => {
     twitterFunc.twitterFilter(clientForDiscord);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 49000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 60000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     
     liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 600000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 60000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
