@@ -4,7 +4,7 @@ module.exports = {
 
     postToDiscord : function(clientForDiscord, YTer, msgToPost, ifEmbed, channel){
 
-        //var postingChannel = credentials.channel;
+        var postingChannel = channel;
 
         console.log("---YTeR:" + YTer + " msgToPost: " + msgToPost + " channel: " + channel + " posting channel: " + postingChannel);
         if ((YTer == 'Twitch') || (YTer == '')) {
