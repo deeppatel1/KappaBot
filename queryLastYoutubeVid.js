@@ -155,8 +155,11 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                             //discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false, "main-channel");
                             //discordPost.postToDiscord(clientForDiscord, '', { embed }, true, "main-channel");
                             var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId;
+                            //var messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084>" : messageToPost;
                             //discordPost.postToDiscord(clientForDiscord, '', messageToPost, " Youtube - ! ", false, "main-channel");
                             discordPost.postToDiscord(clientForDiscord, '', messageToPost, false, "main-channel");
+                            //discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
+
                         }
                     }
                 }
