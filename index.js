@@ -18,24 +18,24 @@ clientForDiscord.on('ready', () => {
 
     discordFuncs.respondToMessagesLive(clientForDiscord);
 
-    twitterFunc.twitterFilter(clientForDiscord);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 49000);
+    //twitterFunc.twitterFilter(clientForDiscord);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 49000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     
-    liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
+    //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 60000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 610000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 610000);
     
 });
 
