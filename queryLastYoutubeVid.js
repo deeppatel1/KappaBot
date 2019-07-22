@@ -152,9 +152,9 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                                 ]
                             };
 
-                            discordPost.postToDiscord(clientForDiscord, YTer, { embed }, true, '');
+                            discordPost.postToDiscord(clientForDiscord, YTer, { embed }, true, 173611297387184129);
                             var messageToPost = (streamersTracker[YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId;
-                            discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, '');
+                            discordPost.postToDiscord(clientForDiscord, YTer, messageToPost, false, 173611297387184129);
                         }
                     }
                 }
