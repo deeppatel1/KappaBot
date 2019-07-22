@@ -54,7 +54,7 @@ module.exports = {
         }
     },
 
-    queryLastYoutubeSingle : function(YTer){
+    queryLastYoutubeSingle : function(YTer, clientForDiscord){
 
         request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + streamerInformation['streamersTracker'][YTer].channelId + "&maxResults=1&order=date&type=video&key=" + gKey, function(err, resp, body) {
     
@@ -115,11 +115,11 @@ module.exports = {
                                     ]
                                 };
         
-                                postToDiscord(YTer, {embed}, true, "main-channel");
+                                postToDiscord(clientForDiscord, YTer, {embed}, true, "main-channel");
         
                                 var messageToPost = (streamerInformation['streamersTracker'][YTer].atorNot) ? "<@173611085671170048> <@173610714433454084> https://www.youtube.com/watch?v=" + videoId : "https://www.youtube.com/watch?v=" + videoId; 
                                 
-                                postToDiscord(YTer, messageToPost, false, "main-channel");
+                                postToDiscord(clientForDiscord, YTer, messageToPost, false, "main-channel");
                             }
                         }
                     }
