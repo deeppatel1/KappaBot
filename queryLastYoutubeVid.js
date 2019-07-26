@@ -112,8 +112,6 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                     var time = currentdate.getHours() + ":"
                         + currentdate.getMinutes() + ":"
                         + currentdate.getSeconds();
-                    var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime + '\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\'' + url + '\');'
-                    dbQuery.query(sql_query);
 
                     var properVidToPost = false;
                     console.log('filter check length: ' + streamersTracker[YTer].filters.length);
@@ -159,7 +157,9 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                             //discordPost.postToDiscord(clientForDiscord, '', messageToPost, " Youtube - ! ", false, "main-channel");
                             discordPost.postToDiscord(clientForDiscord, '', messageToPost, false, "main-channel");
                             //discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
-
+                            var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime + '\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\'' + url + '\');'
+                            dbQuery.query(sql_query);
+        
                         }
                     }
                 }

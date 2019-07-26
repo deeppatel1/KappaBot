@@ -77,9 +77,7 @@ module.exports = {
                         var time = currentdate.getHours() + ":"
                                     + currentdate.getMinutes() + ":"
                                     + currentdate.getSeconds();
-                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
-                        dbQuery.query(sql_query);
-        
+
         
                         var properVidToPost = false;
         
@@ -122,6 +120,9 @@ module.exports = {
                                 postToDiscord(clientForDiscord, YTer, messageToPost, false, "main-channel");
                             }
                         }
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ url +'\');'
+                        dbQuery.query(sql_query);
+        
                     }
                 });            
 

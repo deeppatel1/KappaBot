@@ -122,11 +122,12 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord){
                                     + currentdate.getMinutes() + ":"
                                     + currentdate.getSeconds();
                         
-                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ twitchStreamerTracker[TWITCHer]['URL'] +'\');'                    
-                        dbQuery.query(sql_query);
+                        
                         var messageToPost = twitchStreamerTracker[TWITCHer]['channelName'] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
                         messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084>" : messageToPost;
                         discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
+                        var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime +'\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\''+ twitchStreamerTracker[TWITCHer]['URL'] +'\');'                    
+                        dbQuery.query(sql_query);
                     }                
                 })
             }else{
