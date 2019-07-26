@@ -83,7 +83,7 @@ module.exports = {
 				console.log(returnArrayOfMatches);
 				for (var a = 0; (a < returnArrayOfMatches.length) && (counter < 5); a++) {
 
-					if ((returnArrayOfMatches[a]['league'].contains('cblol')) || (returnArrayOfMatches[a]['league'].contains('LMS')) || (returnArrayOfMatches[a]['league'].contains('LJL')) || (returnArrayOfMatches[a]['league'].contains('LMS')) || (returnArrayOfMatches[a]['league'].contains('OPL'))) {
+					if ((returnArrayOfMatches[a]['league'].includes('cblol')) || (returnArrayOfMatches[a]['league'].includes('LMS')) || (returnArrayOfMatches[a]['league'].includes('LJL')) || (returnArrayOfMatches[a]['league'].includes('LMS')) || (returnArrayOfMatches[a]['league'].includes('OPL'))) {
 						//a = a - 1;
 					} else {
 
