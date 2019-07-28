@@ -80,10 +80,10 @@ module.exports = {
 		leagueMatchesPromise.then(returnArrayOfMatches => {
 			if (returnArrayOfMatches.length != 0) {
 				var counter = 0;
-				console.log(returnArrayOfMatches);
+				//console.log(returnArrayOfMatches);
 				for (var a = 0; (a < returnArrayOfMatches.length) && (counter < 5); a++) {
 
-					if ((returnArrayOfMatches[a]['league'].includes('cblol')) || (returnArrayOfMatches[a]['league'].includes('LMS')) || (returnArrayOfMatches[a]['league'].includes('LJL')) || (returnArrayOfMatches[a]['league'].includes('LMS')) || (returnArrayOfMatches[a]['league'].includes('OPL'))) {
+					if ((returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('cblol'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('LMSS'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('LJL'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('LMS'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('OPL'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('CBLoL')))) {
 						//a = a - 1;
 					} else {
 
