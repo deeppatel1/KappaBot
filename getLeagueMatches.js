@@ -83,7 +83,7 @@ module.exports = {
 				//console.log(returnArrayOfMatches);
 				for (var a = 0; (a < returnArrayOfMatches.length) && (counter < 5); a++) {
 
-					if ((returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('cblol'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('LMSS'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('LJL'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('LMS'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('OPL'))) || (returnArrayOfMatches[a]['league'].includes(equalsIgnoreCase('CBLoL')))) {
+					if ((returnArrayOfMatches[a]['league'].includes(('cblol'))) || (returnArrayOfMatches[a]['league'].includes(('LMSS'))) || (returnArrayOfMatches[a]['league'].includes(('LJL'))) || (returnArrayOfMatches[a]['league'].includes(('LMS'))) || (returnArrayOfMatches[a]['league'].includes(('OPL'))) || (returnArrayOfMatches[a]['league'].includes(('CBLoL')))) {
 						//a = a - 1;
 					} else {
 
