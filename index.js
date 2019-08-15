@@ -12,9 +12,14 @@ var clientForDiscord = new Discord.Client();
 
 // TO DO: download node-schedule NPM to schedule the remidners. than use RSS on nyaa.si to link the torrent downloads.
 
-//animeNotifications.makeAniListCall();
+
 
 clientForDiscord.on('ready', () => {    
+
+
+    //animeNotifications.makeAniListCall();
+
+    animeNotifications.initiateAnimes(clientForDiscord);
 
     discordFuncs.respondToMessagesLive(clientForDiscord);
 
@@ -37,7 +42,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 610000);
-    
+
 });
 
 

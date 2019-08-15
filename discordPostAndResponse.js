@@ -7,11 +7,11 @@ var twitchFunctions = require('./twitchLiveAndPost');
 var animeFunctions = require('./animeNotifications.js');
 
 module.exports = {
-    
-    respondToMessagesLive : function(clientForDiscord){
 
-        clientForDiscord.on("message", function(message) {
-    
+    respondToMessagesLive: function (clientForDiscord) {
+
+        clientForDiscord.on("message", function (message) {
+
             if (message.content.startsWith("--h") || message.content.startsWith("?help")) {
                 const embed = new Discord.RichEmbed()
                     .setTitle('Commands')
@@ -22,77 +22,39 @@ module.exports = {
                     .addField("?vod {name} {number}", "Gets the last {number} of vods for a particular streamer.\n{name}: EBZ, SAM, SJC, CXNews, MexicanAcne")
                     .addField("!league games", "post upcoming league games")
                     .addField("!(t1/lolesports) (day/week/month/all)", "query twitch vods for these 2 channels. tops clips per day/week/month/all")
-                    .addField("_","_")
+                    .addField("_", "_")
                     .addField("!version", "checks current version")
-    
+
                 message.channel.send(embed)
-            } /* else if (message.content.startsWith("!ice")) {
-                var args = message.content.split(/ +/g);
-                var inHowLongDuration = args[1]; //can be hour for last hour, day..., week..., month..., year..., alltime
-                var howManyClips = args[2]; //how many clips to show
-                var stringToSend = "";
-    
-                //console.log(args)
-    
-                neatclipClient.get("https://neatclip.com/api/v1/clips.php?streamer_url=https://www.youtube.com/channel/UCv9Edl_WbtbPeURPtFDo-uA&time=" + inHowLongDuration + "&sort=top", {api_key:  credentials.neatclip}, function(data, response) {
-    
-                    var size = howManyClips
-                    if (data.length < size) size = data.length;
-                    for (var x = 0; x < size; x++) {
-                        var entry = [data[x]["slugID"], data[x]["viewsAll"]];
-                        stringToSend = stringToSend + "https://neatclip.com/clip/" + data[x]["slugId"] + " views:" + data[x]["viewsAll"] + "\n";
-                    }
-    
-                    message.channel.send(stringToSend)
-    
-                });
-    
-            } else if (message.content.startsWith('!clips')) {
-                var args = message.content.split(/ +/g);
-                var inHowLongDuration = args[1]; //can be hour for last hour, day..., week..., month..., year..., alltime
-                var howManyClips = args[2]; //how many clips to show
-                var stringToSend = "";
-                neatclipClient.get("https://neatclip.com/api/v1/clips.php?time=" + inHowLongDuration + "&sort=top", {api_key: credentials.neatclip}, function(data, response) {
-    
-                    var size = howManyClips;
-    
-                    if (data.length < size) size = data.length;
-                    for (var x = 0; x < size; x++) {
-                        var entry = [data[x]["slugID"], data[x]["viewsAll"]];
-                        stringToSend = stringToSend + "https://neatclip.com/clip/" + data[x]["slugId"] + " views:" + data[x]["viewsAll"] + "\n";
-                    }
-                    message.channel.send(stringToSend);
-                });
-    
-            } */else if (message.content.startsWith('!update')) {
-    
+            } else if (message.content.startsWith('!update')) {
+
                 message.channel.send(':thinking:')
 
                 liveYouTubeCheck.queryOnceAndThenPostSummary(clientForDiscord);
-    
+
             } else if (message.content.startsWith('?vod ')) {
                 var numberofVods = message.content.split(" ");
                 const num = numberofVods[2];
                 const name = numberofVods[1];
-    
+
                 if (numberofVods.length == 3) {
                     dbQuery.queryOthers(num, name, message);
                 }
-            } else if (message.content.startsWith('?ice last')){
+            } else if (message.content.startsWith('?ice last')) {
                 var numberofVods = message.content.split(" ");
                 const num = numberofVods[2];
                 if (numberofVods.length == 3) {
                     dbQuery.queryVod(num, message);
                 }
-                // readLastLines.read('icevods.txt',numberofVods).then((lines) =>
-                //     message.channel.send(lines));
-            } else if (message.content.startsWith('!league games')){
+            } else if (message.content.startsWith('!league games')) {
                 getLeagueMatches.getAndPostAllMatches(clientForDiscord);
             } else if (message.content.startsWith('!logs')) {
-                message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
+                message.channel.send("kappabot logs", {
+                    files: ["/home/pi/.forever/kappabot.log"]
+                });
             } else if (message.content.startsWith('!version')) {
                 message.channel.send("version ios 16.0");
-            } else if (message.content.startsWith('!clips')){
+            } else if (message.content.startsWith('!clips')) {
                 var extraInputs = message.content.split(" ");
                 var streamer = extraInputs[1];
                 streamer = streamer.toLowerCase();
@@ -100,14 +62,24 @@ module.exports = {
                 console.log('streamer = ' + streamer);
                 console.log('period: ' + period);
                 twitchFunctions.getTopClips(clientForDiscord, streamer, period, 5);
-            } else if (message.content.startsWith('!anime')){
-                var extraInputs = message.content.split(" ");
-                var anime = extraInputs[1];
-                animeFunctions.getAirTime(clientForDiscord, anime);
             }
-    
+
+            /* anime stuff is here */
+            else if (message.content.startsWith("!anime")) {
+                animeFunctions.extractAnimeAndAnimeID();
+            } else if (message.content.startsWith("!add anime")) {
+                var animeAndID = message.content.split(" ");
+                console.log(animeAndID)
+
+                animeFunctions.addAnime(animeAndID[2], animeAndID[3]);
+            } else if (message.content.startsWith("!view anime")) {
+                console.log('in anime functions view')
+                animeFunctions.viewAnime();
+            }
+
+
         });
-    
+
     },
 
 };
