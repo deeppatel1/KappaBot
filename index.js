@@ -14,7 +14,7 @@ var clientForDiscord = new Discord.Client();
 
 
 
-clientForDiscord.on('ready', () => {    
+clientForDiscord.on('ready', () => {
 
 
     //animeNotifications.makeAniListCall();
@@ -24,13 +24,13 @@ clientForDiscord.on('ready', () => {
     discordFuncs.respondToMessagesLive(clientForDiscord);
 
     twitterFunc.twitterFilter(clientForDiscord);
+    
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 60000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
-    
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'CXClips', 570000);

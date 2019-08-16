@@ -7,9 +7,9 @@ var allMatchesArray = [];
 
 module.exports = {
 
-	getAllMatches: function() {
+	getAllMatches: function () {
 		return new Promise(async (resolve, reject) => {
-			request('https://www.leagueofgraphs.com/lcs/lcs-schedule', function(error, response, html) {
+			request('https://www.leagueofgraphs.com/lcs/lcs-schedule', function (error, response, html) {
 
 				if (!error && response.statusCode == 200) {
 					var $ = cheerio.load(html);
@@ -18,7 +18,7 @@ module.exports = {
 					var lastLeagueName = '';
 					var lastLeagueIcon = '';
 
-					$('td.lcsMatchScoreColumn').each(function(i, element) {
+					$('td.lcsMatchScoreColumn').each(function (i, element) {
 						if (($(this).parent().prev().children().text()) == 'Recent games') {
 							recentGames = true;
 						}
@@ -31,14 +31,14 @@ module.exports = {
 							var leagueIcon = ($(this).prev().prev().children().children().children().children().attr('src'));
 							var leagueName = ($(this).prev().prev().children().children().children().children().attr('title'));
 
-							if (leagueIcon == undefined){
+							if (leagueIcon == undefined) {
 								leagueIcon = lastLeagueIcon;
 								leagueName = lastLeagueName;
 							} else {
 								lastLeagueIcon = leagueIcon;
 								lastLeagueName = leagueName;
 							}
-							
+
 							var leftSideTeamIconAndName = ($(this).prev().children().children().children());
 
 							var leftSideTeamIcon = leftSideTeamIconAndName.children().attr('src');
@@ -75,20 +75,21 @@ module.exports = {
 	},
 
 
-	getAndPostAllMatches: function(clientForDiscord) {
+	getAndPostAllMatches: function (clientForDiscord) {
 		var leagueMatchesPromise = this.getAllMatches();
 		leagueMatchesPromise.then(returnArrayOfMatches => {
 			if (returnArrayOfMatches.length != 0) {
 				var counter = 0;
 				//console.log(returnArrayOfMatches);
-				for (var a = 0; (a < returnArrayOfMatches.length) && (counter < 5); a++) {
+				for (var a = 0;
+					(a < returnArrayOfMatches.length) && (counter < 5); a++) {
 
 					if ((returnArrayOfMatches[a]['league'].includes(('cblol'))) || (returnArrayOfMatches[a]['league'].includes(('LMSS'))) || (returnArrayOfMatches[a]['league'].includes(('LJL'))) || (returnArrayOfMatches[a]['league'].includes(('LMS'))) || (returnArrayOfMatches[a]['league'].includes(('OPL'))) || (returnArrayOfMatches[a]['league'].includes(('CBLoL')))) {
 						//a = a - 1;
 					} else {
 
 						var newDate = new Date(0); // The 0 there is the key, which sets the date to the epoch
-						newDate.setUTCSeconds(returnArrayOfMatches[a]['dayAndTimeEPOC']/1000);
+						newDate.setUTCSeconds(returnArrayOfMatches[a]['dayAndTimeEPOC'] / 1000);
 
 						const embed = {
 							"color": 9336950,
@@ -120,7 +121,9 @@ module.exports = {
 							]
 						};
 
-						discordPost.postToDiscord(clientForDiscord, '', {embed: embed}, true, "main-channel");
+						discordPost.postToDiscord(clientForDiscord, '', {
+							embed: embed
+						}, true, "main-channel");
 						counter++;
 					}
 				}

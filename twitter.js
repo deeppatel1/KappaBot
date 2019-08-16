@@ -1,4 +1,3 @@
-
 var discordPost = require('./discordPost');
 var Twitter = require('twitter');
 var credentials = require('./configuration.json');
@@ -11,56 +10,57 @@ var Twitterclient = new Twitter({
 });
 
 twitterAccounts = {
-    deep : {
+    deep: {
         tweeter: 'solonoid12',
         twitterId: '1615735502',
         postOnlyIfContains: ['scrub']
     },
-    t1 : {
+    t1: {
         tweeter: 'loltyler1',
         twitterId: '4833803780',
         postOnlyIfContains: []
     },
-    ice : {
+    ice: {
         tweeter: 'REALIcePoseidon',
         twitterId: '736784706486734852',
         postOnlyIfContains: []
     },
-    lift : {
+    lift: {
         tweeter: 'TLDoublelift',
         twitterId: '344538810',
         postOnlyIfContains: []
     },
-    jacob : {
+    jacob: {
         tweeter: 'jacobK_Cx',
         twitterId: '873949601522487297',
         postOnlyIfContains: []
     },
-    reapered : {
+    reapered: {
         tweeter: 'Reapered',
         twitterId: '290495509',
         postOnlyIfContains: []
-    },/*
-    lolesports : {
-        tweeter: 'lolesports',
-        twitterId: '614754689',
-        postOnlyIfContains: ['#lcs', 'na', 'lcs']
-    },*/
-    c9 : {
+    },
+    /*
+        lolesports : {
+            tweeter: 'lolesports',
+            twitterId: '614754689',
+            postOnlyIfContains: ['#lcs', 'na', 'lcs']
+        },*/
+    c9: {
         tweeter: 'Cloud9',
         twitterId: '1452520626',
         postOnlyIfContains: ['c9lol, lol, lcs']
     },
-    lcs : {
+    lcs: {
         tweeter: 'LCS',
         twitterId: '1099419521654222848',
         postOnlyIfContains: []
     }
-} 
+}
 
 var twitterClientSubscribeToListDelimittedComma = '';
 
-for (tweeter in twitterAccounts){
+for (tweeter in twitterAccounts) {
     twitterClientSubscribeToListDelimittedComma = twitterClientSubscribeToListDelimittedComma + twitterAccounts[tweeter].twitterId;
     if (tweeter != 'lcs') twitterClientSubscribeToListDelimittedComma = twitterClientSubscribeToListDelimittedComma + ',';
 }
@@ -68,37 +68,34 @@ for (tweeter in twitterAccounts){
 console.log(twitterClientSubscribeToListDelimittedComma);
 
 module.exports = {
-    
-    twitterFilter : function(clientForDiscord){
-    
+
+    twitterFilter: function (clientForDiscord) {
+
         Twitterclient.stream('statuses/filter', {
             //solonoid12 is 1615735502
             follow: twitterClientSubscribeToListDelimittedComma
-        }, function(stream) {
-    
-            stream.on('data', function(tweet) {
+        }, function (stream) {
+
+            stream.on('data', function (tweet) {
                 //console.log(tweet)
 
-                for (tweeter in twitterAccounts){
-                    if (tweet.user.screen_name == twitterAccounts[tweeter].tweeter){
+                for (tweeter in twitterAccounts) {
+                    if (tweet.user.screen_name == twitterAccounts[tweeter].tweeter) {
                         var postThisQuestion = false;
                         console.log(postThisQuestion);
                         console.log(twitterAccounts[tweeter].postOnlyIfContains.length);
-                        if (twitterAccounts[tweeter].postOnlyIfContains.length == 0){
+                        if (twitterAccounts[tweeter].postOnlyIfContains.length == 0) {
                             postThisQuestion = true;
-                        }else{
-
-                            for (eachFilter in twitterAccounts[tweeter].postOnlyIfContains){
+                        } else {
+                            for (eachFilter in twitterAccounts[tweeter].postOnlyIfContains) {
                                 console.log("each filter " + eachFilter);
-                                if ((tweet.text).toLowerCase().includes(twitterAccounts[tweeter].postOnlyIfContains[eachFilter])){
+                                if ((tweet.text).toLowerCase().includes(twitterAccounts[tweeter].postOnlyIfContains[eachFilter])) {
                                     postThisQuestion = true;
                                 }
                             }
-
-                
                         }
-                        console.log("2-: "+ postThisQuestion);
-                        if (postThisQuestion){
+                        console.log("2-: " + postThisQuestion);
+                        if (postThisQuestion) {
                             console.log("Twitter - Post - For: " + tweet.user.screen_name);
                             discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false, "main-channel");
                         }
@@ -113,8 +110,8 @@ module.exports = {
                 }
                 */
             });
-    
-            stream.on('error', function(error) {
+
+            stream.on('error', function (error) {
                 console.log(error);
             });
         });

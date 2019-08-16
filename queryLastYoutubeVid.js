@@ -73,7 +73,8 @@ var streamersTracker = {
         atorNot: true,
         lastVideoID: '',
         filters: ['Heist']
-    },};
+    },
+};
 
 
 module.exports = {
@@ -104,14 +105,14 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
             var checkIfURLExistsInDatabase = dbQuery.checkURL(url);
 
             checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
-                if (!checkIfURLExistsInDatabase) {   //If the video is not in the DB, do all this
+                if (!checkIfURLExistsInDatabase) { //If the video is not in the DB, do all this
                     // Add video to database
                     console.log(YTer + ' Database said this video is live and doesnt exist in data base ' + url);
                     var currentdate = new Date();
                     var datetime = getFormattedDate(currentdate);
-                    var time = currentdate.getHours() + ":"
-                        + currentdate.getMinutes() + ":"
-                        + currentdate.getSeconds();
+                    var time = currentdate.getHours() + ":" +
+                        currentdate.getMinutes() + ":" +
+                        currentdate.getSeconds();
 
                     var properVidToPost = false;
                     console.log('filter check length: ' + streamersTracker[YTer].filters.length);
@@ -142,12 +143,10 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                                 "author": {
                                     "name": YTer + " - " + body.items[0].snippet.title,
                                 },
-                                "fields": [
-                                    {
-                                        "name": "-",
-                                        "value": body.items[0].snippet.description
-                                    }
-                                ]
+                                "fields": [{
+                                    "name": "-",
+                                    "value": body.items[0].snippet.description
+                                }]
                             };
 
                             //discordPost.postToDiscord(clientForDiscord, '', "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str, "Twitter - " + tweet.user.screen_name, false, "main-channel");
@@ -157,9 +156,9 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                             //discordPost.postToDiscord(clientForDiscord, '', messageToPost, " Youtube - ! ", false, "main-channel");
                             discordPost.postToDiscord(clientForDiscord, '', messageToPost, false, "main-channel");
                             //discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
-                               var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime + '\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\'' + url + '\');'
+                            var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime + '\', \'' + url + '\', \'' + "YouTube" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\'' + url + '\');'
                             dbQuery.query(sql_query);
-        
+
                         }
                     }
                 }
