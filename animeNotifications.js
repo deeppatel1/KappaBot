@@ -169,6 +169,11 @@ function getTimeUntilAiring(id) {
 												timeUntilAiring
 												episode
 										}
+										coverImage {
+												large
+												medium
+										}
+										bannerImage
 								}
 						}
 				`;
@@ -193,13 +198,18 @@ function getTimeUntilAiring(id) {
 
 function handleDataForAiringUntil(data) {
 
+	console.log(data.data.Media.coverImage.large)
+
+	var coverImage = data.data.Media.coverImage.medium;
+	var bannerImage = data.data.Media.bannerImage;
+
 	var anime = data.data.Media.title.romaji;
 	var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
 	var episode = data.data.Media.nextAiringEpisode.episode;
 
 	var dateTimeOfAirDate = new Date(unixAirTime * 1000);
-	var currentDateTime = new Date();
-
+	
+	/*var currentDateTime = new Date();
 	
 	var seconds = Math.floor((dateTimeOfAirDate - (currentDateTime))/1000);
 	var minutes = Math.floor(seconds/60);
@@ -216,10 +226,37 @@ function handleDataForAiringUntil(data) {
 		var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
 
 	}
+*/
+	console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode));
 
-	discordPost.postToDiscord(clientForDiscord, '', msgToPost, false, "main-channel");
+	discordPost.postToDiscord(clientForDiscord, '', {
+		embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode)
+	}, true, "main-channel");
 
 }
+
+
+function createEmbed(anime, airDateTime, bannerImage, episode) {
+	const embed = {
+		color: 0x0099ff,
+		title: anime,
+		//description: 'Some description here',
+		//thumbnail: {
+		//	url: coverImage,
+		//},
+		image: {
+			url: bannerImage,
+		},
+		timestamp: airDateTime,
+		footer: {
+			text: 'Episode ' + episode + ' will air'
+		},
+	};
+
+	return embed
+
+}
+
 
 function handleResponseForAiringUntil(response) {
 	return response.json().then(function (json) {

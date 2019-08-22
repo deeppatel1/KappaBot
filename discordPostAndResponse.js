@@ -53,7 +53,7 @@ module.exports = {
                     files: ["/home/pi/.forever/kappabot.log"]
                 });
             } else if (message.content.startsWith('!version')) {
-                message.channel.send("version ios 16.0");
+                message.channel.send("version ios 19.0");
             } else if (message.content.startsWith('!clips')) {
                 var extraInputs = message.content.split(" ");
                 var streamer = extraInputs[1];
