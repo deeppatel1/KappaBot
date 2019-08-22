@@ -13,13 +13,17 @@ module.exports = {
 	initiateAnimes: function (clientForDiscordPassedIn) {
 		clientForDiscord = clientForDiscordPassedIn;
 		// Now get all the animes that are saved, and instantiate the automatic reminder
-		this.extractAnimeAndAnimeID();
+		extractAnimeAndAnimeIdPromise.then(function (value) {
+			for (var eachAnime in value) {
+				getNextAirDate(value[eachAnime][0], value[eachAnime][1])
+			}
+		});
 	},
 
 	extractAnimeAndAnimeID: function () {
 		extractAnimeAndAnimeIdPromise.then(function (value) {
 			for (var eachAnime in value) {
-				getNextAirDate(value[eachAnime][0], value[eachAnime][1])
+				getTimeUntilAiring(value[eachAnime][0], value[eachAnime][1])
 			}
 		});
 	},
@@ -71,6 +75,12 @@ function createReminder(animeName, dateTimeUnixStringForm, episode) {
 	console.log(animeName + ' -- Reminder alert set for anime ' + animeName + ' at ' + j.nextInvocation());
 }
 
+/* 
+//		Functions that deal with handling API return data OF GETTING NEXT AIR DATE!
+//
+//
+*/
+
 function getNextAirDate(id) {
 
 	const query = `
@@ -109,9 +119,6 @@ function getNextAirDate(id) {
 	fetch(url, options).then(handleResponse).then(handleData).catch(handleError)
 }
 
-
-/* Functions that deal with handling API return data */
-
 function handleData(data) {
 
 	var anime = data.data.Media.title.romaji;
@@ -123,7 +130,7 @@ function handleData(data) {
 
 	console.log(anime + ' - Creating Reminder at ' + nextAirDateString + ' with cronInput as ' + nextAirDateCronInput);
 	createReminder(anime, nextAirDateCronInput, nextEpisodeNumber);
-	discordPost.postToDiscord(clientForDiscord, '', anime + ' : will air at --- ' + nextAirDateString, false, "main-channel");
+	//discordPost.postToDiscord(clientForDiscord, '', anime + ' : will air at --- ' + nextAirDateString, false, "main-channel");
 
 }
 
@@ -134,6 +141,93 @@ function handleResponse(response) {
 }
 
 function handleError(error) {
+	//alert('Error, check console');
+	console.error(error);
+	console.log(JSON.stringify(error));
+
+}
+
+/* 
+//		Functions that deal with handling API return data OF GETTING TIME UNTIL NEXT "Airing Until"
+//
+//
+*/
+
+function getTimeUntilAiring(id) {
+
+	const query = `
+				query($id: Int!) {
+								Media(id: $id, type: ANIME) {
+										title {
+												romaji
+												english
+												native
+												userPreferred
+										}
+										nextAiringEpisode {
+												airingAt
+												timeUntilAiring
+												episode
+										}
+								}
+						}
+				`;
+
+	var url = 'https://graphql.anilist.co',
+		options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+			},
+			body: JSON.stringify({
+				query: query,
+				variables: {
+					id: id
+				}
+			})
+		};
+
+	fetch(url, options).then(handleResponseForAiringUntil).then(handleDataForAiringUntil).catch(handleErrorForAiringUntil)
+}
+
+function handleDataForAiringUntil(data) {
+
+	var anime = data.data.Media.title.romaji;
+	var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
+	var episode = data.data.Media.nextAiringEpisode.episode;
+
+	var dateTimeOfAirDate = new Date(unixAirTime * 1000);
+	var currentDateTime = new Date();
+
+	
+	var seconds = Math.floor((dateTimeOfAirDate - (currentDateTime))/1000);
+	var minutes = Math.floor(seconds/60);
+	var hours = Math.floor(minutes/60);
+	var days = Math.floor(hours/24);
+
+	hours = hours-(days*24);
+	minutes = minutes-(days*24*60)-(hours*60);
+	seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+
+	if (hours == 0) {
+		var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
+	}else{
+		var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
+
+	}
+
+	discordPost.postToDiscord(clientForDiscord, '', msgToPost, false, "main-channel");
+
+}
+
+function handleResponseForAiringUntil(response) {
+	return response.json().then(function (json) {
+		return response.ok ? json : Promise.reject(json);
+	});
+}
+
+function handleErrorForAiringUntil(error) {
 	//alert('Error, check console');
 	console.error(error);
 	console.log(JSON.stringify(error));
@@ -167,4 +261,14 @@ function unixToDateTimeStringCron(UNIX_timestamp) {
 	var sec = "0" + a.getSeconds();
 	var time = min.substr(-2) + ' ' + hour + ' ' + date + ' ' + month + ' *';
 	return time;
+}
+
+function getDateDifference(start, end) {
+	var secondsDifference = Math.round((start.getTime() - end.getTime()) / 1000);
+	var hours = Math.floor(secondsDifference / 3600);
+    secondsDifference -= hours * 3600
+    var minutes = Math.floor(secondsDifference / 60);
+    secondsDifference -= minutes * 60;
+    var seconds = secondsDifference % 60;
+    return hours + ":" + minutes + ":" + seconds;
 }
