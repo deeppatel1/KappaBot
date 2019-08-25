@@ -16,13 +16,13 @@ var clientForDiscord = new Discord.Client();
 
 clientForDiscord.on('ready', () => {
 
-/*
+
     //animeNotifications.makeAniListCall();
 
     animeNotifications.initiateAnimes(clientForDiscord);
 
     discordFuncs.respondToMessagesLive(clientForDiscord);
-
+/*
     twitterFunc.twitterFilter(clientForDiscord);
     
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 60000);

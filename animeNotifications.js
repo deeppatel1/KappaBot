@@ -23,6 +23,7 @@ module.exports = {
 	extractAnimeAndAnimeID: function () {
 		extractAnimeAndAnimeIdPromise.then(function (value) {
 			for (var eachAnime in value) {
+				console.log(value[eachAnime])
 				getTimeUntilAiring(value[eachAnime][0], value[eachAnime][1])
 			}
 		});
@@ -41,7 +42,7 @@ module.exports = {
 		lineReader.eachLine('animeList.txt', function (line) {
 			console.log(line)
 			animeAndAnimeID = line.split(',')
-			discordPost.postToDiscord(clientForDiscord, '', animeAndAnimeID[0] + ' - ' + animeAndAnimeID[1], false, "main-channel");
+			discordPost.postToDiscord(clientForDiscord, '', animeAndAnimeID[0] + ' - ' + animeAndAnimeID[1] + ' - ' + animeAndAnimeID[2], false, "main-channel");
 		});
 	},
 
@@ -55,12 +56,10 @@ module.exports = {
 				}
 			}
 
+            fs.writeFile('animeList.txt', linesToEnterinTxt.join('\n'), {}, () => {
+                fs.close('animeList.txt', () => {});
+            });
 
-                        fs.writeFile('animeList.txt', linesToEnterinTxt.join('\n'), {}, () => {
-                                fs.close(file, () => {});
-                        });
-
-		
 			console.log(linesToEnterinTxt)
 			//var linesExceptFirst = data.split('\n').slice(1).join('\n');
 			//fs.writeFile(filename, linesExceptFirst);
