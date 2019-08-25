@@ -1,5 +1,6 @@
 #!/bin/bash/
-sleep 8
+npm install npm@latest -g
+sleep 50
 cd ~/KappaBot/KappaBot/
 git pull --all
 npm install
