@@ -54,7 +54,13 @@ module.exports = {
 					linesToEnterinTxt.push(allLines[eachLine]);
 				}
 			}
-			fs.writeFile('animeList.txt', linesToEnterinTxt.join('\n'))
+
+
+                        fs.writeFile('animeList.txt', linesToEnterinTxt.join('\n'), {}, () => {
+                                fs.close(file, () => {});
+                        });
+
+		
 			console.log(linesToEnterinTxt)
 			//var linesExceptFirst = data.split('\n').slice(1).join('\n');
 			//fs.writeFile(filename, linesExceptFirst);
