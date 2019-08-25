@@ -16,7 +16,7 @@ var clientForDiscord = new Discord.Client();
 
 clientForDiscord.on('ready', () => {
 
-/*
+
     //animeNotifications.makeAniListCall();
 
     animeNotifications.initiateAnimes(clientForDiscord);
@@ -42,7 +42,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 610000);
-*/
+
 });
 
 

@@ -1,4 +1,4 @@
-const lineReader = require('line-reader');
+var lineReader = require('line-reader');
 const fetch = require("node-fetch");
 const fs = require('fs')
 
@@ -28,8 +28,8 @@ module.exports = {
 		});
 	},
 
-	addAnime: function (anime, Id) {
-		data = '\n' + anime + ',' + Id
+	addAnime: function (anime, Id, watchAnimeTitle) {
+		data = '\n' + anime + ',' + Id + ',' + watchAnimeTitle;
 		console.log(data)
 		fs.appendFile('animeList.txt', data, (err) => {
 			// In case of a error throw err.
@@ -43,12 +43,29 @@ module.exports = {
 			animeAndAnimeID = line.split(',')
 			discordPost.postToDiscord(clientForDiscord, '', animeAndAnimeID[0] + ' - ' + animeAndAnimeID[1], false, "main-channel");
 		});
+	},
+
+	removeAnime: function(anime){
+		fs.readFile('animeList.txt', 'utf8', function(err, data){
+			var linesToEnterinTxt = [];
+			var allLines = data.split('\n');
+			for (var eachLine in allLines){
+				if (!allLines[eachLine].toLowerCase().includes(anime.toLowerCase())){
+					linesToEnterinTxt.push(allLines[eachLine]);
+				}
+			}
+			fs.writeFile('animeList.txt', linesToEnterinTxt.join('\n'))
+			console.log(linesToEnterinTxt)
+			//var linesExceptFirst = data.split('\n').slice(1).join('\n');
+			//fs.writeFile(filename, linesExceptFirst);
+		});
 	}
 
 }
 
 var extractAnimeAndAnimeIdPromise = new Promise(function (resolve, reject) {
 	var animeAndAnimeID2DArray = []
+	lineReader = require('line-reader');
 
 	lineReader.eachLine('animeList.txt', function (line, last) {
 		console.log(line)
@@ -122,16 +139,17 @@ function getNextAirDate(id) {
 function handleData(data) {
 
 	var anime = data.data.Media.title.romaji;
-	var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
+	if (data.data.Media.nextAiringEpisode != null){
+		var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
 
-	var nextAirDateString = timeConverterBeautifulString(unixAirTime);
-	var nextAirDateCronInput = unixToDateTimeStringCron(unixAirTime);
-	var nextEpisodeNumber = data.data.Media.nextAiringEpisode.episode;
+		var nextAirDateString = timeConverterBeautifulString(unixAirTime);
+		var nextAirDateCronInput = unixToDateTimeStringCron(unixAirTime);
+		var nextEpisodeNumber = data.data.Media.nextAiringEpisode.episode;
 
-	console.log(anime + ' - Creating Reminder at ' + nextAirDateString + ' with cronInput as ' + nextAirDateCronInput);
-	createReminder(anime, nextAirDateCronInput, nextEpisodeNumber);
-	//discordPost.postToDiscord(clientForDiscord, '', anime + ' : will air at --- ' + nextAirDateString, false, "main-channel");
-
+		console.log(anime + ' - Creating Reminder at ' + nextAirDateString + ' with cronInput as ' + nextAirDateCronInput);
+		createReminder(anime, nextAirDateCronInput, nextEpisodeNumber);
+		//discordPost.postToDiscord(clientForDiscord, '', anime + ' : will air at --- ' + nextAirDateString, false, "main-channel");
+	}
 }
 
 function handleResponse(response) {
@@ -198,52 +216,67 @@ function getTimeUntilAiring(id) {
 
 function handleDataForAiringUntil(data) {
 
-	console.log(data.data.Media.coverImage.large)
+	//console.log(data)
+	//console.log(data.data.Media.coverImage.large)
 
 	var coverImage = data.data.Media.coverImage.medium;
 	var bannerImage = data.data.Media.bannerImage;
 
 	var anime = data.data.Media.title.romaji;
-	var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
-	var episode = data.data.Media.nextAiringEpisode.episode;
+	var animeLast3Characters = anime.substr(anime.length-3);
 
-	var dateTimeOfAirDate = new Date(unixAirTime * 1000);
+	if ( data.data.Media.nextAiringEpisode != null){
+		var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
+		var episode = data.data.Media.nextAiringEpisode.episode;
+
+		var dateTimeOfAirDate = new Date(unixAirTime * 1000);
+		
+		/*var currentDateTime = new Date();
+		
+		var seconds = Math.floor((dateTimeOfAirDate - (currentDateTime))/1000);
+		var minutes = Math.floor(seconds/60);
+		var hours = Math.floor(minutes/60);
+		var days = Math.floor(hours/24);
+
+		hours = hours-(days*24);
+		minutes = minutes-(days*24*60)-(hours*60);
+		seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+
+		if (hours == 0) {
+			var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
+		}else{
+			var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
+
+		}
+	*/
 	
-	/*var currentDateTime = new Date();
-	
-	var seconds = Math.floor((dateTimeOfAirDate - (currentDateTime))/1000);
-	var minutes = Math.floor(seconds/60);
-	var hours = Math.floor(minutes/60);
-	var days = Math.floor(hours/24);
+		var watchanimetitle = '';
 
-	hours = hours-(days*24);
-	minutes = minutes-(days*24*60)-(hours*60);
-	seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+		lineReader.eachLine('animeList.txt', function (line) {
+			if (line.toLowerCase().includes(animeLast3Characters.toLowerCase())){
+				watchanimetitle=line.split(',')[2];
+				console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle));
 
-	if (hours == 0) {
-		var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
-	}else{
-		var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
+				discordPost.postToDiscord(clientForDiscord, '', {
+					embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
+				}, true, "main-channel");
+			}
+		});
+
+
 
 	}
-*/
-	console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode));
-
-	discordPost.postToDiscord(clientForDiscord, '', {
-		embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode)
-	}, true, "main-channel");
-
 }
 
 
-function createEmbed(anime, airDateTime, bannerImage, episode) {
+function createEmbed(anime, airDateTime, bannerImage, episode, watchanimetitle) {
+	
+	var episodeMinus1Link = 'https://en.animehd.eu/' + watchanimetitle + '-episode-' + (episode-1).toString() + '-eng-subbed/';
+	var episodeMinus2Link = 'https://en.animehd.eu/' + watchanimetitle + '-episode-' + (episode-2).toString() + '-eng-subbed/';
+
 	const embed = {
 		color: 0x0099ff,
 		title: anime,
-		//description: 'Some description here',
-		//thumbnail: {
-		//	url: coverImage,
-		//},
 		image: {
 			url: bannerImage,
 		},
@@ -251,6 +284,16 @@ function createEmbed(anime, airDateTime, bannerImage, episode) {
 		footer: {
 			text: 'Episode ' + episode + ' will air'
 		},
+		fields: [
+			{
+				name: 'Watch Episode ' + (episode-1).toString() + ':',
+				value: episodeMinus1Link	
+			},
+			{
+				name: 'Watch Episode ' + (episode-2).toString() + ':',
+				value: episodeMinus2Link
+			}
+		],
 	};
 
 	return embed

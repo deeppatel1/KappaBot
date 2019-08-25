@@ -70,11 +70,14 @@ module.exports = {
             } else if (message.content.startsWith("!add anime")) {
                 var animeAndID = message.content.split(" ");
                 console.log(animeAndID)
-
-                animeFunctions.addAnime(animeAndID[2], animeAndID[3]);
+                animeFunctions.addAnime(animeAndID[2], animeAndID[3], animeAndID[4]);
             } else if (message.content.startsWith("!view anime")) {
                 console.log('in anime functions view')
                 animeFunctions.viewAnime();
+            } else if (message.content.startsWith("!remove anime")){
+                var animeToRemove = message.content.split(" ");
+                console.log('in remove functions anime')
+                animeFunctions.removeAnime(animeToRemove[2]);
             }
 
 
