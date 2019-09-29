@@ -39,6 +39,7 @@ module.exports = {
 	},
 
 	viewAnime: function () {
+		console.log('---in viewAnime')
 		lineReader.eachLine('animeList.txt', function (line) {
 			console.log(line)
 			animeAndAnimeID = line.split(',')
@@ -71,7 +72,7 @@ module.exports = {
 var extractAnimeAndAnimeIdPromise = new Promise(function (resolve, reject) {
 	var animeAndAnimeID2DArray = []
 	lineReader = require('line-reader');
-
+	console.log('--Entered in extractAnimeAndAnimeID')
 	lineReader.eachLine('animeList.txt', function (line, last) {
 		console.log(line)
 		animeAndAnimeID = line.split(',')
@@ -228,43 +229,30 @@ function handleDataForAiringUntil(data) {
 	var bannerImage = data.data.Media.bannerImage;
 
 	var anime = data.data.Media.title.romaji;
-	var animeLast3Characters = anime.substr(anime.length-3);
+
 
 	if ( data.data.Media.nextAiringEpisode != null){
+		console.log('--entered if statement')
 		var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
 		var episode = data.data.Media.nextAiringEpisode.episode;
 
 		var dateTimeOfAirDate = new Date(unixAirTime * 1000);
 		
-		/*var currentDateTime = new Date();
-		
-		var seconds = Math.floor((dateTimeOfAirDate - (currentDateTime))/1000);
-		var minutes = Math.floor(seconds/60);
-		var hours = Math.floor(minutes/60);
-		var days = Math.floor(hours/24);
-
-		hours = hours-(days*24);
-		minutes = minutes-(days*24*60)-(hours*60);
-		seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
-
-		if (hours == 0) {
-			var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
-		}else{
-			var msgToPost = anime + ' ~ Episode ' + episode + ' will air in ~ ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds!';
-
-		}
-	*/
 	
 		var watchanimetitle = '';
-
+		console.log('date time is:' + dateTimeOfAirDate)
 		lineReader.eachLine('animeList.txt', function (line) {
-			if (line.toLowerCase().includes(animeLast3Characters.toLowerCase())){
+			var animeLast3Characters = line.split(',')[0].substr(anime.length-3);
+			if (anime.toLowerCase().includes(animeLast3Characters.toLowerCase())){
 				watchanimetitle=line.split(',')[2];
+				console.log('--attemping to post anime will air now')
 				console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle));
 
 				discordPost.postToDiscord(clientForDiscord, '', {
 					embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
 				}, true, "main-channel");
+			}else{
+				console.log('--line:' + line + ' didnt contain these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)
 			}
 		});
 
@@ -289,17 +277,24 @@ function createEmbed(anime, airDateTime, bannerImage, episode, watchanimetitle) 
 		footer: {
 			text: 'Episode ' + episode + ' will air'
 		},
-		fields: [
-			{
-				name: 'Watch Episode ' + (episode-1).toString() + ':',
-				value: episodeMinus1Link	
-			},
-			{
+		fields: [],
+	};
+
+	console.log('--next episode for ' + anime + ' is ' + episode)
+
+	if (episode > 1){
+		embed.fields.push({
+			name: 'Watch Episode ' + (episode-1).toString() + ':',
+			value: episodeMinus1Link	
+		})
+		
+		if (episode > 2){
+			embed.fields.push({
 				name: 'Watch Episode ' + (episode-2).toString() + ':',
 				value: episodeMinus2Link
-			}
-		],
-	};
+			})
+		}
+	}
 
 	return embed
 
