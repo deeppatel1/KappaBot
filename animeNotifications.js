@@ -242,21 +242,21 @@ function handleDataForAiringUntil(data) {
 		var watchanimetitle = '';
 		console.log('date time is:' + dateTimeOfAirDate)
 		lineReader.eachLine('animeList.txt', function (line) {
-			var animeLast3Characters = line.split(',')[0].substr(anime.length-3);
-			if (anime.toLowerCase().includes(animeLast3Characters.toLowerCase())){
-				watchanimetitle=line.split(',')[2];
-				console.log('--attemping to post anime will air now')
-				console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle));
+			var animeLast3Characters = line.split(',')[0].substr(line.split(',')[0].length-3);
+				if (anime.toLowerCase().includes(animeLast3Characters.toLowerCase())){
+					console.log('--line:' + line + ' contained these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)		
+					watchanimetitle=line.split(',')[2];
+					console.log('--attemping to post anime will air now')
+					console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle));
 
-				discordPost.postToDiscord(clientForDiscord, '', {
-					embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
-				}, true, "main-channel");
-			}else{
-				console.log('--line:' + line + ' didnt contain these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)
-			}
+					discordPost.postToDiscord(clientForDiscord, '', {
+						embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
+					}, true, "main-channel");
+				}else{
+					console.log('--line:' + line + ' didnt contain these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)
+				}
+			
 		});
-
-
 
 	}
 }
