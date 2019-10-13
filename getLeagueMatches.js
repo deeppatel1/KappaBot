@@ -82,7 +82,7 @@ module.exports = {
 				var counter = 0;
 				//console.log(returnArrayOfMatches);
 				for (var a = 0;
-					(a < returnArrayOfMatches.length) && (counter < 5); a++) {
+					(a < returnArrayOfMatches.length) && (counter < 6); a++) {
 
 					if ((returnArrayOfMatches[a]['league'].includes(('cblol'))) || (returnArrayOfMatches[a]['league'].includes(('LMSS'))) || (returnArrayOfMatches[a]['league'].includes(('LJL'))) || (returnArrayOfMatches[a]['league'].includes(('LMS'))) || (returnArrayOfMatches[a]['league'].includes(('OPL'))) || (returnArrayOfMatches[a]['league'].includes(('CBLoL')))) {
 						//a = a - 1;
