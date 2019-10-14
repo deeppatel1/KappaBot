@@ -1,4 +1,4 @@
 .env
 configuration.json
-animeList.txt
+#animeList.txt
 #node_modules

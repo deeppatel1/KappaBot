@@ -1,3 +1,5 @@
+var request = require('request')
+
 var lineReader = require('line-reader');
 const fetch = require("node-fetch");
 const fs = require('fs')
@@ -7,6 +9,7 @@ var schedule = require('node-schedule');
 
 var clientForDiscord;
 
+var animeIdAnd4AnimeTitle = new Object();
 
 module.exports = {
 
@@ -29,6 +32,7 @@ module.exports = {
 		});
 	},
 
+	/*
 	addAnime: function (anime, Id, watchAnimeTitle) {
 		data = '\n' + anime + ',' + Id + ',' + watchAnimeTitle;
 		console.log(data)
@@ -37,15 +41,18 @@ module.exports = {
 			if (err) throw err;
 		})
 	},
+	*/
 
 	viewAnime: function () {
 		console.log('---in viewAnime')
 		lineReader.eachLine('animeList.txt', function (line) {
 			console.log(line)
 			animeAndAnimeID = line.split(',')
-			discordPost.postToDiscord(clientForDiscord, '', animeAndAnimeID[0] + ' - ' + animeAndAnimeID[1] + ' - ' + animeAndAnimeID[2], false, "main-channel");
+			discordPost.postToDiscord(clientForDiscord, '', animeAndAnimeID[0] + ' - ' + animeAndAnimeID[1], false, "main-channel");
 		});
 	},
+
+	/*
 
 	removeAnime: function(anime){
 		fs.readFile('animeList.txt', 'utf8', function(err, data){
@@ -67,6 +74,7 @@ module.exports = {
 		});
 	}
 
+	*/
 }
 
 var extractAnimeAndAnimeIdPromise = new Promise(function (resolve, reject) {
@@ -76,7 +84,7 @@ var extractAnimeAndAnimeIdPromise = new Promise(function (resolve, reject) {
 	lineReader.eachLine('animeList.txt', function (line, last) {
 		console.log(line)
 		animeAndAnimeID = line.split(',')
-
+		animeIdAnd4AnimeTitle[animeAndAnimeID[1]] = animeAndAnimeID[0]
 		animeAndAnimeID2DArray.push([animeAndAnimeID[1], animeAndAnimeID[0]]);
 
 		if (last) {
@@ -182,12 +190,14 @@ function getTimeUntilAiring(id) {
 	const query = `
 				query($id: Int!) {
 								Media(id: $id, type: ANIME) {
+										id
 										title {
 												romaji
 												english
 												native
 												userPreferred
 										}
+										siteUrl
 										nextAiringEpisode {
 												airingAt
 												timeUntilAiring
@@ -222,9 +232,8 @@ function getTimeUntilAiring(id) {
 
 function handleDataForAiringUntil(data) {
 
-	//console.log(data)
-	//console.log(data.data.Media.coverImage.large)
-
+	var id = data.data.Media.id;
+	var siteUrl = data.data.Media.siteUrl;
 	var coverImage = data.data.Media.coverImage.medium;
 	var bannerImage = data.data.Media.bannerImage;
 
@@ -237,15 +246,20 @@ function handleDataForAiringUntil(data) {
 		var episode = data.data.Media.nextAiringEpisode.episode;
 
 		var dateTimeOfAirDate = new Date(unixAirTime * 1000);
-		
 	
-		var watchanimetitle = '';
-		console.log('date time is:' + dateTimeOfAirDate)
+		var watchanimetitle = animeIdAnd4AnimeTitle[id];
+
+		discordPost.postToDiscord(clientForDiscord, '', {
+			embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
+		}, true, "main-channel");
+
+		
+		/*
 		lineReader.eachLine('animeList.txt', function (line) {
 			var animeLast3Characters = line.split(',')[0].substr(line.split(',')[0].length-3);
 				if (anime.toLowerCase().includes(animeLast3Characters.toLowerCase())){
 					console.log('--line:' + line + ' contained these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)		
-					watchanimetitle=line.split(',')[2];
+					watchanimetitle=line.split(',')[0];
 					console.log('--attemping to post anime will air now')
 					console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle));
 
@@ -257,6 +271,7 @@ function handleDataForAiringUntil(data) {
 				}
 			
 		});
+		*/
 
 	}
 }
@@ -264,8 +279,8 @@ function handleDataForAiringUntil(data) {
 
 function createEmbed(anime, airDateTime, bannerImage, episode, watchanimetitle) {
 	
-	var episodeMinus1Link = 'https://en.animehd.eu/' + watchanimetitle + '-episode-' + (episode-1).toString() + '-eng-subbed/';
-	var episodeMinus2Link = 'https://en.animehd.eu/' + watchanimetitle + '-episode-' + (episode-2).toString() + '-eng-subbed/';
+	var episodeMinus1Link = 'https://4anime.to/' + watchanimetitle + '-episode-' + ('0' + (episode - 1)).slice(-2);
+	var episodeMinus2Link = 'https://4anime.to/' + watchanimetitle + '-episode-' + ('0' + (episode - 2)).slice(-2);
 
 	const embed = {
 		color: 0x0099ff,

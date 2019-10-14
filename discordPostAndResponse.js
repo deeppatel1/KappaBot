@@ -67,18 +67,18 @@ module.exports = {
             /* anime stuff is here */
             else if (message.content.startsWith("!anime")) {
                 animeFunctions.extractAnimeAndAnimeID();
-            } else if (message.content.startsWith("!add anime")) {
+            } /* else if (message.content.startsWith("!add anime")) {
                 var animeAndID = message.content.split(" ");
                 console.log(animeAndID)
                 animeFunctions.addAnime(animeAndID[2], animeAndID[3], animeAndID[4]);
-            } else if (message.content.startsWith("!view anime")) {
+            } */ else if (message.content.startsWith("!view anime")) {
                 console.log('in anime functions view')
                 animeFunctions.viewAnime();
-            } else if (message.content.startsWith("!remove anime")){
+            } /* else if (message.content.startsWith("!remove anime")){
                 var animeToRemove = message.content.split(" ");
                 console.log('in remove functions anime')
                 animeFunctions.removeAnime(animeToRemove[2]);
-            }
+            } */
 
 
         });
