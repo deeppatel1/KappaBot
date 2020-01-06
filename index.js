@@ -34,7 +34,7 @@ clientForDiscord.on('ready', () => {
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'CXClips', 570000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 580000);
+    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'ICE', 580000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
