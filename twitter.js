@@ -20,11 +20,12 @@ twitterAccounts = {
         twitterId: '4833803780',
         postOnlyIfContains: []
     },
+/*
     ice: {
         tweeter: 'REALIcePoseidon',
         twitterId: '736784706486734852',
         postOnlyIfContains: []
-    },
+    },*/
     lift: {
         tweeter: 'TLDoublelift',
         twitterId: '344538810',
