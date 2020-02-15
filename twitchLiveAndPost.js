@@ -27,7 +27,7 @@ twitchStreamerTracker = {
         status: 'offline',
         URL: "https://www.twitch.tv/trick2g",
         MoreThan10kPostedDiscord: false
-    },
+    },/*
     riotgames: {
         channelName: 'riotgames',
         channelId: "36029255",
@@ -38,6 +38,18 @@ twitchStreamerTracker = {
         lastVideoID: '',
         status: 'offline',
         URL: "https://www.twitch.tv/riotgames",
+        MoreThan10kPostedDiscord: false
+    },*/
+    lcs: {
+        channelName: 'lcs',
+        channelId: "124420521",
+        emoji: '',
+        discordChannelToPost: "main",
+        atorNot: true,
+        postedToDiscord: false,
+        lastVideoID: '',
+        status: 'offline',
+        URL: "https://www.twitch.tv/lcs",
         MoreThan10kPostedDiscord: false
     },
     ragen: {
@@ -129,7 +141,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
 
 
                         var messageToPost = twitchStreamerTracker[TWITCHer]['channelName'] + ' is LIVE ' + twitchStreamerTracker[TWITCHer]['URL'];
-                        messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084>" : messageToPost;
+                        messageToPost = twitchStreamerTracker[TWITCHer]['atorNot'] ? messageToPost + " <@173611085671170048> <@173610714433454084> <@173628297979232257>" : messageToPost;
                         discordPost.postToDiscord(clientfordiscord, '', messageToPost, false, "main-channel");
                         var sql_query = 'INSERT INTO cxnetwork (date, url, name, time) SELECT \'' + datetime + '\', \'' + dateStreamStarted + '\', \'' + "Twitch" + '\', \'' + time + '\' WHERE NOT EXISTS (SELECT 1 FROM cxnetwork WHERE url=\'' + twitchStreamerTracker[TWITCHer]['URL'] + '\');'
                         dbQuery.query(sql_query);
