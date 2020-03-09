@@ -113,6 +113,7 @@ module.exports = {
 
 function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
 
+    console.log('Checking -- ' + TWITCHer);
     var options = {
         url: "https://api.twitch.tv/helix/streams?user_id=" + twitchStreamerTracker[TWITCHer].channelId,
         headers: {
