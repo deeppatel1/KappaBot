@@ -16,6 +16,10 @@ module.exports = {
 
         //console.log(clientForDiscord.channel);
 
+        if (msgToPost.includes("twitter")){
+            clientForDiscord.channels.get('284157566693539851').send(msgToPost)
+        }
+
         if (!ifEmbed){
             // main discord channel is          173611297387184129
             // secondary discord channel is     284157566693539851
