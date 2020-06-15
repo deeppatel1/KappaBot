@@ -25,7 +25,7 @@ clientForDiscord.on('ready', () => {
 
     twitterFunc.twitterFilter(clientForDiscord);
     
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 60000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
@@ -40,8 +40,10 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
-    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 622000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 8000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 610000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'IRLMoments', 610000);
+
 
 });
 
