@@ -32,8 +32,8 @@ var streamersTracker = {
         lastVideoID: '',
         filters: []
     },
-    CXClips: {
-        channelId: "UCFthsIV3Bp11cRwb6R9AOOw",
+    IRLMoments: {
+        channelId: "UCK3LEiOxZacoXc5uBx3hJaw",
         discordChannelToPost: "main",
         atorNot: true,
         lastVideoID: '',
