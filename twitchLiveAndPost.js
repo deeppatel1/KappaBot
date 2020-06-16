@@ -124,6 +124,7 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
     request.get(options, function (err, resp, body) {
         console.log('Twitch Check Live - ' + TWITCHer + ' ++ ' + new Date());
         data = JSON.parse(body);
+        console.log(body)
         if (data['data'] != undefined) {
             if (data['data'].length != 0) {
                 console.log('Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
