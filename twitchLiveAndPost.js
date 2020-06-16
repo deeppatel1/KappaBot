@@ -118,13 +118,9 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
         url: "https://id.twitch.tv/oauth2/token?client_id=" + credentials.twitchClientId + "&client_secret=" + credentials.twitchClientSecret + "&grant_type=client_credentials"
     }
 
-    console.log(oauthCall)
     request.post(oauthCall, function (err, resp, body){
         data = JSON.parse(body)
-        console.log('===')
-        console.log(data)
         auth = data["access_token"]
-        console.log("twitch api call headers")
 
         var secondTwitchCall = {
             url: "https://api.twitch.tv/helix/streams?user_id=" + twitchStreamerTracker[TWITCHer].channelId,
@@ -138,7 +134,6 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
         request.get(secondTwitchCall, function (err, resp, body) {
             console.log('Twitch Check Live - ' + TWITCHer + ' ++ ' + new Date());
             data = JSON.parse(body);
-            console.log(body)
             if (data['data'] != undefined) {
                 if (data['data'].length != 0) {
                     console.log("--TWITCH--" + 'Twitch Check Live - ' + TWITCHer + ' said is Live. Now Checking DB');
