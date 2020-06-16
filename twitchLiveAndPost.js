@@ -120,7 +120,8 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
             "Client-ID": credentials.twitchauth
         }
     };
-
+    console.log("twitch api call headers")
+    console.log(options)
     request.get(options, function (err, resp, body) {
         console.log('Twitch Check Live - ' + TWITCHer + ' ++ ' + new Date());
         data = JSON.parse(body);
