@@ -26,7 +26,7 @@ module.exports = {
 	extractAnimeAndAnimeID: function () {
 		extractAnimeAndAnimeIdPromise.then(function (value) {
 			for (var eachAnime in value) {
-				console.log(value[eachAnime])
+				console.log("--ANIME--" + value[eachAnime])
 				getTimeUntilAiring(value[eachAnime][0], value[eachAnime][1])
 			}
 		});
@@ -44,7 +44,7 @@ module.exports = {
 	*/
 
 	viewAnime: function () {
-		console.log('---in viewAnime')
+		console.log("--ANIME--" + '---in viewAnime')
 		lineReader.eachLine('animeList.txt', function (line) {
 			console.log(line)
 			animeAndAnimeID = line.split(',')
@@ -80,7 +80,7 @@ module.exports = {
 var extractAnimeAndAnimeIdPromise = new Promise(function (resolve, reject) {
 	var animeAndAnimeID2DArray = []
 	lineReader = require('line-reader');
-	console.log('--Entered in extractAnimeAndAnimeID')
+	console.log("--ANIME--" + '--Entered in extractAnimeAndAnimeID')
 	lineReader.eachLine('animeList.txt', function (line, last) {
 		console.log(line)
 		animeAndAnimeID = line.split(',')
@@ -103,7 +103,7 @@ function createReminder(animeName, dateTimeUnixStringForm, episode) {
 		discordPost.postToDiscord(clientForDiscord, '', strToPost, false, "main-channel");
 
 	})
-	console.log(animeName + ' -- Reminder alert set for anime ' + animeName + ' at ' + j.nextInvocation());
+	console.log("--ANIME--" + animeName + ' -- Reminder alert set for anime ' + animeName + ' at ' + j.nextInvocation());
 }
 
 /* 
@@ -160,7 +160,7 @@ function handleData(data) {
 		var nextAirDateCronInput = unixToDateTimeStringCron(unixAirTime);
 		var nextEpisodeNumber = data.data.Media.nextAiringEpisode.episode;
 
-		console.log(anime + ' - Creating Reminder at ' + nextAirDateString + ' with cronInput as ' + nextAirDateCronInput);
+		console.log("--ANIME--" + anime + ' - Creating Reminder at ' + nextAirDateString + ' with cronInput as ' + nextAirDateCronInput);
 		createReminder(anime, nextAirDateCronInput, nextEpisodeNumber);
 		//discordPost.postToDiscord(clientForDiscord, '', anime + ' : will air at --- ' + nextAirDateString, false, "main-channel");
 	}
@@ -241,7 +241,7 @@ function handleDataForAiringUntil(data) {
 
 
 	if ( data.data.Media.nextAiringEpisode != null){
-		console.log('--entered if statement')
+		console.log("--ANIME--" + '--entered if statement')
 		var unixAirTime = data.data.Media.nextAiringEpisode.airingAt;
 		var episode = data.data.Media.nextAiringEpisode.episode;
 

@@ -92,12 +92,12 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
 
     request.get("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + streamersTracker[YTer].channelId + "&maxResults=1&order=date&type=video&key=" + gKey, function (err, resp, body) {
 
-        console.log('YOUTUBE VOD CHECK - querying youtube for vids: ' + YTer + ' at ' + new Date());
+        console.log('==YOUTUBE VOD CHECK== querying youtube for vids: ' + YTer + ' at ' + new Date());
 
         if (err) {
             reject(err);
         } else {
-            console.log("Body of VID IS: " + body);
+            console.log("==YOUTUBE VOD CHECK==" + "Body of VID IS: " + body);
             body = JSON.parse(body);
             var videoId = body.items[0].id.videoId;
             var url = "https://www.youtube.com/watch?v=" + videoId;
@@ -107,7 +107,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
             checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
                 if (!checkIfURLExistsInDatabase) { //If the video is not in the DB, do all this
                     // Add video to database
-                    console.log(YTer + ' Database said this video is live and doesnt exist in data base ' + url);
+                    console.log("==YOUTUBE VOD CHECK==" + YTer + ' Database said this video is live and doesnt exist in data base ' + url);
                     var currentdate = new Date();
                     var datetime = getFormattedDate(currentdate);
                     var time = currentdate.getHours() + ":" +
@@ -122,9 +122,9 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
                     } else {
 
                         for (filter in streamersTracker[YTer].filters) {
-                            console.log('YOUTUBE VOD CHECK - checking filter: ' + filter + ' with this uRL: ' + body.items[0].snippet.title);
+                            console.log("==YOUTUBE VOD CHECK==" + 'YOUTUBE VOD CHECK - checking filter: ' + filter + ' with this uRL: ' + body.items[0].snippet.title);
                             if (body.items[0].snippet.title.includes(streamersTracker[YTer].filters[filter])) {
-                                console.log('YOUTUBE VOD CHECK - checked it exists, now making properVidTOPsotTrue');
+                                console.log("==YOUTUBE VOD CHECK==" + 'YOUTUBE VOD CHECK - checked it exists, now making properVidTOPsotTrue');
                                 properVidToPost = true;
                             }
                         }

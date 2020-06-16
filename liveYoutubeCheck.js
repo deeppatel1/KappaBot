@@ -64,7 +64,7 @@ function postSummary(clientForDiscord){
 
 function getRequest(clientForDiscord, YTer){
     request.get('https://youtube.com/channel/' + streamersTracker[YTer].channelId + '/live', function(err, resp, body) {
-        console.log('checked YT :' + YTer + ' at ' + new Date());
+        console.log("--YOUTUBE--" + 'checked YT :' + YTer + ' at ' + new Date());
         if (err) {
             reject(err);
         } else {
@@ -106,13 +106,13 @@ function updateStreamerTracker(clientForDiscord, YTer, status, videoID){
     //post that person is live now
     if (status == "live"){
         if (streamersTracker[YTer].status == "offline"){
-                console.log("In IF: ");
+                console.log("--LIVE YOUTUBE--" + "In IF: ");
                 var urlToCheck = "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
-                console.log("After urlAToCheck:");
+                console.log("--LIVE YOUTUBE--" + "After urlAToCheck:");
                 var checkIfURLExistsInDatabase = dbQuery.checkURL(urlToCheck);
-                console.log("After dbQuery.checkURL");
+                console.log("--LIVE YOUTUBE--" + "After dbQuery.checkURL");
                 checkIfURLExistsInDatabase.then(checkIfURLExistsInDatabase => {
-                    console.log("In checkURLExistsInDatabase");
+                    console.log("--LIVE YOUTUBE--" + "In checkURLExistsInDatabase");
                     if (!checkIfURLExistsInDatabase) {
                         var messageToPost = YTer + " is LIVE " + "https://www.youtube.com/watch?v=" + streamersTracker[YTer].URL;
         
