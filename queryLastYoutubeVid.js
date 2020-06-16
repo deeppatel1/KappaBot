@@ -97,7 +97,7 @@ function queryLastYoutubeSingle(clientForDiscord, YTer) {
         if (err) {
             reject(err);
         } else {
-            //console.log("Body of VID IS: " + body);
+            console.log("Body of VID IS: " + body);
             body = JSON.parse(body);
             var videoId = body.items[0].id.videoId;
             var url = "https://www.youtube.com/watch?v=" + videoId;
