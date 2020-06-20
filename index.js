@@ -38,8 +38,8 @@ clientForDiscord.on('ready', () => {
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TeamLiquid', 600000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Cloud9', 590000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'Flyquest', 610000);
-    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
-    //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'TSM', 611000);
+    queryYoutubeVods.queryLastYoutube(clientForDiscord, 'HundredT', 621000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 180000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 610000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'IRLMoments', 610000);
