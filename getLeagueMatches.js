@@ -20,6 +20,7 @@ module.exports = {
 			await page.goto('https://watch.lolesports.com/schedule?leagues=lcs,lck');
 		
 			content = (await page.content());
+			console.log(content)
 			const $ = cheerio.load(content)
 			console.log($)
 			console.log($.html())
