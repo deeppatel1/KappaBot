@@ -28,7 +28,7 @@ clientForDiscord.on('ready', () => {
     //animeNotifications.initiateAnimes(clientForDiscord);
 
     discordFuncs.respondToMessagesLive(clientForDiscord);
-    /*
+
     twitterFunc.twitterFilter(clientForDiscord);
     
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
@@ -50,7 +50,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 620000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'IRLMoments', 610000);
 
-    */
+    
 });
 
 
