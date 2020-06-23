@@ -18,8 +18,10 @@ module.exports = {
 			// go to the target web
 			await page.goto('https://watch.lolesports.com/schedule?leagues=lcs,lck');
 		
-			console.log(await page.content());
-		
+			// console.log(await page.content());
+			await page.evaluate(() => {console.log(document.querySelector('Event').className)});
+
+				
 			// close the browser
 			await browser.close();
 		});
