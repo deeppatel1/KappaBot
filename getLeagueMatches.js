@@ -1,5 +1,4 @@
 const request = require('request');
-const cheerio = require('cheerio');
 const puppeteer = require('puppeteer-core')
 
 var discordPost = require('./discordPost');
