@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "discord": "^0.8.2",
     "discord.js": "^11.4.2",
     "dotenv": "^6.1.0",
@@ -20,8 +21,8 @@
     "npm": "^6.5.0",
     "pg": "^7.9.0",
     "promise": "^8.0.2",
+    "puppeteer-core": "^1.11.0",
     "request": "^2.88.0",
-    "twitter": "^1.7.1",
-    "puppeteer-core": "^1.11.0"
+    "twitter": "^1.7.1"
   }
 }

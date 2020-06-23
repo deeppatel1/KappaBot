@@ -1,5 +1,6 @@
 const request = require('request');
 const puppeteer = require('puppeteer-core')
+const cheerio = require('cheerio')
 
 var discordPost = require('./discordPost');
 
@@ -18,11 +19,12 @@ module.exports = {
 			// go to the target web
 			await page.goto('https://watch.lolesports.com/schedule?leagues=lcs,lck');
 		
-			// console.log(await page.content());
-			const myclassname = await page.evaluate(() => document.querySelector('.Event'));
+			content = (await page.content());
+			const $ = cheerio.load(content)
+			console.log($)
+			console.log($.html())
+			
 
-			console.log(myclassname); 
-				
 			// close the browser
 			await browser.close();
 		});
