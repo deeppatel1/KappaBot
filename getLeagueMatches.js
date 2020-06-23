@@ -19,8 +19,9 @@ module.exports = {
 			await page.goto('https://watch.lolesports.com/schedule?leagues=lcs,lck');
 		
 			// console.log(await page.content());
-			await page.evaluate(() => {console.log(document.querySelector('Event').className)});
+			const myclassname = await page.evaluate(() => document.querySelector('.Event'));
 
+			console.log(myclassname); 
 				
 			// close the browser
 			await browser.close();
