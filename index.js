@@ -25,7 +25,7 @@ clientForDiscord.on('ready', () => {
     
     //animeNotifications.makeAniListCall();
 
-    //animeNotifications.initiateAnimes(clientForDiscord);
+    animeNotifications.initiateAnimes(clientForDiscord);
 
     discordFuncs.respondToMessagesLive(clientForDiscord);
 
