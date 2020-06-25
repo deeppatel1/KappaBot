@@ -128,6 +128,8 @@ function getNextAirDate(id) {
 												timeUntilAiring
 												episode
 										}
+										status
+										episodes
 								}
 						}
 				`;
@@ -146,7 +148,7 @@ function getNextAirDate(id) {
 				}
 			})
 		};
-
+	
 	fetch(url, options).then(handleResponse).then(handleData).catch(handleError)
 }
 
@@ -208,6 +210,8 @@ function getTimeUntilAiring(id) {
 												medium
 										}
 										bannerImage
+										status
+										episodes
 								}
 						}
 				`;
@@ -253,25 +257,13 @@ function handleDataForAiringUntil(data) {
 			embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
 		}, true, "main-channel");
 
-		
-		/*
-		lineReader.eachLine('animeList.txt', function (line) {
-			var animeLast3Characters = line.split(',')[0].substr(line.split(',')[0].length-3);
-				if (anime.toLowerCase().includes(animeLast3Characters.toLowerCase())){
-					console.log('--line:' + line + ' contained these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)		
-					watchanimetitle=line.split(',')[0];
-					console.log('--attemping to post anime will air now')
-					console.log(anime + ' posting with embed: ' + createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle));
+	} else {
 
-					discordPost.postToDiscord(clientForDiscord, '', {
-						embed: createEmbed(anime, dateTimeOfAirDate, bannerImage, episode,watchanimetitle)
-					}, true, "main-channel");
-				}else{
-					console.log('--line:' + line + ' didnt contain these last 3 characters: ' + animeLast3Characters + ' which was derived from: ' + anime)
-				}
-			
-		});
-		*/
+		var episode = data.data.Media.episodes
+		var watchanimetitle = animeIdAnd4AnimeTitle[id];
+		discordPost.postToDiscord(clientForDiscord, '', {
+			embed: createEmbed(anime, null, bannerImage, episode ,watchanimetitle)
+		}, true, "main-channel");
 
 	}
 }
@@ -279,6 +271,15 @@ function handleDataForAiringUntil(data) {
 
 function createEmbed(anime, airDateTime, bannerImage, episode, watchanimetitle) {
 	
+	var text = ''
+
+	if (airDateTime == null){
+		text = "This show is done!"
+		episode = episode + 1
+	}else{
+		text = 'Episode ' + episode + ' will air'
+	}
+
 	var episodeMinus1Link = 'https://4anime.to/' + watchanimetitle + '-episode-' + ('0' + (episode - 1)).slice(-2);
 	var episodeMinus2Link = 'https://4anime.to/' + watchanimetitle + '-episode-' + ('0' + (episode - 2)).slice(-2);
 
@@ -290,7 +291,7 @@ function createEmbed(anime, airDateTime, bannerImage, episode, watchanimetitle) 
 		},
 		timestamp: airDateTime,
 		footer: {
-			text: 'Episode ' + episode + ' will air'
+			text: text
 		},
 		fields: [],
 	};

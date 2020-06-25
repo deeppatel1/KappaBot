@@ -100,7 +100,6 @@ module.exports = {
         console.log("--TWITCH--" + 'Twitch Get Top Clips - ' + twitchStreamer + ' ++ ' + secondTwitchCall.url);
 
         request.get(secondTwitchCall, function (err, resp, body) {
-            data = JSON.parse(body);
             var discordPostWithAllClips = '';
             for (clip in data["clips"]) {
                 discordPostWithAllClips = discordPostWithAllClips + "\n https://clips.twitch.tv/" + data["clips"][clip]["slug"];
@@ -130,7 +129,6 @@ function pollToCheckTwitcherIsLive(TWITCHer, clientfordiscord) {
             }
         };
 
-        console.log(secondTwitchCall)
         request.get(secondTwitchCall, function (err, resp, body) {
             console.log('Twitch Check Live - ' + TWITCHer + ' ++ ' + new Date());
             data = JSON.parse(body);
