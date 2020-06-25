@@ -44,6 +44,7 @@ module.exports = {
                 var numberofVods = message.content.split(" ");
                 const num = numberofVods[2];
                 if (numberofVods.length == 3) {
+                    console.log("==QUERYING VODS=== querying " + num + " number of vods")
                     dbQuery.queryVod(num, message);
                 }
             } else if (message.content.startsWith('!league games')) {
