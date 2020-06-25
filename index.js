@@ -16,6 +16,7 @@ var clientForDiscord = new Discord.Client();
 
 clientForDiscord.on('ready', () => {
 
+    
     console.log('###')
     console.log('###')
     console.log('###')
@@ -23,7 +24,7 @@ clientForDiscord.on('ready', () => {
     console.log('###')
     console.log('###')
     
-    //animeNotifications.makeAniListCall();
+    animeNotifications.makeAniListCall();
 
     animeNotifications.initiateAnimes(clientForDiscord);
 
@@ -36,6 +37,11 @@ clientForDiscord.on('ready', () => {
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
+
+
+
+
+    /*
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
@@ -50,7 +56,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 620000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'IRLMoments', 610000);
 
-    
+    */    
 });
 
 
