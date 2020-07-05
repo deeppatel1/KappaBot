@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 all_embeds = []
 
 def call_anilist_api(id, watch_anime_url):
-    print('333')
     graph_ql_query = """
         query($id: Int!) {
             Media(id: $id) {
@@ -46,14 +45,10 @@ def call_anilist_api(id, watch_anime_url):
     response = requests.post(url, json={'query': graph_ql_query, 'variables': {'id': id}})
 
     process_embed(response, watch_anime_url)
-    print('!!!!')
-    print(id)
-    print('!!!!')
     print(response.json())
     return response
 
 def process_embed(response, watch_anime_url):
-    ##print('===')
     if response.status_code == 200:
         response = response.json()
         if response.get("data"):
@@ -166,7 +161,6 @@ def load_all_embeds():
     with open("animeList.txt") as fp:
         line = fp.readline()
         cnt = 1
-        print('222')
         while line:
             line_info = line.split(',')
             call_anilist_api(line_info[1].strip('\n'), line_info[0])
