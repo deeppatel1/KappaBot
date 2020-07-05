@@ -47,9 +47,9 @@ module.exports = {
                     console.log("==QUERYING VODS=== querying " + num + " number of vods")
                     dbQuery.queryVod(num, message);
                 }
-            } else if (message.content.startsWith('!league games')) {
+            } /*else if (message.content.startsWith('!league games')) {
                 getLeagueMatches.getAndPostAllMatches(clientForDiscord);
-            } else if (message.content.startsWith('!logs')) {
+            }*/ else if (message.content.startsWith('!logs')) {
                 message.channel.send("kappabot logs", {
                     files: ["/home/pi/.forever/kappabot.log"]
                 });
@@ -65,10 +65,10 @@ module.exports = {
                 twitchFunctions.getTopClips(clientForDiscord, streamer, period, 5);
             }
 
-            /* anime stuff is here */
+            /* anime stuff is here 
             else if (message.content.startsWith("!anime")) {
                 animeFunctions.extractAnimeAndAnimeID();
-            } /* else if (message.content.startsWith("!add anime")) {
+            } *//* else if (message.content.startsWith("!add anime")) {
                 var animeAndID = message.content.split(" ");
                 console.log(animeAndID)
                 animeFunctions.addAnime(animeAndID[2], animeAndID[3], animeAndID[4]);

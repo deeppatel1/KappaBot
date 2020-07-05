@@ -5,7 +5,7 @@ import asyncio
 import datetime
 from bs4 import BeautifulSoup
 
-client = discord.Client()
+#client = discord.Client()
 
 all_embeds = []
 
@@ -47,12 +47,10 @@ def call_anilist_api(id, watch_anime_url):
 
     process_embed(response, watch_anime_url)
     print('!!!!')
-    print('!!!!')
     print(id)
     print('!!!!')
     print(response.json())
     return response
-
 
 def process_embed(response, watch_anime_url):
     ##print('===')
@@ -104,10 +102,6 @@ def deal_with_manga(title, image_link, watch_anime_url):
                 
     create_manga_embed(title, image_link, last_5_chapters, last_5_chapters_link, came_out_strings)
 
-async def post_to_channel(channel_id, embed):
-    channel = client.get_channel(channel_id)
-    await channel.send(embed)
-
 def create_manga_embed(name, image_link, mangas_and_chapter, links, came_out_strings):
     embed = discord.Embed(description="Manga - " + name)
     embed.set_image(url=image_link)
@@ -121,10 +115,6 @@ def create_manga_embed(name, image_link, mangas_and_chapter, links, came_out_str
     all_embeds.append(embed)
 
 def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, total_episodes, watch_anime_url):
-    #print('####')
-    #print(airdate)
-    #print(total_episodes)
-
     last_episode_aired_str = "0"
     second_last_episode_str = "0"
 
@@ -182,7 +172,7 @@ def load_all_embeds():
             call_anilist_api(line_info[1].strip('\n'), line_info[0])
             line = fp.readline()
             cnt += 1
-
+'''
 @client.event
 async def on_message(message):
     if message.content.startswith('!hello'):
@@ -192,3 +182,4 @@ async def on_message(message):
         all_embeds.clear()
 
 client.run('MzEzODM4NTA1Mzc1ODI1OTIw.Xv6yEw.V5JRLBtztRXstP49z4BCAAHrG-k')
+'''
