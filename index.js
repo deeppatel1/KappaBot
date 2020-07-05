@@ -24,9 +24,9 @@ clientForDiscord.on('ready', () => {
     console.log('###')
     console.log('###')
     
-   
+   /*
     animeNotifications.initiateAnimes(clientForDiscord);
-
+    */
     discordFuncs.respondToMessagesLive(clientForDiscord);
 
     /*
