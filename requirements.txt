@@ -1,4 +1,4 @@
 discord
 requests
 asyncio
-BeautifulSoup4
+bs4
