@@ -7,4 +7,4 @@ cd ~/KappaBot/KappaBot/
 git pull --all
 forever start -a -l kappabot.log index.js -p 8000
 pip install -r requirements.txt
-forever start -l kappabot.log -c python python_discord.py
+forever start -l kappabot.log -c python3 python_discord.py
