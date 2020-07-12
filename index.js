@@ -30,7 +30,7 @@ clientForDiscord.on('ready', () => {
     discordFuncs.respondToMessagesLive(clientForDiscord);
 
     
-    twitterFunc.twitterFilter(clientForDiscord);
+    //twitterFunc.twitterFilter(clientForDiscord);
     
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
     /*
