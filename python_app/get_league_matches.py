@@ -15,7 +15,7 @@ emoji_id = {
     "tl": 729060542995497076,
     "imt": 729060542765072436,
     "dig": 729060542819467284,
-    "100-1:": 729060542873862155,
+    "100~1:": 729060542873862155,
     "clg": 729060542848958595,
     "gg": 729060543113068554,
 
@@ -80,12 +80,24 @@ def generate_embeds(list_of_games):
         left_team = league_and_versus.split(" ")[-3]
         right_team = league_and_versus.split(" ")[-1]
 
-        left_team_emoji = left_team.lower() if left_team is not "100" else "100~1"
-        right_team_emoji = right_team.lower() if right_team is not "100" else "100~1"
+        if left_team != "100":
+            left_team_emoji = left_team.lower()
+        else:
+            left_team_emoji = "100~1"
+        
+        if right_team != "100":
+            right_team_emoji = right_team.lower()
+        else:
+            right_team_emoji = "100~1"
 
         left_team_emoji = "<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">"
         right_team_emoji = "<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">"
         vs_emoji = "<:versus:" + str(emoji_id.get("vs")) + ">"
+        
+        if left_team_emoji == "<:100~1:None>":
+            left_team_emoji = ":100:"
+        if right_team_emoji == "<:100~1:None>":
+            right_team_emoji = ":100:"
 
         versus_strig = league_emoji + "       " + left_team_emoji + vs_emoji + right_team_emoji
 
