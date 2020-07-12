@@ -2,6 +2,7 @@ import discord, json
 
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
+from python_app.tweet_listener import initiate_follows
 
 client = discord.Client()
 

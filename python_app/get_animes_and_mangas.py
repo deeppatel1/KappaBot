@@ -3,13 +3,15 @@ import requests
 import glob
 import asyncio
 import datetime
+from functools import lru_cache
 from bs4 import BeautifulSoup
 
 #client = discord.Client()
 
 all_embeds = []
 
-def call_anilist_api(id, watch_anime_url):
+@lru_cache(maxsize=256)
+def call_anilist_api(id):
     graph_ql_query = """
         query($id: Int!) {
             Media(id: $id) {
@@ -42,10 +44,11 @@ def call_anilist_api(id, watch_anime_url):
     """
     url = 'https://graphql.anilist.co'
 
+    print('making api call')
     response = requests.post(url, json={'query': graph_ql_query, 'variables': {'id': id}})
 
-    process_embed(response, watch_anime_url)
-    print(response.json())
+    #process_embed(response, watch_anime_url)
+    ##print(response.json())
     return response
 
 def process_embed(response, watch_anime_url):
@@ -163,7 +166,8 @@ def load_all_embeds():
         cnt = 1
         while line:
             line_info = line.split(',')
-            call_anilist_api(line_info[1].strip('\n'), line_info[0])
+            response = call_anilist_api(line_info[1].strip('\n'))
+            process_embed(response, line_info[0])
             line = fp.readline()
             cnt += 1
 '''
