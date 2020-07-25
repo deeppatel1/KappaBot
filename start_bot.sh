@@ -8,4 +8,4 @@ git pull --all
 forever start -a -l /home/kapp/.forever/kappabot.log index.js -p 8000
 pip3 install --upgrade
 pip3 install -r requirements.txt
-forever start -a -l /home/kapp/.forever/kappabot.log -c python3 python_discord.py
+python3 python_discord.py
