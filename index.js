@@ -25,18 +25,18 @@ clientForDiscord.on('ready', () => {
     console.log('###')
     
    
-    //animeNotifications.initiateAnimes(clientForDiscord);
+    animeNotifications.initiateAnimes(clientForDiscord);
     
-    //discordFuncs.respondToMessagesLive(clientForDiscord);
+    discordFuncs.respondToMessagesLive(clientForDiscord);
 
     
-    //twitterFunc.twitterFilter(clientForDiscord);
+    twitterFunc.twitterFilter(clientForDiscord);
     
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 10000);
     /*
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
-    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
+    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 100000);
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "riotgames", 150000);
 
 
