@@ -1,7 +1,7 @@
 var credentials = require('./configuration.json');
 var Discord = require("discord.js");
 var dbQuery = require('./db.js');
-var getLeagueMatches = require('./getLeagueMatches.js');
+//var get_league_matches = require('./get_league_matches.js');
 var liveYouTubeCheck = require('./liveYoutubeCheck');
 var twitchFunctions = require('./twitchLiveAndPost');
 var animeFunctions = require('./animeNotifications.js');
@@ -48,7 +48,7 @@ module.exports = {
                     dbQuery.queryVod(num, message);
                 }
             } /*else if (message.content.startsWith('!league games')) {
-                getLeagueMatches.getAndPostAllMatches(clientForDiscord);
+                get_league_matches.getAndPostAllMatches(clientForDiscord);
             }*/ else if (message.content.startsWith('!logs')) {
                 message.channel.send("kappabot logs", {
                     files: ["/home/pi/.forever/kappabot.log"]
