@@ -32,7 +32,7 @@ clientForDiscord.on('ready', () => {
     
     //twitterFunc.twitterFilter(clientForDiscord);
     
-    //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
+    twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);
     twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "ragen", 10000);
     /*
     //twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "yassuo", 320000);
