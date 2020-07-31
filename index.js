@@ -25,9 +25,9 @@ clientForDiscord.on('ready', () => {
     console.log('###')
     
    
-    animeNotifications.initiateAnimes(clientForDiscord);
+    //animeNotifications.initiateAnimes(clientForDiscord);
     
-    discordFuncs.respondToMessagesLive(clientForDiscord);
+    //discordFuncs.respondToMessagesLive(clientForDiscord);
 
     
     //twitterFunc.twitterFilter(clientForDiscord);
