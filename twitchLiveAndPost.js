@@ -16,6 +16,18 @@ twitchStreamerTracker = {
         URL: "https://www.twitch.tv/loltyler1",
         MoreThan10kPostedDiscord: false
     },
+    grossie: {
+        channelName: 'grossie_gore',
+        channelId: "37522020",
+        emoji: '',
+        discordChannelToPost: "main",
+        atorNot: true,
+        postedToDiscord: false,
+        lastVideoID: '',
+        status: 'offline',
+        URL: "https://twitch.tv/grossie_gore",
+        MoreThan10kPostedDiscord: false
+    },
     trick: {
         channelName: 'trick2g',
         channelId: "28036688",
