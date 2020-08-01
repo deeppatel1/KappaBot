@@ -1,4 +1,5 @@
 #!/bin/bash/
+sudo su kapp
 cd /home/kapp/.forever/
 rm kappabot.log
 touch kappabot.log
