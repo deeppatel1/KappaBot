@@ -43,7 +43,7 @@ clientForDiscord.on('ready', () => {
 
 
 
-    
+    /*
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "ICE", 20000);
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 
@@ -58,7 +58,7 @@ clientForDiscord.on('ready', () => {
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1', 50000);
     queryYoutubeVods.queryLastYoutube(clientForDiscord, 'T1Vods', 620000);
     //queryYoutubeVods.queryLastYoutube(clientForDiscord, 'IRLMoments', 610000);
-    
+    */
 });
 
 
