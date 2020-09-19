@@ -18,7 +18,7 @@ async def on_message(message):
         all_embeds.clear()
 
     if message.content.startswith('!league'):
-        future_games = get_games(10)
+        future_games = get_games(8)
         for x in future_games:
             await message.channel.send(x)
 
