@@ -1,7 +1,67 @@
 import glob
 import datetime
 import discord
+import requests
+from bs4 import BeautifulSoup
+import datetime
 
+relevant_teams = [
+    "TSM",
+    "FLY",
+    "TL",
+    "G2",
+    "FNC"
+]
+
+
+def get_games(count_games_to_return):
+
+    all_games_to_return = []
+
+    schedule = requests.get("https://lol.gamepedia.com/index.php?pfRunQueryFormName=MatchCalendarExport&title=Special%3ARunQuery%2FMatchCalendarExport&MCE%5B1%5D=2020+Season+World+Championship%2FPlay-In%2C2020+Season+World+Championship%2FMain+Event&wpRunQuery=Run+query&pf_free_text=").text
+    soup = BeautifulSoup(schedule, 'html.parser')
+
+    content = soup.find(id='mw-content-text').get_text()
+    list_content = content.split("\n")
+
+    games = [k for k in list_content if "Worlds" in k]
+
+    now = datetime.datetime.now()
+
+    for game in games:
+        game_data = game.split(",")
+        tourney_and_competitors = game_data[0]
+
+        date_time = game_data[-5:]
+        date_time_obj = datetime.datetime(int(date_time[0]), int(date_time[1]), int(date_time[2]), int(date_time[3]), int(date_time[4]))
+
+        for team in relevant_teams:
+            found = tourney_and_competitors.find(team)
+            if found != -1:  
+                tourney_and_competitors = (tourney_and_competitors[:found] + "__**" + team + "**__" + tourney_and_competitors[found + len(team):] )
+
+
+        if date_time_obj > now and len(all_games_to_return) < count_games_to_return:
+            seconds_till = (date_time_obj-now).total_seconds()
+
+            day = seconds_till // (24 * 3600)
+            
+            time = seconds_till % (24 * 3600)
+            hour = time // 3600
+            time %= 3600
+            minutes = time // 60
+            time %= 60
+
+            time_until = "in %d days %d hours %d minutes" % (day, hour, minutes)
+
+            all_games_to_return.append(tourney_and_competitors + " --- " + date_time_obj.strftime("%d-%b-%Y %H:%M") + " --- " + time_until)
+
+    return all_games_to_return
+
+
+
+"""
+old code
 emoji_id = {
     "lcs": 729112464834166824,
     "lck": 729112464775446628,
@@ -112,3 +172,5 @@ def generate_embeds(list_of_games):
         all_embeds.append(embed)
 
     return versus_strings, all_embeds
+
+"""
