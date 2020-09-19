@@ -2,3 +2,4 @@
 configuration.json
 #animeList.txt
 #node_modules
+python_app/__pycache__/
