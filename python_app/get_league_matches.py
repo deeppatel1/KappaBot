@@ -30,7 +30,7 @@ def get_games(count_games_to_return):
 
     for game in games:
         game_data = game.split(",")
-        tourney_and_competitors = game_data[0]
+        tourney_and_competitors = game_data[0][12:]
 
         date_time = game_data[-5:]
         date_time_obj = datetime.datetime(int(date_time[0]), int(date_time[1]), int(date_time[2]), int(date_time[3]), int(date_time[4]))
