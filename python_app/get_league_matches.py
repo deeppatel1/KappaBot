@@ -40,7 +40,7 @@ def get_games(count_games_to_return):
             if found != -1:  
                 tourney_and_competitors = (tourney_and_competitors[:found] + "__**" + team + "**__" + tourney_and_competitors[found + len(team):] )
 
-        date_time_obj = date_time_obj - datetime.timedelta(hours=4)
+
         if date_time_obj > now and len(all_games_to_return) < count_games_to_return:
             seconds_till = (date_time_obj-now).total_seconds()
 
