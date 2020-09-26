@@ -20,7 +20,7 @@ async def on_message(message):
     if message.content.startswith('!league'):
         future_games = get_games(8)
         for x in future_games:
-            await message.channel.send(x)
+            await message.channel.send(embed=x)
 
 
 client.run(config.get("discordclientlogin"))

@@ -40,7 +40,7 @@ def get_games(count_games_to_return):
             if found != -1:  
                 tourney_and_competitors = (tourney_and_competitors[:found] + "__**" + team + "**__" + tourney_and_competitors[found + len(team):] )
 
-
+        date_time_obj = date_time_obj - datetime.timedelta(hours=4)
         if date_time_obj > now and len(all_games_to_return) < count_games_to_return:
             seconds_till = (date_time_obj-now).total_seconds()
 
@@ -54,7 +54,10 @@ def get_games(count_games_to_return):
 
             time_until = "in %d days %d hours %d minutes" % (day, hour, minutes)
 
-            all_games_to_return.append(tourney_and_competitors + " --- " + date_time_obj.strftime("%d-%b-%Y %H:%M") + " --- " + time_until)
+            embed = discord.Embed(colour=discord.Colour(0xc7cf39), description=tourney_and_competitors, timestamp=date_time_obj)
+
+            # all_games_to_return.append(tourney_and_competitors + " --- " + date_time_obj.strftime("%d-%b-%Y %H:%M") + " --- " + time_until)
+            all_games_to_return.append(embed)
 
     return all_games_to_return
 
