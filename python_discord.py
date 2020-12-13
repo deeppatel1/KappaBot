@@ -23,4 +23,7 @@ async def on_message(message):
             await message.channel.send(embed=x)
 
 
+    if message.content.startswith('!test'):
+        await message.channel.send("hello")
+
 client.run(config.get("discordclientlogin"))
