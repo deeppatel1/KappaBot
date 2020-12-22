@@ -10,6 +10,11 @@ LIVE_STREAMS = [
         "channelName": "ICE",
         "channelTrueName": "IcePoseidon",
         "channelId": "UCv9Edl_WbtbPeURPtFDo-uA"
+    },
+    {
+        "channelName": "UC3Nlcpu-kbLmdhph_BN7OwQ",
+        "channelTrueName": "UC3Nlcpu-kbLmdhph_BN7OwQ",
+        "channelId": "UC3Nlcpu-kbLmdhph_BN7OwQ"
     }
 ]
 
