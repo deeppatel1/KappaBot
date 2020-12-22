@@ -30,7 +30,7 @@ def youtube_live_and_post_check(scheduler):
         channel_true_name = stream.get("channelTrueName")
         channel_id = stream.get("channelId")
         print("----Youtube Live Check: " + channel_true_name)
-        resp = requests.get("https://www.youtube.com/channel/" + channel_true_name + "/videos?view=2&live_view=501")
+        resp = requests.get("https://www.youtube.com/c/" + channel_true_name + "/videos?view=2&live_view=501")
         if resp.status_code == 200:
             if "Live now" in resp.text:
                 print(channel_true_name + " IS LIVE")
