@@ -1,5 +1,5 @@
 import json
-import request
+import requests
 from discord import Webhook, RequestsWebhookAdapter, Embed
 import sched, time
 
@@ -16,9 +16,11 @@ WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0
 def get_auth_token():
     url = "https://id.twitch.tv/oauth2/token?client_id=" + config.get("twitchClientId") + "&client_secret=" + config.get("twitchClientSecret") + "&grant_type=client_credentials"
 
-    resp = request.get(url)
+    resp = requests.get(url)
 
     if resp != 200:
+        print("Failed to get auth token...")
+        print(url)
         return None
     
     resp_body = resp.json
@@ -37,7 +39,7 @@ def check_streamer_live(streamer_name, streamer_id):
         "Authorization": "Bearer " + str(auth_token)
     }
     
-    streamer_resp = request.get("https://api.twitch.tv/helix/streams?user_id=" + streamer_id, headers=headers)
+    streamer_resp = requests.get("https://api.twitch.tv/helix/streams?user_id=" + streamer_id, headers=headers)
 
     if streamer_resp.status_code != 200:
         print("Streamer check failed, got auth token but failed on getting data from the API")
