@@ -1,6 +1,6 @@
 import json
 import requests
-from live_youtube_check import sendWebhookMessage
+from discord import Webhook, RequestsWebhookAdapter, Embed
 import sched, time
 
 with open('../configuration.json') as json_file :
@@ -11,6 +11,7 @@ STREAMERS_TO_CHECK = {
 }
 
 STREAMERS_LIVE = []
+WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0N516n6nMPdaJB78ex85PWi2loPq18IWij3LCUugVhOwMR8h8I_ROokrPIQShyxgs"]
 
 def get_auth_token():
     url = "https://id.twitch.tv/oauth2/token?client_id=" + config.get("twitchClientId") + "&client_secret=" + config.get("twitchClientSecret") + "&grant_type=client_credentials"
@@ -33,18 +34,19 @@ def check_streamer_live(streamer_name, streamer_id):
 
     headers = {
         "Client-ID": config.get("twitchClientId"),
-        "Authorization": "Bearer " + auth_token
+        "Authorization": "Bearer " + str(auth_token)
     }
     
     streamer_resp = requests.get("https://api.twitch.tv/helix/streams?user_id=" + streamer_id, headers=headers)
 
     if streamer_resp.status_code != 200:
+        print("Streamer check failed, got auth token but failed on getting data from the API")
         return
 
     resp = streamer_resp.json
 
     if "data" in resp and len(resp.get("data") != 0):
-       # is online
+        print("streamer " + streamer_name + " is ONLINE")
 
         if streamer_name not in STREAMERS_LIVE:
             url = "https://twitch.tv/" + streamer_name
@@ -52,11 +54,14 @@ def check_streamer_live(streamer_name, streamer_id):
             STREAMERS_LIVE.append(streamer_name)
 
     else:
-        STREAMERS_LIVE.remove(streamer_name)
+        print("streamer " + streamer_name + " is offline")
+        if streamer_name in STREAMERS_LIVE:
+            STREAMERS_LIVE.remove(streamer_name)
 
 
 def check_all_streamers(scheduler):
     for streamer in STREAMERS_TO_CHECK:
+        print("--- Twitch Live Check for " + streamer)
         check_streamer_live(streamer, STREAMERS_TO_CHECK.get(streamer))
 
     scheduler.enter(10, 1, check_all_streamers, (scheduler,))
@@ -66,6 +71,13 @@ def start_checks():
     s = sched.scheduler(time.time, time.sleep)
     s.enter(10, 1, check_all_streamers, (s,))
     s.run()
+
+def sendWebhookMessage(body_to_post):
+    for webhook in WEBHOOKS_TO_POST:
+        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+
+    webhook.send(body_to_post, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
+
 
 
 start_checks()

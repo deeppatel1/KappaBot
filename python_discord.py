@@ -26,5 +26,6 @@ async def on_message(message):
         await message.channel.send("hello")
 
 subprocess.Popen(["python3","python_app/live_youtube_check.py"])
+subprocess.Popen(["python3","python_app/get_twitch_live.py"])
     
 client.run(config.get("discordclientlogin"))
