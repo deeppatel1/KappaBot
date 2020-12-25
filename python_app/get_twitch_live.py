@@ -74,9 +74,11 @@ def start_checks():
     s.enter(10, 1, check_all_streamers, (s,))
     s.run()
 
+
 def sendWebhookMessage(body_to_post):
     for webhook in WEBHOOKS_TO_POST:
         webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+
 
     webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
