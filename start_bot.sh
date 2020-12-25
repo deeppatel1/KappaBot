@@ -9,7 +9,7 @@ cd /home/kapp/KappaBot/KappaBot/
 git pull --all
 
 docker build -t kappabot .
-docker run kappabot:latest
+docker run kappabot
 
 
 # forever start -a index.js -p 8000
