@@ -16,7 +16,7 @@ WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0
 def get_auth_token():
     url = "https://id.twitch.tv/oauth2/token?client_id=" + config.get("twitchClientId") + "&client_secret=" + config.get("twitchClientSecret") + "&grant_type=client_credentials"
 
-    resp = requests.get(url)
+    resp = requests.post(url)
 
     if resp != 200:
         print("Failed to get auth token...")
