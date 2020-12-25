@@ -23,7 +23,7 @@ def get_auth_token():
         print(url)
         return None
     
-    resp_body = resp.json
+    resp_body = resp.json()
 
     return resp_body["access_token"]
 
@@ -45,9 +45,9 @@ def check_streamer_live(streamer_name, streamer_id):
         print("Streamer check failed, got auth token but failed on getting data from the API")
         return
 
-    resp = streamer_resp.json
+    resp = streamer_resp.json()
 
-    if "data" in resp and len(resp.get("data") != 0):
+    if "data" in resp and len(resp.get("data")) > 0:
         print("streamer " + streamer_name + " is ONLINE")
 
         if streamer_name not in STREAMERS_LIVE:
@@ -78,7 +78,7 @@ def sendWebhookMessage(body_to_post):
     for webhook in WEBHOOKS_TO_POST:
         webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
 
-    webhook.send(body_to_post, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
+    webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
 
 
