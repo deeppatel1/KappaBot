@@ -7,7 +7,8 @@ with open('../configuration.json') as json_file :
     config = json.load(json_file)
 
 STREAMERS_TO_CHECK = {
-    "loltyler1": "51496027"
+    "loltyler1": "51496027",
+    "grossie_gore": "37522020"
 }
 
 STREAMERS_LIVE = []
@@ -66,7 +67,7 @@ def check_all_streamers(scheduler):
         print("--- Twitch Live Check for " + streamer)
         check_streamer_live(streamer, STREAMERS_TO_CHECK.get(streamer))
 
-    scheduler.enter(10, 1, check_all_streamers, (scheduler,))
+    scheduler.enter(180, 1, check_all_streamers, (scheduler,))
 
 
 def start_checks():
