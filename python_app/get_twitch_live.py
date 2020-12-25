@@ -53,7 +53,8 @@ def check_streamer_live(streamer_name, streamer_id):
 
         if streamer_name not in STREAMERS_LIVE:
             url = "https://twitch.tv/" + streamer_name
-            sendWebhookMessage(url)
+            discord_post = streamer_name + " IS LIVE <@173610714433454084> <@173611085671170048> " + url
+            sendWebhookMessage(discord_post)
             STREAMERS_LIVE.append(streamer_name)
 
     else:
