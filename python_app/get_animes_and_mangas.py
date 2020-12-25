@@ -122,7 +122,6 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             if (next_episode - 2 > 0):
                 second_last_episode_str = "0" + str(next_episode - 2)
             else:
-                last_episode_aired_str = None
                 second_last_episode_str = None
         else:
             last_episode_aired_str = str(next_episode-1)
@@ -144,7 +143,7 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
         embed = discord.Embed(description="Anime - " + name)
         embed.set_image(url=image)
         embed.set_footer(text="Season complete!")
-        if last_episode_aired_str:
+        if last_episode_aired_str and total_episodes != 0:
             embed.add_field(name="Watch episode " + str(total_episodes), value="[Watch this episode](" + str(last_episode_aired_str) + ")")
         if second_last_episode_str:
             embed.add_field(name="Watch episode " + str(total_episodes - 1), value="[Watch this episode](" + str(second_last_episode_str) + ")")

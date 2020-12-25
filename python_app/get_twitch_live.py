@@ -3,7 +3,7 @@ import requests
 from discord import Webhook, RequestsWebhookAdapter, Embed
 import sched, time
 
-with open('../configuration.json') as json_file :
+with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
 STREAMERS_TO_CHECK = {
