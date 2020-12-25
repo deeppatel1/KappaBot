@@ -18,7 +18,7 @@ def get_auth_token():
 
     resp = requests.post(url)
 
-    if resp != 200:
+    if resp.status_code != 200:
         print("Failed to get auth token...")
         print(url)
         return None
