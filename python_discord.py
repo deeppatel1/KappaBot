@@ -1,5 +1,5 @@
 import discord, json
-
+import subprocess
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_games
 
@@ -22,8 +22,9 @@ async def on_message(message):
         for x in future_games:
             await message.channel.send(embed=x)
 
-
     if message.content.startswith('!test'):
         await message.channel.send("hello")
 
+subprocess.Popen(["python3","python_app/live_youtube_check.py"])
+    
 client.run(config.get("discordclientlogin"))
