@@ -17,6 +17,8 @@ async def on_message(message):
         channels = await message.channel.webhooks()
         print(channels)
         print(channels[0])
+        print(channels[0].id)
+        print(channels[0].token)
         send_the_message(username="anime updates", \
             webhook=channels[0],
             avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
