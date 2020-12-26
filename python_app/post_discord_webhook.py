@@ -16,7 +16,14 @@ def sendWebhookListEmbeds(username: str, avatar_url: str, embeds, content=None):
 
 
 def send_the_message(username, avatar_url, webhook, content=None, embeds=None):
-    print("sending to webhook " + webhook)
-    webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
-    print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
-    webhook.send(content, username=username, avatar_url=avatar_url)
+    if content and not embeds:
+        print("sending to webhook " + webhook)
+        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+        print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
+        webhook.send(content, username=username, avatar_url=avatar_url)
+    
+    if embeds or content:
+        print("sending to webhook " + webhook)
+        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+        print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
+        webhook.send(content=content, embeds=embeds, username=username, avatar_url=avatar_url)
