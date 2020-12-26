@@ -5,14 +5,17 @@ WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0
 
 def sendWebhookMessage(username: str, avatar_url: str, content=None):
     for webhook in WEBHOOKS_TO_POST:
-        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
         print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
-        webhook.send(content, username=username, avatar_url=avatar_url)
+        send_the_message(username, avatar_url, webhook, content=content)
 
 
 def sendWebhookListEmbeds(username: str, avatar_url: str, embeds, content=None):
     for webhook in WEBHOOKS_TO_POST:
-        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
-
         print("Sending an embed to " + str(webhook))
-        webhook.send(content, username=username, avatar_url=avatar_url, embeds=embeds)
+        send_the_message(username, avatar_url, webhook, content=None, embeds=embeds)
+
+
+def send_the_message(username, avatar_url, webhook, content=None, embeds=None):
+    webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+    print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
+    webhook.send(content, username=username, avatar_url=avatar_url)
