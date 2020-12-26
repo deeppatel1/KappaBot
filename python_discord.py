@@ -2,6 +2,7 @@ import discord, json
 import subprocess
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_games
+from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds
 
 client = discord.Client()
 
@@ -13,8 +14,11 @@ with open('configuration.json') as json_file :
 async def on_message(message):
     if message.content.startswith('!weeb'):
         load_all_embeds()
-        for embed in all_embeds:
-            await message.channel.send(embed=embed)
+        sendWebhookListEmbeds(username="Anime Updates", \
+            avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
+            embeds=all_embeds)
+        # for embed in all_embeds:
+        #     await message.channel.send(embed=embed)
         all_embeds.clear()
 
     if message.content.startswith('!league'):
