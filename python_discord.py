@@ -14,9 +14,10 @@ with open('configuration.json') as json_file :
 async def on_message(message):
     if message.content.startswith('!weeb'):
         load_all_embeds()
-        sendWebhookListEmbeds(username="Anime Updates", \
-            avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
-            embeds=all_embeds)
+        await message.channel.send(embed=all_embeds)
+        # sendWebhookListEmbeds(username="Anime Updates", \
+        #     avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
+        #     embeds=all_embeds)
         # for embed in all_embeds:
         #     await message.channel.send(embed=embed)
         all_embeds.clear()
