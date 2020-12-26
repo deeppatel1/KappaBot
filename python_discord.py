@@ -9,18 +9,17 @@ client = discord.Client()
 with open('configuration.json') as json_file :
     config = json.load(json_file)
 
+def create_webhook_url(id, token):
+    return "https://discordapp.com/api/webhooks/" + str(id) + "/" /
+     + str(id)
 
 @client.event
 async def on_message(message):
     if message.content.startswith('!weeb'):
         load_all_embeds()
         channels = await message.channel.webhooks()
-        print(channels)
-        print(channels[0])
-        print(channels[0].id)
-        print(channels[0].token)
         send_the_message(username="anime updates", \
-            webhook=channels[0],
+            webhook=create_webhook_url(channels[0].id, channels[0].token), \
             avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
             embeds=all_embeds)
 
