@@ -20,13 +20,13 @@ async def on_message(message):
     if message.content.startswith('!league'):
         future_games = get_games(8)
         for x in future_games:
-            await message.channel.send(embed=x)
+            await message.channel.send(embeds=x)
 
     if message.content.startswith('!test'):
         await message.channel.send("hello")
 
-subprocess.Popen(["python3","python_app/live_youtube_check.py"])
-subprocess.Popen(["python3","python_app/get_twitch_live.py"])
-subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"])
+# subprocess.Popen(["python3","python_app/live_youtube_check.py"])
+# subprocess.Popen(["python3","python_app/get_twitch_live.py"])
+# subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"])
     
 client.run(config.get("discordclientlogin"))
