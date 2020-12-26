@@ -1,4 +1,4 @@
-var credentials = require('./configuration.json');
+var credentials = require('../configuration.json');
 var Discord = require("discord.js");
 var dbQuery = require('./db.js');
 //var get_league_matches = require('./get_league_matches.js');

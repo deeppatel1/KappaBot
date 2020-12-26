@@ -1,6 +1,6 @@
 var discordPost = require('./discordPost');
 var Twitter = require('twitter');
-var credentials = require('./configuration.json');
+var credentials = require('../configuration.json');
 
 var Twitterclient = new Twitter({
     consumer_key: credentials.twitterApiKey,

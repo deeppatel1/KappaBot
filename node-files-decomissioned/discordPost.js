@@ -1,4 +1,4 @@
-var credentials = require('./configuration.json');
+var credentials = require('../configuration.json');
 
 module.exports = {
 
