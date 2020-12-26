@@ -3,3 +3,5 @@ configuration.json
 #animeList.txt
 #node_modules
 python_app/__pycache__/
+/node_modules
+/.vscode

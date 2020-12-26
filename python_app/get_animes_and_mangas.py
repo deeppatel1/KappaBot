@@ -5,10 +5,13 @@ import asyncio
 import datetime
 from functools import lru_cache
 from bs4 import BeautifulSoup
-
+from datetime import datetime, timedelta
+import sched, time
+from threading import Timer
 #client = discord.Client()
 
 all_embeds = []
+
 
 @lru_cache(maxsize=256)
 def call_anilist_api(id):
@@ -51,6 +54,7 @@ def call_anilist_api(id):
     ##print(response.json())
     return response
 
+
 def process_embed(response, watch_anime_url):
     if response.status_code == 200:
         response = response.json()
@@ -78,6 +82,7 @@ def process_embed(response, watch_anime_url):
                     image = response.get('data').get('Media').get('bannerImage')
                     deal_with_manga(title, image, watch_anime_url)
 
+
 def deal_with_manga(title, image_link, watch_anime_url):
     r = requests.get("https://www.mangaeden.com/en/en-manga/" + watch_anime_url)
     data = r.text
@@ -100,6 +105,7 @@ def deal_with_manga(title, image_link, watch_anime_url):
                 
     create_manga_embed(title, image_link, last_5_chapters, last_5_chapters_link, came_out_strings)
 
+
 def create_manga_embed(name, image_link, mangas_and_chapter, links, came_out_strings):
     embed = discord.Embed(description="Manga - " + name)
     embed.set_image(url=image_link)
@@ -111,6 +117,7 @@ def create_manga_embed(name, image_link, mangas_and_chapter, links, came_out_str
         embed.add_field(name=manga, value="[Read this chapter](" + link +")")
     
     all_embeds.append(embed)
+
 
 def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, total_episodes, watch_anime_url):
     last_episode_aired_str = "0"
@@ -159,7 +166,8 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             embed.add_field(name="Watch episode " + str(next_episode - 2), value="[Watch this episode](" + str(second_last_episode_str) + ")")
     
     all_embeds.append(embed)
-    
+
+
 def load_all_embeds():
     with open("animeList.txt") as fp:
         line = fp.readline()
@@ -170,14 +178,4 @@ def load_all_embeds():
             process_embed(response, line_info[0])
             line = fp.readline()
             cnt += 1
-'''
-@client.event
-async def on_message(message):
-    if message.content.startswith('!hello'):
-        load_all_embeds()
-        for embed in all_embeds:
-            await message.channel.send(embed=embed)
-        all_embeds.clear()
 
-client.run('MzEzODM4NTA1Mzc1ODI1OTIw.Xv6yEw.V5JRLBtztRXstP49z4BCAAHrG-k')
-'''

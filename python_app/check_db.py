@@ -39,4 +39,5 @@ def execute_select_query(database, query):
     except Exception as error:
         print("error! " + str(error))
 
+
 execute_select_query("cx_network", "SELECT * FROM ")
