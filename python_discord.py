@@ -10,8 +10,7 @@ with open('configuration.json') as json_file :
     config = json.load(json_file)
 
 def create_webhook_url(id, token):
-    return "https://discordapp.com/api/webhooks/" + str(id) + "/" /
-     + str(id)
+    return "https://discordapp.com/api/webhooks/" + str(id) + "/" + str(id)
 
 @client.event
 async def on_message(message):
