@@ -14,8 +14,11 @@ with open('configuration.json') as json_file :
 async def on_message(message):
     if message.content.startswith('!weeb'):
         load_all_embeds()
+        channels = await message.channel.webhooks()
+        print(channels)
+        print(channels[0])
         send_the_message(username="anime updates", \
-            webhook=message.channel.webhooks()[0],
+            webhook=channels[0],
             avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
             embeds=all_embeds)
 
