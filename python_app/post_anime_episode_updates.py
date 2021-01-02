@@ -121,7 +121,7 @@ def set_manual_manga_reminder(anime_name, day_of_month, manga_url):
     todays_date = datetime.now()
     todays_day_of_month = todays_date.day
 
-    if todays_day_of_month != day_of_month:
+    if todays_day_of_month == day_of_month:
         print("scheduling for " + text_to_show + " at time " + time_to_post)
         schedule.every().day.at(time_to_post).do(post_manual_discord_reminder, text_to_show)
 
