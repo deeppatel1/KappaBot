@@ -23,7 +23,7 @@ def send_the_message(username, avatar_url, webhook, content=None, embeds=None):
         webhook.send(content, username=username, avatar_url=avatar_url)
     
     if embeds or content:
-        print("sending to webhook " + webhook)
+        print(webhook)
         webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
-        print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
+        print("Sending to Webhook content: " + str(content))
         webhook.send(content=content, embeds=embeds, username=username, avatar_url=avatar_url)

@@ -1,7 +1,7 @@
 import sched, time, schedule, discord
 from datetime import datetime, timedelta
 from get_animes_and_mangas import call_anilist_api
-from post_discord_webhook import sendWebhookListEmbeds
+from post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
 
 
 class AnimeObject:
@@ -66,7 +66,7 @@ def do_reminders(anime_object):
 
 def set_reminder(airing_datetime, anime_title, episode, total_episodes, four_anime_url_name, thumbnail, image):
 
-    message = "Episode " + str(episode) + "/" + str(total_episodes) + " has aired! CLICK TO WATCH"
+    message = "@everyone Episode " + str(episode) + "/" + str(total_episodes) + " has aired! CLICK TO WATCH"
 
     if episode < 10:
         episode_str = "0" + str(episode)
@@ -113,9 +113,29 @@ def get_next_airing_date(anilist_resp, four_anime_url):
     return None
 
 
-# At startup, run this once:
+def set_manual_manga_reminder(anime_name, day_of_month, manga_url):
+    # manually puts up manga reminders... for now, naruto and super on the 20th at 12 pm
+
+    text_to_show = anime_name + " new manga chapter should be released... click :point_right: " + manga_url
+    time_to_post = "12:00"
+    todays_date = datetime.now()
+    todays_day_of_month = todays_date.day
+
+    if todays_day_of_month != day_of_month:
+        print("scheduling for " + text_to_show + " at time " + time_to_post)
+        schedule.every().day.at(time_to_post).do(post_manual_discord_reminder, text_to_show)
+
+
+def post_manual_discord_reminder(text):
+    text = "@everyone " + text
+    sendWebhookMessage("manga updater", "https://i.ytimg.com/vi/e_bhsQyU3V4/maxresdefault.jpg", text)
+
+
+# At startup, run these once:
 post_anime_episodes()
+set_manual_manga_reminder("naruto", 20, "https://www.viz.com/shonenjump/chapters/boruto")
+set_manual_manga_reminder("dragon ball super", 20, "https://www.viz.com/shonenjump/chapters/dragon-ball-super")
 
 while 1:
     schedule.run_pending()
-    time.sleep(300)
+    time.sleep(900)

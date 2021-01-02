@@ -145,26 +145,32 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
                 
         last_episode_aired_str = "https://4anime.to/" + watch_anime_url + "-episode-" + last_episode_aired_str
         second_last_episode_str = "https://4anime.to/" + watch_anime_url + "-episode-" + second_last_episode_str
-            
+
+
     if status == "FINISHED":
-        embed = discord.Embed(description="Anime - " + name)
+        embed = discord.Embed(description=":white_check_mark:  " + name)
         embed.set_image(url=image)
         embed.set_footer(text="Season complete!")
-        if last_episode_aired_str and total_episodes != 0:
-            embed.add_field(name="Watch episode " + str(total_episodes), value="[Watch this episode](" + str(last_episode_aired_str) + ")")
+        if last_episode_aired_str:
+            embed.add_field(name="Episode " + str(total_episodes), value="[Watch this episode](" + str(last_episode_aired_str) + ")")
         if second_last_episode_str:
-            embed.add_field(name="Watch episode " + str(total_episodes - 1), value="[Watch this episode](" + str(second_last_episode_str) + ")")
+            embed.add_field(name="Episode " + str(total_episodes - 1), value="[Watch this episode](" + str(second_last_episode_str) + ")")
             
+    elif status == "NOT_YET_RELEASED":
+        embed = discord.Embed(description=":alarm_clock:  " + name, timestamp=datetime.utcfromtimestamp(airdate))
+        embed.set_footer(text="Episode " + str(next_episode) + " will air ")
+        if image:
+            embed.set_image(url=image)
 
     else:
-        embed = discord.Embed(description="Anime - " + name, timestamp=datetime.utcfromtimestamp(airdate))
+        embed = discord.Embed(description=":point_right:  " + name, timestamp=datetime.utcfromtimestamp(airdate))
         if image:
             embed.set_image(url=image)
         embed.set_footer(text="Episode " + str(next_episode) + " will air ")
-        if last_episode_aired_str:
-            embed.add_field(name="Watch episode " + str(next_episode - 1), value="[Watch this episode](" + str(last_episode_aired_str) + ")")
-        if second_last_episode_str:
-            embed.add_field(name="Watch episode " + str(next_episode - 2), value="[Watch this episode](" + str(second_last_episode_str) + ")")
+        if last_episode_aired_str and total_episodes:
+            embed.add_field(name="Episode " + str(next_episode - 1), value="[Watch this episode](" + str(last_episode_aired_str) + ")")
+        if second_last_episode_str and total_episodes:
+            embed.add_field(name="Episode " + str(next_episode - 2), value="[Watch this episode](" + str(second_last_episode_str) + ")")
     
     all_embeds.append(embed)
 
