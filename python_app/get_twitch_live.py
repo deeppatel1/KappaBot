@@ -12,7 +12,7 @@ STREAMERS_TO_CHECK = {
 }
 
 STREAMERS_LIVE = []
-WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0N516n6nMPdaJB78ex85PWi2loPq18IWij3LCUugVhOwMR8h8I_ROokrPIQShyxgs"]
+WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
 
 def get_auth_token():
     url = "https://id.twitch.tv/oauth2/token?client_id=" + config.get("twitchClientId") + "&client_secret=" + config.get("twitchClientSecret") + "&grant_type=client_credentials"

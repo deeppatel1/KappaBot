@@ -1,6 +1,10 @@
 from discord import Webhook, RequestsWebhookAdapter, Embed
+import json
 
-WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0N516n6nMPdaJB78ex85PWi2loPq18IWij3LCUugVhOwMR8h8I_ROokrPIQShyxgs"]
+with open('./configuration.json') as json_file :
+    config = json.load(json_file)
+
+WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
 # WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/792195748065574912/foWeFreUrk6CW82zJU3UxcBzz6qxKAWNNr4ZvvID45Ld-SDBgZxkm_1dg02HfY1cFeBF"]
 
 def sendWebhookMessage(username: str, avatar_url: str, content=None):

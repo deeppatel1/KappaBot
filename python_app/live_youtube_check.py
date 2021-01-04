@@ -4,6 +4,10 @@ from discord import Webhook, RequestsWebhookAdapter, Embed
 import sched, time
 from bs4 import BeautifulSoup, SoupStrainer
 import re
+import json
+
+with open('./configuration.json') as json_file :
+    config = json.load(json_file)
 
 LIVE_STREAMS = [
     {
@@ -18,7 +22,7 @@ LIVE_STREAMS = [
     }
 ]
 
-WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/529864369824071691/7Wa0N516n6nMPdaJB78ex85PWi2loPq18IWij3LCUugVhOwMR8h8I_ROokrPIQShyxgs"]
+WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
 
 CURRENTLY_LIVE = []
 
