@@ -8,7 +8,8 @@ with open('./configuration.json') as json_file :
 
 STREAMERS_TO_CHECK = {
     "loltyler1": "51496027",
-    "grossie_gore": "37522020"
+    "grossie_gore": "37522020",
+    "itachipower": "17582288"
 }
 
 STREAMERS_LIVE = []
