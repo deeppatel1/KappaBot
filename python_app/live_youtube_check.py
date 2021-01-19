@@ -1,16 +1,11 @@
-import requests
+import requests, sched, time, re, json
 # from bs4 import BeautifulSoup
 from discord import Webhook, RequestsWebhookAdapter, Embed
-import sched, time
 from bs4 import BeautifulSoup, SoupStrainer
-import re
-import json
-from .streamers_tracker import ice, deep
-
+from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
-STREAMS_TO_CHECK = [ice, deep]
 
 WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
 
@@ -23,8 +18,7 @@ def check_youtube_live(channel_id):
 
     if len(raw) < 29:
         return False
-    
-    main_json_str = raw[27].text[20:-1]
+    main_json_str = str(raw[27])[59:-10]
     main_json = json.loads(main_json_str)
 
     if "channelFeaturedContentRenderer" not in main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]:
@@ -37,23 +31,27 @@ def check_youtube_live(channel_id):
 
 
 def start_youtube_checks(scheduler):
-    for stream in STREAMS_TO_CHECK:
-        print(stream)
-        channel_id = stream.get("channel_id")
+
+    for streamer in get_platform_streamers("youtube"):
+        print("  Streamer info loaded: " + str(streamer))
+        name = streamer[0]
+        channel_id = streamer[1]
+        is_online = streamer[3]
+        viewer_count = streamer[4]
+
         if channel_id:
             live_url = check_youtube_live(channel_id)
             
-            if live_url: 
-                # is live, now update the tracker and post to discord
-                stream["video_id"] = live_url
-                if not stream.get("online"):
-                    sendWebhookMessage("<@173610714433454084> <@173611085671170048> " + stream.get("name") + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
-                stream["online"] = True
+            if live_url:
+                update_video_id(name, live_url)
+                if not is_online:
+                    sendWebhookMessage("<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
+                update_streamer_online_status(name, "TRUE")
             if not live_url:
-                stream["online"] = False
-                stream["video_id"] = None
+                update_streamer_online_status(name, "FALSE")
+                update_video_id(name, "NULL")
 
-    scheduler.enter(10, 1, start_youtube_checks, (scheduler,))
+    scheduler.enter(45, 1, start_youtube_checks, (scheduler,))
 
 
 def sendWebhookMessage(body_to_post):
@@ -70,6 +68,19 @@ def start_live_checks():
 
 
 start_live_checks()
+
+
+def update_youtube_view_count():
+    for streamer in get_platform_streamers("youtube"):
+        print(stream)
+        name = streamer[0]
+        channel_id = streamer[1]
+
+        viewer_count = get_live_viewers(channel_id)
+        update_viewer_counts(name, viewer_count)        
+        # stream["viewer_count"] = viewer_count
+
+
 
 # old code
 

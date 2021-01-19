@@ -1,7 +1,7 @@
 import psycopg2, json
 
 
-with open('../configuration.json') as json_file :
+with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
 def connect(database):
@@ -13,7 +13,7 @@ def connect(database):
                                       database = database)
         cursor = connection.cursor()
         # Print PostgreSQL Connection properties
-        print ( connection.get_dsn_parameters(),"\n")
+        # print ( connection.get_dsn_parameters(),"\n")
         # Print PostgreSQL version
         return cursor, connection
 
@@ -38,6 +38,3 @@ def execute_select_query(database, query):
         return rows
     except Exception as error:
         print("error! " + str(error))
-
-
-execute_select_query("cx_network", "SELECT * FROM ")

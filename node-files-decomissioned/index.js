@@ -31,7 +31,7 @@ clientForDiscord.on('ready', () => {
 
     
     // twitterFunc.twitterFilter(clientForDiscord);
-    // twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "grossie", 30000);
+    // twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "grossie_gore", 30000);
     // twitch.initiateLiveCheckForTwitchLoop(clientForDiscord, "t1", 30000);      ;
     //liveYoutubeCheck.initiateLiveCheckLoop(clientForDiscord, "SAM", 300000);
 

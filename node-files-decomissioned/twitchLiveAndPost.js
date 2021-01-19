@@ -16,8 +16,8 @@ twitchStreamerTracker = {
         URL: "https://www.twitch.tv/loltyler1",
         MoreThan10kPostedDiscord: false
     },
-    grossie: {
-        channelName: 'grossie_gore',
+    grossie_gore: {
+        channelName: 'grossie_gore_gore',
         channelId: "37522020",
         emoji: '',
         discordChannelToPost: "main",
@@ -25,7 +25,7 @@ twitchStreamerTracker = {
         postedToDiscord: false,
         lastVideoID: '',
         status: 'offline',
-        URL: "https://twitch.tv/grossie_gore",
+        URL: "https://twitch.tv/grossie_gore_gore",
         MoreThan10kPostedDiscord: false
     },
     trick: {
@@ -64,7 +64,7 @@ twitchStreamerTracker = {
         URL: "https://www.twitch.tv/lcs",
         MoreThan10kPostedDiscord: false
     },
-    ragen: {
+    itachipower: {
         channelId: "17582288",
         emoji: '',
         discordChannelToPost: "main",
