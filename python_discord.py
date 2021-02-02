@@ -91,6 +91,6 @@ async def on_message(message):
 subprocess.Popen(["python3","python_app/live_youtube_check.py"])
 subprocess.Popen(["python3","python_app/get_twitch_live.py"])
 subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"])
-subprocess.Popen(["python3","python_app/tweet_posts.py", ">>", "~/.forever/kappabot_tweets.log"])
+subprocess.Popen(["python3","python_app/tweet_posts.py", ">", "~/.forever/kappabot_tweets.log"])
 
 client.run(config.get("discordclientlogin"))
