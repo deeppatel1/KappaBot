@@ -8,6 +8,8 @@ import datetime
 relevant_teams = [
     "TSM",
     "FLY",
+    "C9",
+    "CLG",
     "TL",
     "EG",
     "100",
