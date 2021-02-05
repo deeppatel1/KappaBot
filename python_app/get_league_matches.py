@@ -140,6 +140,7 @@ def generate_embeds(list_of_games):
                 #embed.add_field(name="<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">", value=".")
                 versus_strings.append(versus_strig)
                 all_embeds.append(embed)
+                break
 
     return versus_strings, all_embeds
 
@@ -159,9 +160,9 @@ def get_future_league_games():
     for k in list_content:
         if "LCK 2021" in k:
             games.append(k)
-        if "LCS" in k:
+        elif "LCS" in k:
             games.append(k)
-        if "LEC 2021" in k:
+        elif "LEC 2021" in k:
             games.append(k)
 
     now = datetime.datetime.now()
@@ -188,8 +189,9 @@ def get_future_league_games():
 
 
 if __name__ == "__main__":
-    print(get_future_league_games())
-
+    [b, a] = get_future_league_games()
+    for a in range(0,5):
+        print(b[a])
 
 """
 old code
