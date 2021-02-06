@@ -2,12 +2,89 @@ import requests, sched, time, re, json
 # from bs4 import BeautifulSoup
 from discord import Webhook, RequestsWebhookAdapter, Embed
 from bs4 import BeautifulSoup, SoupStrainer
-from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id
+from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id, get_video_id
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
+# WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/807510380380684308/7giR3QmowgmXGv1F1ZgrI-wxpzpYSYAuvIE7Efv3YJCK7dVURNxWoM0LA4C0OhP27tde"]
+WEBHOOKS_TO_POST = [config.get("youtube-videos")]
+# WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
 
-WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
+def get_latest_video_in_channel(channel_id):
+    api_key = config.get("gKey")
+
+    base_video_url = 'https://www.youtube.com/watch?v='
+    base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
+
+    first_url = base_search_url+'key={}&channelId={}&part=snippet,id&order=date&maxResults=25'.format(api_key, channel_id)
+
+    video_links = []
+    url = first_url
+
+    resp = json.dumps(requests.get(url).json())
+    resp = json.loads(resp)
+
+    first_url = resp["items"][0]["id"]["videoId"]
+    title = resp["items"][0]["snippet"]["title"]
+
+    return (title, first_url)
+
+
+def get_filtered_video(channel_name, channel_id, filter_str):
+    
+    [name, url] = get_latest_video_in_channel(channel_id)
+    
+    if filter_str:
+        filters = filter_str.split(",")
+    else:
+        filters = None
+
+    if not filters:
+        url = "https://www.youtube.com/watch?v=" + url
+        return url
+
+    
+    if name[0] == "E":
+        url = "https://www.youtube.com/watch?v=" + url
+        return url
+
+    for filter in filters:
+        if filter.lower() in name.lower():
+            url = "https://www.youtube.com/watch?v=" + url
+            return url
+
+    return None
+
+
+def check_if_url_in_db(channel_name, last_video_id):
+    saved_video_id = get_video_id(channel_name)
+
+    if saved_video_id != last_video_id:
+        return False
+
+    return True
+
+
+def get_last_youtube_video_id(channel_id):
+    url = "https://www.youtube.com/channel/" + channel_id
+    content = requests.get(url).text
+    soup = BeautifulSoup(content)
+    raw = soup.findAll('script')
+
+    if len(raw) < 29:
+        return None
+
+    main_json_str = str(raw[27])[59:-10]
+    main_json = json.loads(main_json_str)
+    url = None
+
+    try:
+        video_id =(main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["itemSectionRenderer"]["contents"][0]["shelfRenderer"]["content"]["horizontalListRenderer"]["items"][0]["gridVideoRenderer"]["videoId"])
+        url = "https://www.youtube.com/watch?v=" + video_id
+    except:
+        return None
+
+    return url
 
 
 def check_youtube_live(channel_id):
@@ -22,9 +99,8 @@ def check_youtube_live(channel_id):
     main_json = json.loads(main_json_str)
 
     if "channelFeaturedContentRenderer" not in main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]:
-        # if it gets to here, user is live, need to get their URL
         return False
-    
+    # if it gets to here, user is live, need to get their URL
     live_url = main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]["channelFeaturedContentRenderer"]["items"][0]["videoRenderer"]["videoId"]
         
     return live_url
@@ -36,25 +112,37 @@ def start_youtube_checks(scheduler):
         print("  Streamer info loaded: " + str(streamer))
         name = streamer[0]
         channel_id = streamer[1]
+        last_video_id = streamer[2]
         is_online = streamer[3]
         viewer_count = streamer[4]
+        filter_str = streamer[6]
 
         if channel_id:
             live_url = check_youtube_live(channel_id)
             
-            if live_url:
-                update_video_id(name, live_url)
-                if not is_online:
-                    sendWebhookMessage("<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
-                update_streamer_online_status(name, "TRUE")
-            if not live_url:
-                update_streamer_online_status(name, "FALSE")
-                update_video_id(name, "NULL")
+            # if live_url:
+            #     update_video_id(name, live_url)
+            #     if not is_online:
+            #         sendWebhookMessage("<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
+            #     update_streamer_online_status(name, "TRUE")
+            # if not live_url:
+            #     update_streamer_online_status(name, "FALSE")
+            #     update_video_id(name, "NULL")
 
-    scheduler.enter(45, 1, start_youtube_checks, (scheduler,))
+            last_youtube_video = get_filtered_video(name, channel_id, filter_str)
+            if last_youtube_video != last_video_id:
+                sendWebhookMessage(name, last_youtube_video)
+                update_video_id(name, last_youtube_video)
+
+    scheduler.enter(10, 1, start_youtube_checks, (scheduler,))
 
 
-def sendWebhookMessage(body_to_post):
+def sendWebhookMessage(name, body_to_post):
+
+    if name == "ice":
+        webhook = Webhook.from_url(url = config.get("main-server-webhook"), adapter = RequestsWebhookAdapter())
+        webhook.send(body_to_post, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
+
     for webhook in WEBHOOKS_TO_POST:
         webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
 
@@ -72,63 +160,13 @@ start_live_checks()
 
 def update_youtube_view_count():
     for streamer in get_platform_streamers("youtube"):
-        print(stream)
         name = streamer[0]
         channel_id = streamer[1]
 
         viewer_count = get_live_viewers(channel_id)
-        update_viewer_counts(name, viewer_count)        
-        # stream["viewer_count"] = viewer_count
+        update_viewer_counts(name, viewer_count)
 
 
-
-# old code
-
-# resp = requests.get()
-# text = resp.text
-
-# soup = BeautifulSoup(text)
-
-# print(soup.find('a', id="video-title"))
-
-
-
-# def get_youtube_stream_link(channel_id):
-#     r = requests.get("https://www.youtube.com/feeds/videos.xml?channel_id=" + channel_id).text
-#     soup = BeautifulSoup(r, "lxml")
-
-#     return soup.find_all("entry")[0].find_all("link")[0]["href"]
-
-# print(resp.status_code)
-# print("Live now" in resp.text)
-# print("<meta itemprop=\"videoId\" content=" in resp.text)
-
-
-# start_youtube_checks()
-
-# def youtube_live_and_post_check(scheduler):
-#     print("###")
-#     print("Currently Live " + str(CURRENTLY_LIVE))
-#     for stream in LIVE_STREAMS:
-#         channel_name = stream.get("channelName")
-#         channel_true_name = stream.get("channelTrueName")
-#         channel_id = stream.get("channelId")
-#         print("----Youtube Live Check: " + channel_true_name)
-#         resp = requests.get("https://www.youtube.com/c/" + channel_true_name + "/videos?view=2&live_view=501")
-#         if resp.status_code == 200:
-#             if "Live now" in resp.text:
-#                 print(channel_true_name + " IS LIVE")
-#                 # person is live, post now
-#                 if channel_name not in CURRENTLY_LIVE:
-#                     link = get_youtube_stream_link(channel_id)
-#                     sendWebhookMessage("<@173610714433454084> <@173611085671170048> " + channel_name + " IS LIVE " + link)
-#                     CURRENTLY_LIVE.append(channel_name)
-#             else:
-#                 print(channel_true_name + " IS NOT LIVE")
-#                 try:
-#                     CURRENTLY_LIVE.remove(channel_name)
-#                 except ValueError:
-#                     pass
-    
-#     scheduler.enter(10, 1, youtube_live_and_post_check, (scheduler,))
+# if __name__ == "__main__":
+#     print(get_filtered_video("test", "UCESLZhusAkFfsNsApnjF_Cg", "xx"))
 

@@ -39,7 +39,7 @@ class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
         id = json_data.get("user").get("id_str")
-        if id in people_to_follow.keys():
+        if id in people_to_follow.keys() and not json_data.get("in_reply_to_user_id"):
             user = json_data.get("user").get("screen_name")
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
