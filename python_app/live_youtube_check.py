@@ -1,4 +1,4 @@
-import requests, sched, time, re, json
+import requests, sched, time, re, json, time
 # from bs4 import BeautifulSoup
 from discord import Webhook, RequestsWebhookAdapter, Embed
 from bs4 import BeautifulSoup, SoupStrainer
@@ -7,8 +7,11 @@ with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
 # WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/807510380380684308/7giR3QmowgmXGv1F1ZgrI-wxpzpYSYAuvIE7Efv3YJCK7dVURNxWoM0LA4C0OhP27tde"]
-WEBHOOKS_TO_POST = [config.get("youtube-videos")]
+# WEBHOOKS_TO_POST = [config.get("youtube-videos")]
 # WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
+
+MAIN_SERVER_WEBHOOK = config.get("main-server-webhook")
+YOUTUBE_VIDEOS_WEBHOOK = config.get("youtube-videos")
 
 def get_latest_video_in_channel(channel_id):
     api_key = config.get("gKey")
@@ -16,17 +19,30 @@ def get_latest_video_in_channel(channel_id):
     base_video_url = 'https://www.youtube.com/watch?v='
     base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
 
-    first_url = base_search_url+'key={}&channelId={}&part=snippet,id&order=date&maxResults=25'.format(api_key, channel_id)
+    first_url = base_search_url+'key={}&channelId={}&part=snippet,id&order=date&maxResults=1'.format(api_key, channel_id)
 
     video_links = []
     url = first_url
 
-    resp = json.dumps(requests.get(url).json())
-    resp = json.loads(resp)
+    resp = requests.get(url)
 
-    first_url = resp["items"][0]["id"]["videoId"]
-    title = resp["items"][0]["snippet"]["title"]
+    if resp.status_code == 200:
+        
+        resp = json.dumps(resp.json())
+        resp = json.loads(resp)
 
+        first_url = resp["items"][0]["id"]["videoId"]
+        title = resp["items"][0]["snippet"]["title"]
+
+    else:
+
+        print('!!!!')
+        print(resp.status_code)
+        print(resp.text)
+        return None, None
+
+    print('got title, first_url' )
+    print(title, url)
     return (title, first_url)
 
 
@@ -34,6 +50,9 @@ def get_filtered_video(channel_name, channel_id, filter_str):
     
     [name, url] = get_latest_video_in_channel(channel_id)
     
+    if not name:
+        return None
+
     if filter_str:
         filters = filter_str.split(",")
     else:
@@ -109,6 +128,7 @@ def check_youtube_live(channel_id):
 def start_youtube_checks(scheduler):
 
     for streamer in get_platform_streamers("youtube"):
+        time.sleep(.5)
         print("  Streamer info loaded: " + str(streamer))
         name = streamer[0]
         channel_id = streamer[1]
@@ -118,40 +138,38 @@ def start_youtube_checks(scheduler):
         filter_str = streamer[6]
 
         if channel_id:
-            live_url = check_youtube_live(channel_id)
-            
-            # if live_url:
-            #     update_video_id(name, live_url)
-            #     if not is_online:
-            #         sendWebhookMessage("<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
-            #     update_streamer_online_status(name, "TRUE")
-            # if not live_url:
-            #     update_streamer_online_status(name, "FALSE")
-            #     update_video_id(name, "NULL")
+            # IF ITS ICE, we take BETTER PRECAUTIONS!!!!!!!!!!!!!!!
+            if channel_id == "UCv9Edl_WbtbPeURPtFDo-uA":
+                live_url = check_youtube_live(channel_id)
+                
+                if live_url:
+                    update_video_id(name, live_url)
+                    if not is_online:
+                        sendWebhookMessage(MAIN_SERVER_WEBHOOK, "<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
+                    update_streamer_online_status(name, "TRUE")
+                if not live_url:
+                    update_streamer_online_status(name, "FALSE")
+                    update_video_id(name, "NULL")
 
-            last_youtube_video = get_filtered_video(name, channel_id, filter_str)
-            if last_youtube_video != last_video_id:
-                sendWebhookMessage(name, last_youtube_video)
-                update_video_id(name, last_youtube_video)
+            else:
+                last_youtube_video = get_filtered_video(name, channel_id, filter_str)
+                if last_youtube_video and last_youtube_video != last_video_id:
+                    sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video)
+                    update_video_id(name, last_youtube_video)
 
-    scheduler.enter(10, 1, start_youtube_checks, (scheduler,))
+    scheduler.enter(900, 1, start_youtube_checks, (scheduler,))
 
 
-def sendWebhookMessage(name, body_to_post):
+def sendWebhookMessage(webhook, name, body_to_post):
 
-    if name == "ice":
-        webhook = Webhook.from_url(url = config.get("main-server-webhook"), adapter = RequestsWebhookAdapter())
-        webhook.send(body_to_post, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
-
-    for webhook in WEBHOOKS_TO_POST:
-        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+    webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
 
     webhook.send(body_to_post, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
 
 
 def start_live_checks():
     s = sched.scheduler(time.time, time.sleep)
-    s.enter(4, 1, start_youtube_checks, (s,))
+    s.enter(1, 1, start_youtube_checks, (s,))
     s.run()
 
 

@@ -101,6 +101,11 @@ def update_viewer_count(streamer_name, new_viewer_count):
 def update_video_id(streamer_name, new_video_id):
     update_specific_field(streamer_name, "video_id", new_video_id)
 
+def add_to_tweeter_tickers(tweeter, ticker, date):
+    db_name = "kapp"
+    query = "INSERT INTO common_tickers(tweeter, ticker, date) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\')"
+    return execute_insert_query(db_name, query)
+
 """
 Get specific fields
 """

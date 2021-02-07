@@ -1,4 +1,4 @@
-import json
+import json, datetime
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import sys
@@ -7,6 +7,7 @@ from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Stream
 from tweepy.streaming import StreamListener
+from streamers_tracker import add_to_tweeter_tickers
 
 atoken = config.get("twitterAccessToken")
 asecret = config.get("twitterTokenSecret")
@@ -24,13 +25,37 @@ people_to_follow = {
     "3291691": "chamath"
 }
 
+stocks_peeps = {
+    "1348999248151519233": "tradesew",
+    "1332880377724235776": "wallstreetminx",
+    "1308886171309813761": "neeqlix",
+    "1251671451612131328": "davistrades",
+    "1157015667842920450": "greenarrowtrade",
+    "1281015843044970496": "jmoneystonks",
+    "1290852657033338886": "thomascwatts",
+    "332358429": "traderstewe",
+    "52166809": "traderstewie",
+    "1260551652479647745": "stockdweebs",
+    "914627036081041408": "rebecca_trades",
+    "748611168168644612": "walrustrades",
+    "1329870719732379654": "sweatystonks",
+    "83478764": "mohankonuru",
+    "1300807912835690497": "taytrades11",
+    "1290864917835390976": "tomikazi1",
+    "1320043277001908227": "darkpoolcharts"
+}
+
+all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
+
+TWEETS_CHANNEL_WEBHOOK = config.get("tweets")
+STOCKS_STUFF_WEBHOOK = config.get("stock-stuff")
 
 NORMAL_TWEETS_CHANNELS = [config.get("tweets")]
 
 
-def sendWebhookMessage(user_name, body_to_post, photo_pic_url):
-    for webhook in NORMAL_TWEETS_CHANNELS:
-        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
+def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
+    
+    webhook = Webhook.from_url(url = webhook_url, adapter = RequestsWebhookAdapter())
 
     webhook.send(body_to_post, username=user_name, avatar_url=photo_pic_url)
 
@@ -38,13 +63,38 @@ def sendWebhookMessage(user_name, body_to_post, photo_pic_url):
 class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
-        id = json_data.get("user").get("id_str")
-        if id in people_to_follow.keys() and not json_data.get("in_reply_to_user_id"):
+        # take out replies
+        if json_data.get("in_reply_to_status_id"):
+            return
+        # only use if original tweeter is 1 of the people we want
+        id_str = json_data.get("user").get("id_str")
+        if id_str not in all_tweeters_to_follow:
+            return
+        # now if this is 1 of the people we want to post to discord, do this
+        if id_str in list(people_to_follow.keys()):
             user = json_data.get("user").get("screen_name")
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
             profile_pic = json_data.get("user").get("profile_image_url_https")
-            sendWebhookMessage(user, url, profile_pic)
+            sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
+        # if its 1 of the stock people
+        else:
+            print('in else clause')
+            if json_data.get("truncated"):
+                full_text = json_data.get("extended_tweet").get("full_text")
+            else:
+                full_text = json_data.get("text")
+            full_text_list = full_text.split(" ")
+            now = datetime.datetime.now()
+
+            current_date_str = now.strftime("%Y-%m-%d")
+            user = json_data.get("user").get("name")
+
+            for each_element in full_text_list:
+                if "$" in each_element:
+                    add_to_tweeter_tickers(user, each_element, current_date_str)
+                    sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)
+                    print(each_element + " added to db!")  
 
     def on_error(self, status):
         print(status)
@@ -54,4 +104,4 @@ auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
 
 twitterStream = Stream(auth, listener())
-twitterStream.filter(follow=list(people_to_follow.keys()))
+twitterStream.filter(follow=all_tweeters_to_follow)
