@@ -54,15 +54,14 @@ NORMAL_TWEETS_CHANNELS = [config.get("tweets")]
 
 
 def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
-    
     webhook = Webhook.from_url(url = webhook_url, adapter = RequestsWebhookAdapter())
-
     webhook.send(body_to_post, username=user_name, avatar_url=photo_pic_url)
 
 
 class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
+        print("Got data from: " + json_data.get("user").get("screen_name") + json_data.get("created_at"))
         # take out replies
         if json_data.get("in_reply_to_status_id"):
             return
@@ -72,6 +71,8 @@ class listener(StreamListener):
             return
         # now if this is 1 of the people we want to post to discord, do this
         if id_str in list(people_to_follow.keys()):
+            print("!!!!!------ Main person, posting to discord")
+            print(json_data)
             user = json_data.get("user").get("screen_name")
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
@@ -79,12 +80,19 @@ class listener(StreamListener):
             sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
         # if its 1 of the stock people
         else:
-            print('in else clause')
+            print('XXXX------ Stock person, posting to discord')
+            print(json_data)
+            should_send_to_discord = False
             if json_data.get("truncated"):
                 full_text = json_data.get("extended_tweet").get("full_text")
             else:
                 full_text = json_data.get("text")
-            full_text_list = full_text.split(" ")
+            
+            full_text_list = []
+            c = full_text.split(" ")
+            for a in c:
+                full_text_list = full_text_list + a.split(" ")
+            
             now = datetime.datetime.now()
 
             current_date_str = now.strftime("%Y-%m-%d")
@@ -93,15 +101,19 @@ class listener(StreamListener):
             for each_element in full_text_list:
                 if "$" in each_element:
                     add_to_tweeter_tickers(user, each_element, current_date_str)
-                    sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)
-                    print(each_element + " added to db!")  
+                    should_send_to_discord = True
+                    print(each_element + " added to db!")
+            
+            if should_send_to_discord:
+                sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)
 
     def on_error(self, status):
+        print("!!!!! something happend GASP")
         print(status)
 
 
 auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
-
+print('---starting twitter checks')
 twitterStream = Stream(auth, listener())
 twitterStream.filter(follow=all_tweeters_to_follow)

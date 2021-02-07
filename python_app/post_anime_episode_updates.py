@@ -66,7 +66,7 @@ def do_reminders(anime_object):
 
 def set_reminder(airing_datetime, anime_title, episode, total_episodes, four_anime_url_name, thumbnail, image):
 
-    message = "@everyone Episode " + str(episode) + "/" + str(total_episodes) + " has aired! CLICK TO WATCH"
+    message = "Episode " + str(episode) + "/" + str(total_episodes) + " has aired! CLICK TO WATCH"
 
     if episode < 10:
         episode_str = "0" + str(episode)
@@ -79,6 +79,7 @@ def set_reminder(airing_datetime, anime_title, episode, total_episodes, four_ani
     embed.set_image(url=image)
     embed.set_footer(text="Aired")
 
+    sendWebhookMessage(username=anime_title, avatar_url=avatar_url, content="@everyone")
     sendWebhookListEmbeds(username=anime_title, avatar_url=thumbnail, embeds=[embed])
     
     return

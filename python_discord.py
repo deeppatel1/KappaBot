@@ -37,7 +37,7 @@ def update_youtube_view_count():
             return 0
         
         viewer_count = main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]["channelFeaturedContentRenderer"]["items"][0]["videoRenderer"]["shortViewCountText"]["runs"][0]["text"]
-            
+
         return viewer_count
 
     for streamer in get_platform_streamers("youtube"):
@@ -88,9 +88,15 @@ async def on_message(message):
     if message.content.startswith('!test'):
         await message.channel.send("hello")
 
-subprocess.Popen(["python3","python_app/live_youtube_check.py"])
-subprocess.Popen(["python3","python_app/get_twitch_live.py"])
-subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"])
-subprocess.Popen(["python3","python_app/tweet_posts.py", ">", "~/.forever/kappabot_tweets.log"])
+youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
+twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
+anime_updates = open("logs/post-anime-episodes-updates.txt", "a+")
+yt_vod_check = open("logs/live-youtube-checks-logs.txt", "a+")
+tweets = open("logs/tweets-logs.txt", "a+")
+
+subprocess.Popen(["python3","python_app/live_youtube_check.py"], stdout=yt_vod_check)
+subprocess.Popen(["python3","python_app/get_twitch_live.py"], stdout=twitch_live)
+subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"], stdout=anime_updates)
+subprocess.Popen(["python3","python_app/tweet_posts.py"], stdout=tweets)
 
 client.run(config.get("discordclientlogin"))

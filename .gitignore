@@ -5,3 +5,7 @@ configuration.json
 python_app/__pycache__/
 /node_modules
 /.vscode
+/logs/post-anime-episodes-updates.txt
+/logs/get-twitch-live-logs.txt
+/logs/live-youtube-checks-logs.txt
+/logs/tweets-logs.txt
