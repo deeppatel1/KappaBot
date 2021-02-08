@@ -42,7 +42,8 @@ stocks_peeps = {
     "83478764": "mohankonuru",
     "1300807912835690497": "taytrades11",
     "1290864917835390976": "tomikazi1",
-    "1320043277001908227": "darkpoolcharts"
+    "1320043277001908227": "darkpoolcharts",
+    "1310326298527571971": "Albert_Trades"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
