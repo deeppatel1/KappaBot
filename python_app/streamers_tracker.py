@@ -133,3 +133,31 @@ def get_viewer_count(streamer_name):
 def get_online_status(streamer_name):
     return get_streamer_specific_info(streamer_name, "online")
 
+
+
+# STOCK STUFF
+
+def get_top_stocks(from_date = None, to_date = None):
+
+    # If no dates are provided, get top 10 tickers all time:
+
+    if not from_date and not to_date:
+        query = "SELECT f.ticker, COUNT(f.ticker) as ticker_mention_count FROM (SELECT tweeter, lower(ticker) AS ticker, date FROM common_tickers) as f GROUP BY ticker ORDER BY ticker_mention_count DESC LIMIT 10"
+
+    if from_date and not to_date:
+        query = "SELECT f.ticker, COUNT(f.ticker) as ticker_mention_count FROM (SELECT tweeter, date, lower(ticker) AS ticker, date FROM common_tickers WHERE date >= \'" + from_date + "\') as f GROUP BY ticker ORDER BY ticker_mention_count DESC LIMIT 10"
+
+    if from_date and to_date:
+        query = "SELECT f.ticker, COUNT(f.ticker) as ticker_mention_count FROM (SELECT tweeter, date, lower(ticker) AS ticker, date FROM common_tickers WHERE date >= \'" + from_date + "\' AND date <= \'" + to_date + "\') as f GROUP BY ticker ORDER BY ticker_mention_count DESC LIMIT 10"
+
+    resp = execute_select_query("kapp", query)
+
+    final_str = ""
+
+    for a in resp:
+        ticker = a[0]
+        ticker_count = a[1]
+        
+        final_str = final_str + '{:<10}{:>4}\n'.format(ticker.rstrip(), str(ticker_count))
+
+    return final_str

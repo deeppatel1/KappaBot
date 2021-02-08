@@ -27,7 +27,6 @@ people_to_follow = {
 
 stocks_peeps = {
     "1348999248151519233": "tradesew",
-    "1332880377724235776": "wallstreetminx",
     "1308886171309813761": "neeqlix",
     "1251671451612131328": "davistrades",
     "1157015667842920450": "greenarrowtrade",
@@ -43,7 +42,8 @@ stocks_peeps = {
     "1300807912835690497": "taytrades11",
     "1290864917835390976": "tomikazi1",
     "1320043277001908227": "darkpoolcharts",
-    "1310326298527571971": "Albert_Trades"
+    "1310326298527571971": "Albert_Trades",
+    "767561346275799045": "StockGodd"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
@@ -62,13 +62,15 @@ def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
 class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
-        print("Got data from: " + json_data.get("user").get("screen_name") + json_data.get("created_at"))
+        print("Got data from: " + json_data.get("user").get("screen_name") + " " + json_data.get("created_at"))
         # take out replies
-        if json_data.get("in_reply_to_status_id"):
-            return
+        # if json_data.get("in_reply_to_status_id"):
+        #     print("Taken out because it was a reply to status_id:")
+        #     return
         # only use if original tweeter is 1 of the people we want
         id_str = json_data.get("user").get("id_str")
         if id_str not in all_tweeters_to_follow:
+            print("Taken out due to to id_str not being 1 to follow: " + id_str)
             return
         # now if this is 1 of the people we want to post to discord, do this
         if id_str in list(people_to_follow.keys()):

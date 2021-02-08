@@ -5,7 +5,7 @@ import importlib
 from bs4 import BeautifulSoup, SoupStrainer
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
-from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count
+from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count, get_top_stocks
 from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds, send_the_message
 
 client = discord.Client()
@@ -84,6 +84,16 @@ async def on_message(message):
             embed = discord.Embed(tite="no ones online...")
 
         await message.channel.send(embed=embed)
+
+    if message.content.startswith("!stocks"):
+        top_stocks = get_top_stocks()
+        channels = await message.channel.webhooks()
+        send_the_message(username="pop tickers", \
+            webhook=create_webhook_url(channels[0].id, channels[0].token), \
+            avatar_url=None, \
+            content=top_stocks)
+
+        await message.channel.send(top_stocks)
 
     if message.content.startswith('!test'):
         await message.channel.send("hello")
