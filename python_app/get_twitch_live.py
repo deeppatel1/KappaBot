@@ -27,6 +27,7 @@ def check_streamer_live(streamer):
     streamer_name = streamer[0]
     streamer_id = streamer[1]
     online_status = streamer[3]
+    who_to_at = streamer[7]
 
     auth_token = get_auth_token()
 
@@ -51,7 +52,8 @@ def check_streamer_live(streamer):
 
         if not online_status:
             url = "https://twitch.tv/" + streamer_name
-            discord_post = streamer_name + " IS LIVE <@173610714433454084> <@173611085671170048> " + url
+            who_to_at = get_who_to_at(who_to_at)
+            discord_post = streamer_name + " IS LIVE " + who_to_at + " " + url
             sendWebhookMessage(discord_post)
 
         # Update the db now
@@ -91,3 +93,22 @@ def sendWebhookMessage(body_to_post):
 
 
 start_checks()
+
+
+def get_who_to_at(who_to_at_string):
+
+    if not who_to_at_string or who_to_at_string == "":
+        return "@everyone"
+
+    final_who_to_at_string = ""
+
+    if "deep" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
+
+    if "ragen" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
+    
+    if "priyam" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
+
+    return final_who_to_at_string

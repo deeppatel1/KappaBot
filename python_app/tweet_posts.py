@@ -15,14 +15,14 @@ ckey = config.get("twitterApiKey")
 csecret = config.get("twitterApiKeySecret")
 
 people_to_follow = {
-    "1615735502": "solonoid12",
     "736784706486734852": "realiceposeidon",
     "344538810": "doublelift1",
     "4833803780": "loltyler1",
     "17301744": "imls",
     "934165701220282368": "macawcaw123",
     "1648029396": "c9perkz",
-    "3291691": "chamath"
+    "3291691": "chamath",
+    "1615735502": "solonoid12"
 }
 
 stocks_peeps = {
@@ -53,6 +53,7 @@ STOCKS_STUFF_WEBHOOK = config.get("stock-stuff")
 
 NORMAL_TWEETS_CHANNELS = [config.get("tweets")]
 
+UNWANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
 
 def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
     webhook = Webhook.from_url(url = webhook_url, adapter = RequestsWebhookAdapter())
@@ -103,6 +104,10 @@ class listener(StreamListener):
 
             for each_element in full_text_list:
                 if "$" in each_element:
+                    for char in UNWANTED_CHARS:
+                        if char in each_element:
+                            each_element.replace(char, "")
+                    # filter out unwanted chars
                     add_to_tweeter_tickers(user, each_element, current_date_str)
                     should_send_to_discord = True
                     print(each_element + " added to db!")

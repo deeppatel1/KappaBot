@@ -1,4 +1,5 @@
 import discord, json
+from discord.ext import commands
 import subprocess
 import requests
 import importlib
@@ -9,6 +10,7 @@ from python_app.streamers_tracker import get_platform_streamers, get_everyone_on
 from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds, send_the_message
 
 client = discord.Client()
+bot = commands.Bot(command_prefix='$')
 
 with open('configuration.json') as json_file :
     config = json.load(json_file)
@@ -47,6 +49,17 @@ def update_youtube_view_count():
         viewer_count = get_live_viewers(channel_id)
         update_viewer_count(name, str(viewer_count))
 
+@bot.command()
+async def zclean(client):
+    print('entere dzClean')
+    known_names = ["python_discord.py", "live_youtube_check.py", "get_twitch_live.py", "post_anime_episode_updates.py", "tweet_posts.py"]
+
+    for python_script in known_names:
+        #pkill -9 -f script.py
+        output = subprocess.run(["sudo", "pkill", "-9", "-f", python_script], capture_output=True).stdout.decode('UTF-8')
+
+    os.system('cd /home/kapp/KappaBot/KappaBot/ && python3 python_discord.py')
+    await client.send("done")
 
 @client.event
 async def on_message(message):
@@ -97,6 +110,19 @@ async def on_message(message):
 
     if message.content.startswith('!test'):
         await message.channel.send("hello")
+
+    if message.content.startswith("!zclean"):
+        print('entere dzClean')
+        known_names = ["python_discord.py", "live_youtube_check.py", "get_twitch_live.py", "post_anime_episode_updates.py", "tweet_posts.py"]
+
+        for python_script in known_names:
+            #pkill -9 -f script.py
+            output = subprocess.run(["pkill", "-9", "-f", python_script], capture_output=True).stdout.decode('UTF-8')
+
+        os.system('cd /home/kapp/KappaBot/KappaBot/ && python3 python_discord.py')
+        await message.channel.send("done")
+  
+
 
 youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
 twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
