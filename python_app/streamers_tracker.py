@@ -139,6 +139,9 @@ def get_online_status(streamer_name):
 
 def get_top_stocks(from_date = None, to_date = None):
 
+    print("input from an to date")
+    print(from_date)
+    print(to_date)
     # If no dates are provided, get top 10 tickers all time:
 
     if not from_date and not to_date:
@@ -149,7 +152,7 @@ def get_top_stocks(from_date = None, to_date = None):
 
     if from_date and to_date:
         query = "SELECT f.ticker, COUNT(f.ticker) as ticker_mention_count FROM (SELECT tweeter, date, lower(ticker) AS ticker, date FROM common_tickers WHERE date >= \'" + from_date + "\' AND date <= \'" + to_date + "\') as f GROUP BY ticker ORDER BY ticker_mention_count DESC LIMIT 10"
-
+    print(query)
     resp = execute_select_query("kapp", query)
 
     final_str = ""

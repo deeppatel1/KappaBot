@@ -107,10 +107,11 @@ class listener(StreamListener):
                     for char in UNWANTED_CHARS:
                         if char in each_element:
                             each_element.replace(char, "")
-                    # filter out unwanted chars
-                    add_to_tweeter_tickers(user, each_element, current_date_str)
-                    should_send_to_discord = True
-                    print(each_element + " added to db!")
+                    if len(each_element) == 1:
+                        # filter out unwanted chars
+                        add_to_tweeter_tickers(user, each_element, current_date_str)
+                        should_send_to_discord = True
+                        print(each_element + " added to db!")
             
             if should_send_to_discord:
                 sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)

@@ -99,7 +99,17 @@ async def on_message(message):
         await message.channel.send(embed=embed)
 
     if message.content.startswith("!stocks"):
-        top_stocks = get_top_stocks()
+        msg = message.content
+        msg_array = msg.split(" ")
+        from_date = None
+        to_date = None
+        if len(msg_array) == 2:
+            from_date = msg_array[1]
+        if len(msg_array) == 3:
+            to_date = msg_array[2]
+        print(from_date)
+        print(to_date)
+        top_stocks = get_top_stocks(from_date, to_date)
         channels = await message.channel.webhooks()
         send_the_message(username="pop tickers", \
             webhook=create_webhook_url(channels[0].id, channels[0].token), \
@@ -130,9 +140,9 @@ anime_updates = open("logs/post-anime-episodes-updates.txt", "a+")
 yt_vod_check = open("logs/live-youtube-checks-logs.txt", "a+")
 tweets = open("logs/tweets-logs.txt", "a+")
 
-subprocess.Popen(["python3","python_app/live_youtube_check.py"], stdout=yt_vod_check)
-subprocess.Popen(["python3","python_app/get_twitch_live.py"], stdout=twitch_live)
-subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"], stdout=anime_updates)
-subprocess.Popen(["python3","python_app/tweet_posts.py"], stdout=tweets)
+# subprocess.Popen(["python3","python_app/live_youtube_check.py"], stdout=yt_vod_check)
+# subprocess.Popen(["python3","python_app/get_twitch_live.py"], stdout=twitch_live)
+# subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"], stdout=anime_updates)
+# subprocess.Popen(["python3","python_app/tweet_posts.py"], stdout=tweets)
 
 client.run(config.get("discordclientlogin"))
