@@ -1,6 +1,7 @@
 import discord, json
 from discord.ext import commands
 import subprocess
+import os
 import requests
 import importlib
 from bs4 import BeautifulSoup, SoupStrainer
@@ -121,24 +122,16 @@ async def on_message(message):
     if message.content.startswith('!test'):
         await message.channel.send("hello")
 
-    if message.content.startswith("!zclean"):
-        print('entere dzClean')
-        known_names = ["python_discord.py", "live_youtube_check.py", "get_twitch_live.py", "post_anime_episode_updates.py", "tweet_posts.py"]
+    if message.content.startswith('!logstocks'):
+        for file_path in os.listdir("logs/tweet-logs/"):
+            file = discord.File("logs/tweet-logs/" + file_path)
+            await message.channel.send(file=file)
 
-        for python_script in known_names:
-            #pkill -9 -f script.py
-            output = subprocess.run(["pkill", "-9", "-f", python_script], capture_output=True).stdout.decode('UTF-8')
-
-        os.system('cd /home/kapp/KappaBot/KappaBot/ && python3 python_discord.py')
-        await message.channel.send("done")
-  
-
-
-youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
-twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
-anime_updates = open("logs/post-anime-episodes-updates.txt", "a+")
-yt_vod_check = open("logs/live-youtube-checks-logs.txt", "a+")
-tweets = open("logs/tweets-logs.txt", "a+")
+# youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
+# twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
+# anime_updates = open("logs/post-anime-episodes-updates.txt", "a+")
+# yt_vod_check = open("logs/live-youtube-checks-logs.txt", "a+")
+# tweets = open("logs/tweets-logs.txt", "a+")
 
 # subprocess.Popen(["python3","python_app/live_youtube_check.py"], stdout=yt_vod_check)
 # subprocess.Popen(["python3","python_app/get_twitch_live.py"], stdout=twitch_live)

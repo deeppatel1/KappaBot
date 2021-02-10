@@ -2,12 +2,21 @@ import json, datetime
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import sys
+import os
 from discord import Webhook, RequestsWebhookAdapter, Embed
 from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 from streamers_tracker import add_to_tweeter_tickers
+from logging.handlers import RotatingFileHandler
+import logging
+
+logger = logging.getLogger("Rotating Log")
+logger.setLevel(logging.INFO)
+
+handler = RotatingFileHandler('logs/tweet-logs/tweet-logs.log', maxBytes=7000000, backupCount=5)
+logger.addHandler(handler)
 
 atoken = config.get("twitterAccessToken")
 asecret = config.get("twitterTokenSecret")
@@ -63,20 +72,20 @@ def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
 class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
-        print("Got data from: " + json_data.get("user").get("screen_name") + " " + json_data.get("created_at"))
+        logger.info("---> Got data from: " + json_data.get("user").get("screen_name") + " " + json_data.get("created_at"))
         # take out replies
         # if json_data.get("in_reply_to_status_id"):
-        #     print("Taken out because it was a reply to status_id:")
+        #     logger.info("Taken out because it was a reply to status_id:")
         #     return
         # only use if original tweeter is 1 of the people we want
         id_str = json_data.get("user").get("id_str")
         if id_str not in all_tweeters_to_follow:
-            print("Taken out due to to id_str not being 1 to follow: " + id_str)
+            logger.info("---X----Taken out due to to id_str not being 1 to follow: " + id_str)
             return
         # now if this is 1 of the people we want to post to discord, do this
         if id_str in list(people_to_follow.keys()):
-            print("!!!!!------ Main person, posting to discord")
-            print(json_data)
+            logger.info("!!!!!------ Main person, posting to discord")
+            logger.info(json_data)
             user = json_data.get("user").get("screen_name")
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
@@ -84,8 +93,8 @@ class listener(StreamListener):
             sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
         # if its 1 of the stock people
         else:
-            print('XXXX------ Stock person, posting to discord')
-            print(json_data)
+            logger.info('!!!------ Stock person, posting to discord')
+            logger.info(json_data)
             should_send_to_discord = False
             if json_data.get("truncated"):
                 full_text = json_data.get("extended_tweet").get("full_text")
@@ -111,18 +120,18 @@ class listener(StreamListener):
                         # filter out unwanted chars
                         add_to_tweeter_tickers(user, each_element, current_date_str)
                         should_send_to_discord = True
-                        print(each_element + " added to db!")
+                        logger.info(each_element + " added to db!")
             
             if should_send_to_discord:
                 sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)
 
     def on_error(self, status):
-        print("!!!!! something happend GASP")
-        print(status)
+        logger.info("!!!!! something happend GASP")
+        logger.info(status)
 
 
 auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
-print('---starting twitter checks')
+logger.info('---starting twitter checks')
 twitterStream = Stream(auth, listener())
-twitterStream.filter(follow=all_tweeters_to_follow)
+twitterStream.filter(follow=all_tweeters_to_follow, is_async=True)
