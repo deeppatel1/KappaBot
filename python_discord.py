@@ -123,8 +123,8 @@ async def on_message(message):
         await message.channel.send("hello")
 
     if message.content.startswith('!logstocks'):
-        for file_path in os.listdir("logs/tweet-logs/"):
-            file = discord.File("logs/tweet-logs/" + file_path)
+        for file_path in os.listdir("logs/"):
+            file = discord.File("logs/" + file_path)
             await message.channel.send(file=file)
 
 # youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
@@ -136,6 +136,7 @@ async def on_message(message):
 # subprocess.Popen(["python3","python_app/live_youtube_check.py"], stdout=yt_vod_check)
 # subprocess.Popen(["python3","python_app/get_twitch_live.py"], stdout=twitch_live)
 # subprocess.Popen(["python3","python_app/post_anime_episode_updates.py"], stdout=anime_updates)
-# subprocess.Popen(["python3","python_app/tweet_posts.py"], stdout=tweets)
+
+subprocess.Popen(["python3","python_app/reset_twitter_script.py"])
 
 client.run(config.get("discordclientlogin"))
