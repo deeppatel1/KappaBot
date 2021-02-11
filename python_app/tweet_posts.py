@@ -12,11 +12,16 @@ from streamers_tracker import add_to_tweeter_tickers
 from logging.handlers import RotatingFileHandler
 import logging
 
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger("Rotating Log")
-logger.setLevel(logging.INFO)
+handler = RotatingFileHandler('logs/tweet-logs.log', maxBytes=7000000, backupCount=5)
+handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 
-handler = RotatingFileHandler('logs/tweet-logs/tweet-logs.log', maxBytes=7000000, backupCount=5)
 logger.addHandler(handler)
+
 
 atoken = config.get("twitterAccessToken")
 asecret = config.get("twitterTokenSecret")
@@ -31,7 +36,8 @@ people_to_follow = {
     "934165701220282368": "macawcaw123",
     "1648029396": "c9perkz",
     "3291691": "chamath",
-    "1615735502": "solonoid12"
+    "1615735502": "solonoid12",
+    "44196397": "elon"
 }
 
 stocks_peeps = {

@@ -5,6 +5,18 @@ from bs4 import BeautifulSoup, SoupStrainer
 from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id, get_video_id
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
+import logging
+from logging.handlers import RotatingFileHandler
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
+
+    
+logger = logging.getLogger("Rotating Log")
+handler = RotatingFileHandler('logs/live-youtube-check.log', maxBytes=7000000, backupCount=5)
+logger.addHandler(handler)
 
 # WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/807510380380684308/7giR3QmowgmXGv1F1ZgrI-wxpzpYSYAuvIE7Efv3YJCK7dVURNxWoM0LA4C0OhP27tde"]
 # WEBHOOKS_TO_POST = [config.get("youtube-videos")]
@@ -36,13 +48,14 @@ def get_latest_video_in_channel(channel_id):
 
     else:
 
-        print('!!!!')
-        print(resp.status_code)
-        print(resp.text)
+        logger.info('!!!!')
+        logger.info(resp.status_code)
+        logger.info(resp.text)
         return None, None
 
-    print('got title, first_url' )
-    print(title, url)
+    logger.info('got title, first_url' )
+    logger.info(title)
+    logger.info(first_url)
     return (title, first_url)
 
 
@@ -129,7 +142,7 @@ def start_youtube_checks(scheduler):
 
     for streamer in get_platform_streamers("youtube"):
         time.sleep(.5)
-        print("  Streamer info loaded: " + str(streamer))
+        logger.info("  Streamer info loaded: " + str(streamer))
         name = streamer[0]
         channel_id = streamer[1]
         last_video_id = streamer[2]
@@ -186,5 +199,5 @@ def update_youtube_view_count():
 
 
 # if __name__ == "__main__":
-#     print(get_filtered_video("test", "UCESLZhusAkFfsNsApnjF_Cg", "xx"))
+#     logger.info(get_filtered_video("test", "UCESLZhusAkFfsNsApnjF_Cg", "xx"))
 

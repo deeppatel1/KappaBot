@@ -9,6 +9,17 @@ from datetime import datetime, timedelta
 import sched, time
 from threading import Timer
 #client = discord.Client()
+from logging.handlers import RotatingFileHandler
+import logging
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger("Rotating Log")
+handler = RotatingFileHandler('logs/get-animes-and-mangas.log', maxBytes=7000000, backupCount=5)
+
+logger.addHandler(handler)
 
 all_embeds = []
 
@@ -47,11 +58,11 @@ def call_anilist_api(id):
     """
     url = 'https://graphql.anilist.co'
 
-    print('making api call')
+    logger.info('making api call')
     response = requests.post(url, json={'query': graph_ql_query, 'variables': {'id': id}})
 
     #process_embed(response, watch_anime_url)
-    ##print(response.json())
+    ##logger.info(response.json())
     return response
 
 

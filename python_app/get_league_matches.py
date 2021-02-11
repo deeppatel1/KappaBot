@@ -4,6 +4,16 @@ import discord
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import logging
+from logging.handlers import RotatingFileHandler
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger("Rotating Log")
+handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, backupCount=5)
+logger.addHandler(handler)
 
 relevant_teams = [
     "TSM",
@@ -153,7 +163,7 @@ def get_future_league_games():
     soup = BeautifulSoup(schedule, 'html.parser')
 
     content = soup.find(id='mw-content-text').get_text()
-    # print(content)
+    # logger.info(content)
     list_content = content.split("\n")
     all_matches_after_now = []
 
@@ -193,7 +203,7 @@ def get_future_league_games():
 if __name__ == "__main__":
     [b, a] = get_future_league_games()
     for a in range(0,5):
-        print(b[a])
+        logger.info(b[a])
 
 """
 old code
@@ -213,7 +223,7 @@ def get_games(count_games_to_return):
 
     for game in games:
         if game:
-            print(game)
+            logger.info(game)
             game_data = game.split(",")
             tourney_and_competitors = game_data[0].split(" - ")
             tourney = tourney_and_competitors[0]

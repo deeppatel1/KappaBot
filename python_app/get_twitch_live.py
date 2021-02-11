@@ -3,8 +3,37 @@ from discord import Webhook, RequestsWebhookAdapter, Embed
 from streamers_tracker import get_platform_streamers, update_viewer_count, update_streamer_online_status, update_viewer_count, get_everyone_online
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
+import logging
+from logging.handlers import RotatingFileHandler
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger("Rotating Log")
+handler = RotatingFileHandler('logs/get-twitch-live.log', maxBytes=7000000, backupCount=5)
+logger.addHandler(handler)
 
 WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
+
+
+def get_who_to_at(who_to_at_string):
+
+    if not who_to_at_string or who_to_at_string == "":
+        return "@everyone"
+
+    final_who_to_at_string = ""
+
+    if "deep" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
+
+    if "ragen" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
+    
+    if "priyam" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
+
+    return final_who_to_at_string
 
 
 def get_auth_token():
@@ -13,8 +42,8 @@ def get_auth_token():
     resp = requests.post(url)
 
     if resp.status_code != 200:
-        print("Failed to get auth token...")
-        print(url)
+        logger.info("Failed to get auth token...")
+        logger.info(url)
         return None
     
     resp_body = resp.json()
@@ -43,12 +72,12 @@ def check_streamer_live(streamer):
     streamer_resp = requests.get("https://api.twitch.tv/helix/streams?user_id=" + streamer_id, headers=API_CALL_HEADERS)
 
     if streamer_resp.status_code != 200:
-        print("Streamer check failed, got auth token but failed on getting data from the API")
+        logger.info("Streamer check failed, got auth token but failed on getting data from the API")
         return
 
     resp = streamer_resp.json()
     if "data" in resp and len(resp.get("data")) > 0:
-        print("streamer " + streamer_name + " is ONLINE")
+        logger.info("streamer " + streamer_name + " is ONLINE")
 
         if not online_status:
             url = "https://twitch.tv/" + streamer_name
@@ -61,7 +90,7 @@ def check_streamer_live(streamer):
         update_viewer_count(streamer_name,  str(resp.get("data")[0]["viewer_count"]))
 
     else:
-        print("streamer " + streamer_name + " is offline")
+        logger.info("streamer " + streamer_name + " is offline")
         # Update the db now
         update_streamer_online_status(streamer_name, "FALSE")
         update_viewer_count(streamer_name,  "0")
@@ -73,7 +102,7 @@ def check_all_streamers(scheduler):
     all_twitch_streamers = []
     streamer_infos = get_platform_streamers("twitch")
     for streamer in streamer_infos:
-        print("--- Twitch Live Check for " + streamer[0])
+        logger.info("--- Twitch Live Check for " + streamer[0])
         check_streamer_live(streamer)
 
     scheduler.enter(180, 1, check_all_streamers, (scheduler,))
@@ -93,22 +122,3 @@ def sendWebhookMessage(body_to_post):
 
 
 start_checks()
-
-
-def get_who_to_at(who_to_at_string):
-
-    if not who_to_at_string or who_to_at_string == "":
-        return "@everyone"
-
-    final_who_to_at_string = ""
-
-    if "deep" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
-
-    if "ragen" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
-    
-    if "priyam" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
-
-    return final_who_to_at_string

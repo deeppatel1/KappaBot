@@ -3,6 +3,15 @@ from datetime import datetime, timedelta
 from get_animes_and_mangas import call_anilist_api
 from post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
 
+import logging
+from logging.handlers import RotatingFileHandler
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger("Rotating Log")
+handler = RotatingFileHandler('logs/post-anime-episodes-updates.log', maxBytes=7000000, backupCount=5)
+logger.addHandler(handler)
 
 class AnimeObject:
     def __init__(self, title, status, image, thumbnail, total_episodes, next_airing_episode, next_airing_date, four_anime_url):
@@ -123,7 +132,7 @@ def set_manual_manga_reminder(anime_name, day_of_month, manga_url):
     todays_day_of_month = todays_date.day
 
     if todays_day_of_month == day_of_month:
-        print("scheduling for " + text_to_show + " at time " + time_to_post)
+        logger.info("scheduling for " + text_to_show + " at time " + time_to_post)
         schedule.every().day.at(time_to_post).do(post_manual_discord_reminder, text_to_show)
 
 
