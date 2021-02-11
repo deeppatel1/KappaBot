@@ -1,6 +1,6 @@
 #!/bin/bash/
-# sudo chown +755 kapp:kapp /home/kapp/KappaBot/KappaBot/.git/*
-# sudo su kapp
+sudo chown +755 kapp:kapp /home/kapp/KappaBot/KappaBot/.git/*
+sudo su kapp
 # cd /home/kapp/.forever/
 # rm kappabot.log
 # touch kappabot.log
