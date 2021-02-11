@@ -134,6 +134,8 @@ class listener(StreamListener):
     def on_error(self, status):
         logger.info("!!!!! something happend GASP")
         logger.info(status)
+        
+        sendWebhookMessage(None, "420 420 420 420!!!!", None, STOCKS_STUFF_WEBHOOK)
 
 
 auth = OAuthHandler(ckey, csecret)
