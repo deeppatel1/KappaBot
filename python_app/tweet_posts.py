@@ -36,7 +36,6 @@ people_to_follow = {
     "934165701220282368": "macawcaw123",
     "1648029396": "c9perkz",
     "3291691": "chamath",
-    "1615735502": "solonoid12",
     "44196397": "elon"
 }
 
@@ -59,7 +58,22 @@ stocks_peeps = {
     "1320043277001908227": "darkpoolcharts",
     "1310326298527571971": "Albert_Trades",
     "767561346275799045": "StockGodd",
-    "897328204091871233": "PatternPlays"
+    "897328204091871233": "PatternPlays",
+    "906328017986899968" : "the_chart_life",
+    "1302069535147687936" : "chartingoptions",
+    "1196947949013684224" : "trader182",
+    "1054561163843751936" : "ripster47" ,
+    "1034036822081499141" : "gvstrader",
+    "930177090971877377" :"87alwaysred",
+    "887754279125221378" : "trendspider_j",
+    "441248955" : "moon_shine15",
+    "3410575617" : "johnscharts" ,
+    "16851206" : "patternprofits", 
+    "3083109892" : "avataraidan",
+    "443292881" : "1charts6",
+    "44366481" : "hulkcapital", 
+    "40942576" : "thrackx",
+    "1615735502": "solonoid12"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
@@ -79,7 +93,7 @@ def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
 class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
-        logger.info("---> Got data from: " + json_data.get("user").get("screen_name") + " " + json_data.get("created_at"))
+        # logger.info("---> Got data from: " + json_data.get("user").get("screen_name") + " " + json_data.get("created_at"))
         # take out replies
         # if json_data.get("in_reply_to_status_id"):
         #     logger.info("Taken out because it was a reply to status_id:")
@@ -87,7 +101,7 @@ class listener(StreamListener):
         # only use if original tweeter is 1 of the people we want
         id_str = json_data.get("user").get("id_str")
         if id_str not in all_tweeters_to_follow:
-            logger.info("---X----Taken out due to to id_str not being 1 to follow: " + id_str)
+            # logger.info("---X----Taken out due to to id_str not being 1 to follow: " + id_str)
             return
         # now if this is 1 of the people we want to post to discord, do this
         if id_str in list(people_to_follow.keys()):
@@ -123,7 +137,7 @@ class listener(StreamListener):
                     for char in UNWANTED_CHARS:
                         if char in each_element:
                             each_element.replace(char, "")
-                    if len(each_element) == 1:
+                    if len(each_element) > 1:
                         # filter out unwanted chars
                         add_to_tweeter_tickers(user, each_element, current_date_str)
                         should_send_to_discord = True
