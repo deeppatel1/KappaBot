@@ -32,8 +32,12 @@ def update_youtube_view_count():
 
         if len(raw) <= 28:
             return 0
-        main_json_str = str(raw[27])[59:-10]
-        main_json = json.loads(main_json_str)
+
+        try:
+            main_json_str = str(raw[27])[59:-10]
+            main_json = json.loads(main_json_str)
+        except:
+            return 0 # return 0 if processing viewers failed
 
         if "channelFeaturedContentRenderer" not in main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]:
             # if it gets to here, user is live, need to get their URL

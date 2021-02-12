@@ -119,16 +119,38 @@ def get_last_youtube_video_id(channel_id):
     return url
 
 
+def get_who_to_at(who_to_at_string):
+
+    if who_to_at_string == "everyone":
+        return "@everyone"
+
+    final_who_to_at_string = ""
+
+    if "deep" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
+
+    if "ragen" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
+    
+    if "priyam" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
+
+    return final_who_to_at_string
+
+
 def check_youtube_live(channel_id):
     url = "https://www.youtube.com/channel/" + channel_id
     content = requests.get(url).text
     soup = BeautifulSoup(content)
     raw = soup.findAll('script')
 
-    if len(raw) < 29:
+    try:
+        if len(raw) < 29:
+            return False
+        main_json_str = str(raw[27])[59:-10]
+        main_json = json.loads(main_json_str)
+    except:
         return False
-    main_json_str = str(raw[27])[59:-10]
-    main_json = json.loads(main_json_str)
 
     if "channelFeaturedContentRenderer" not in main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]:
         return False
@@ -149,6 +171,7 @@ def start_youtube_checks(scheduler):
         is_online = streamer[3]
         viewer_count = streamer[4]
         filter_str = streamer[6]
+        who_to_at_str = streamer[7]
 
         if channel_id:
             # IF ITS ICE, we take BETTER PRECAUTIONS!!!!!!!!!!!!!!!
@@ -156,18 +179,21 @@ def start_youtube_checks(scheduler):
                 live_url = check_youtube_live(channel_id)
                 
                 if live_url:
+                    logger.info("ICE is online! with URL : " + live_url)
                     update_video_id(name, live_url)
                     if not is_online:
                         sendWebhookMessage(MAIN_SERVER_WEBHOOK, "<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
                     update_streamer_online_status(name, "TRUE")
                 if not live_url:
+                    logger.info("ICE is offline!!!")
                     update_streamer_online_status(name, "FALSE")
                     update_video_id(name, "NULL")
 
             else:
                 last_youtube_video = get_filtered_video(name, channel_id, filter_str)
                 if last_youtube_video and last_youtube_video != last_video_id:
-                    sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video)
+                    who_to_at_discord_ats = get_who_to_at(who_to_at_str)
+                    sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video + " " + who_to_at_discord_ats)
                     update_video_id(name, last_youtube_video)
 
     scheduler.enter(900, 1, start_youtube_checks, (scheduler,))
@@ -198,6 +224,6 @@ def update_youtube_view_count():
         update_viewer_counts(name, viewer_count)
 
 
-# if __name__ == "__main__":
-#     logger.info(get_filtered_video("test", "UCESLZhusAkFfsNsApnjF_Cg", "xx"))
+if __name__ == "__main__":
+    logger.info(get_filtered_video("test", "UCESLZhusAkFfsNsApnjF_Cg", "xx"))
 
