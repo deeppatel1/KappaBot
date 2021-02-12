@@ -83,7 +83,9 @@ STOCKS_STUFF_WEBHOOK = config.get("stock-stuff")
 
 NORMAL_TWEETS_CHANNELS = [config.get("tweets")]
 
-UNWANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
+# WANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
+WANTED_CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+UPPER_WANTED_CHARS = [a.upper for a in WANTED_CHARS]
 
 def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
     webhook = Webhook.from_url(url = webhook_url, adapter = RequestsWebhookAdapter())
@@ -132,11 +134,12 @@ class listener(StreamListener):
             current_date_str = now.strftime("%Y-%m-%d")
             user = json_data.get("user").get("name")
 
+            sc = set(WANTED_CHARS)
             for each_element in full_text_list:
                 if "$" in each_element:
-                    for char in UNWANTED_CHARS:
-                        if char in each_element:
-                            each_element.replace(char, "")
+                    each_element = each_element[each_element.find("$"):]
+                    each_element = ''.join([c for c in each_element if c in WANTED_CHARS or UPPER_WANTED_CHARS])
+                    # remove everything before the dollar sign
                     if len(each_element) > 1:
                         # filter out unwanted chars
                         add_to_tweeter_tickers(user, each_element, current_date_str)
