@@ -50,9 +50,9 @@ def update_youtube_view_count():
     for streamer in get_platform_streamers("youtube"):
         name = streamer[0]
         channel_id = streamer[1]
-
-        viewer_count = get_live_viewers(channel_id)
-        update_viewer_count(name, str(viewer_count))
+        if name == "ice":
+            viewer_count = get_live_viewers(channel_id)
+            update_viewer_count(name, str(viewer_count))
 
 @bot.command()
 async def zclean(client):

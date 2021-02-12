@@ -116,14 +116,14 @@ class listener(StreamListener):
             sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
         # if its 1 of the stock people
         else:
-            logger.info('!!!------ Stock person, posting to discord')
-            logger.info(json_data)
+            logger.info('!!!------ Stock person, maybe posting to discord')
             should_send_to_discord = False
             if json_data.get("truncated"):
                 full_text = json_data.get("extended_tweet").get("full_text")
             else:
                 full_text = json_data.get("text")
-            
+            logger.info(json_data.get("user").get("name"))
+            logger.info(full_text)
             full_text_list = []
             c = full_text.split(" ")
             for a in c:
@@ -138,7 +138,8 @@ class listener(StreamListener):
             for each_element in full_text_list:
                 if "$" in each_element:
                     each_element = each_element[each_element.find("$"):]
-                    each_element = ''.join([c for c in each_element if c in WANTED_CHARS or UPPER_WANTED_CHARS])
+                    each_element = ''.join([c for c in each_element if (c in WANTED_CHARS) or (c in UPPER_WANTED_CHARS)])
+                    each_element = "$" + each_element
                     # remove everything before the dollar sign
                     if len(each_element) > 1:
                         # filter out unwanted chars
@@ -153,7 +154,7 @@ class listener(StreamListener):
         logger.info("!!!!! something happend GASP")
         logger.info(status)
         
-        sendWebhookMessage(None, "420 420 420 420!!!!", None, STOCKS_STUFF_WEBHOOK)
+        sendWebhookMessage(None, "420 420 420 420!!!! error in starting the tweet bot", None, STOCKS_STUFF_WEBHOOK)
 
 
 auth = OAuthHandler(ckey, csecret)
