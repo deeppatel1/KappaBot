@@ -155,12 +155,12 @@ def get_top_stocks(from_date = None, to_date = None):
     print(query)
     resp = execute_select_query("kapp", query)
 
-    final_str = ""
+    # final_str = ""
 
-    for a in resp:
-        ticker = a[0]
-        ticker_count = a[1]
+    # for a in resp:
+    #     ticker = a[0]
+    #     ticker_count = a[1]
         
-        final_str = final_str + '{:<10}{:>4}\n'.format(ticker.rstrip(), str(ticker_count))
+    #     final_str = final_str + '{:<10}{:>4}\n'.format(ticker.rstrip(), str(ticker_count))
 
-    return final_str
+    return resp

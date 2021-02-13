@@ -6,3 +6,4 @@ lxml
 bs4==0.0.1
 tweepy
 psycopg2
+yfinance

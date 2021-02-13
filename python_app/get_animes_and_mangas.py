@@ -19,6 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger("Rotating Log")
 handler = RotatingFileHandler('logs/get-animes-and-mangas.log', maxBytes=7000000, backupCount=5)
 
+handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
 all_embeds = []

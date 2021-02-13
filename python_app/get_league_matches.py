@@ -13,6 +13,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger("Rotating Log")
 handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, backupCount=5)
+handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
 relevant_teams = [

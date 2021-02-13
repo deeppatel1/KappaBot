@@ -3,6 +3,7 @@ from discord.ext import commands
 import subprocess
 import os
 import requests
+import yfinance as yf
 import importlib
 from bs4 import BeautifulSoup, SoupStrainer
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
@@ -53,6 +54,32 @@ def update_youtube_view_count():
         if name == "ice":
             viewer_count = get_live_viewers(channel_id)
             update_viewer_count(name, str(viewer_count))
+
+
+def create_stock_embed(stock_prices_list):
+
+    embed=discord.Embed(title="Ticker mention frequency", color=0x00ff00)
+
+    for stock in stock_prices_list:
+        ticker = stock[0]
+        times_mentioned = stock[1]
+        ticker_without_dollar = ticker[1:]
+        ticker_info = yf.Ticker(ticker_without_dollar)
+
+        todays_data = ticker_info.history(period='1d')
+
+        if len(todays_data) > 0:
+
+            todays_close = todays_data['Close'][0]
+            todays_open = todays_data['Open'][0]
+            percent_change = ((todays_close - todays_open)/todays_open)
+            
+            percent_change = "{:.2f}".format(percent_change * 100) + "%"
+
+            embed.add_field(name=f'**{ticker.upper()}**', value=f'> Mentioned count: {times_mentioned}\n> Today\'s Change: {percent_change}\n> Open: {"{:.2f}".format(todays_open)}\n> Close: {"{:.2f}".format(todays_close)}',inline=False)
+
+    return embed
+
 
 @bot.command()
 async def zclean(client):
@@ -115,13 +142,14 @@ async def on_message(message):
         print(from_date)
         print(to_date)
         top_stocks = get_top_stocks(from_date, to_date)
-        channels = await message.channel.webhooks()
-        send_the_message(username="pop tickers", \
-            webhook=create_webhook_url(channels[0].id, channels[0].token), \
-            avatar_url=None, \
-            content=top_stocks)
+        await message.channel.send(embed=create_stock_embed(top_stocks))
+        # channels = await message.channel.webhooks()
+        # send_the_message(username="pop tickers", \
+        #     webhook=create_webhook_url(channels[0].id, channels[0].token), \
+        #     avatar_url=None, \
+        #     content=top_stocks)
 
-        await message.channel.send(top_stocks)
+        # await message.channel.send(top_stocks)
 
     if message.content.startswith('!test'):
         await message.channel.send("hello")

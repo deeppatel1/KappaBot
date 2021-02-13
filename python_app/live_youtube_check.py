@@ -16,6 +16,7 @@ logging.basicConfig(
     
 logger = logging.getLogger("Rotating Log")
 handler = RotatingFileHandler('logs/live-youtube-check.log', maxBytes=7000000, backupCount=5)
+handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
 # WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/807510380380684308/7giR3QmowgmXGv1F1ZgrI-wxpzpYSYAuvIE7Efv3YJCK7dVURNxWoM0LA4C0OhP27tde"]

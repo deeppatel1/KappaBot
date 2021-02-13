@@ -11,6 +11,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger("Rotating Log")
 handler = RotatingFileHandler('logs/post-anime-episodes-updates.log', maxBytes=7000000, backupCount=5)
+handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
 class AnimeObject:
@@ -69,6 +70,7 @@ def do_reminders(anime_object):
 
         hour_minutes_str = str(hours) + ":" + str(minutes)
 
+        logger.info("!!! TODAYS THE BIG DAY Scheduling anime " + anime_title + " for time " + str(airing_datetime))
         # schedule.every(2).seconds.do(set_reminder, airing_datetime, anime_title, episode, total_episodes,  four_anime_url, thumbnail_url, image)
         schedule.every().day.at(hour_minutes_str).do(set_reminder, airing_datetime, anime_title, episode, total_episodes,  four_anime_url, thumbnail_url, image)
 
@@ -102,6 +104,7 @@ def get_next_airing_date(anilist_resp, four_anime_url):
             type = response.get("data").get("Media").get("type")
             if type == "ANIME":
                 next_airing_date = None
+                logger.info(response.get('data').get('Media').get('title').get('romaji') + " WILL AIR AT " + str(response.get('data').get('Media').get('nextAiringEpisode')))
                 
                 next_episode_dict = response.get('data').get('Media').get('nextAiringEpisode')
                 if next_episode_dict and isinstance(next_episode_dict, dict):

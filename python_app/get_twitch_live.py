@@ -12,6 +12,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger("Rotating Log")
 handler = RotatingFileHandler('logs/get-twitch-live.log', maxBytes=7000000, backupCount=5)
+handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
 WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
@@ -19,7 +20,7 @@ WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
 
 def get_who_to_at(who_to_at_string):
 
-    if not who_to_at_string or who_to_at_string == "":
+    if who_to_at_string == "everyone":
         return "@everyone"
 
     final_who_to_at_string = ""
