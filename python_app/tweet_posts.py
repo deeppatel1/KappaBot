@@ -143,6 +143,7 @@ class listener(StreamListener):
                     each_element = ''.join([c for c in each_element if (c in WANTED_CHARS) or (c in UPPER_WANTED_CHARS)])
                     each_element = "$" + each_element
                     # remove everything before the dollar sign
+                    logger.info(each_element)
                     if len(each_element) > 1:
                         # filter out unwanted chars
                         add_to_tweeter_tickers(user, each_element, current_date_str)
