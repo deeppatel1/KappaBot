@@ -73,7 +73,8 @@ stocks_peeps = {
     "443292881" : "1charts6",
     "44366481" : "hulkcapital", 
     "40942576" : "thrackx",
-    "1615735502": "solonoid12"
+    "1615735502": "solonoid12",
+    "985721299078070272" : "thetaWarrior"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
