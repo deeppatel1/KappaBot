@@ -86,7 +86,7 @@ NORMAL_TWEETS_CHANNELS = [config.get("tweets")]
 
 # WANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
 WANTED_CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-UPPER_WANTED_CHARS = [a.upper for a in WANTED_CHARS]
+UPPER_WANTED_CHARS = [a.upper() for a in WANTED_CHARS]
 
 def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
     webhook = Webhook.from_url(url = webhook_url, adapter = RequestsWebhookAdapter())
