@@ -139,6 +139,7 @@ class listener(StreamListener):
             for each_element in full_text_list:
                 if "$" in each_element:
                     each_element = each_element[each_element.find("$"):]
+                    logger.info(each_element)
                     each_element = ''.join([c for c in each_element if (c in WANTED_CHARS) or (c in UPPER_WANTED_CHARS)])
                     each_element = "$" + each_element
                     # remove everything before the dollar sign
