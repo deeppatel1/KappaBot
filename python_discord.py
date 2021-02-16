@@ -5,6 +5,7 @@ import os
 import requests
 import yfinance as yf
 import importlib
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, SoupStrainer
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
@@ -56,27 +57,44 @@ def update_youtube_view_count():
             update_viewer_count(name, str(viewer_count))
 
 
-def create_stock_embed(stock_prices_list):
+def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
 
     embed=discord.Embed(title="Ticker mention frequency", color=0x00ff00)
 
+    footer_str = ""
+    if not from_date and not to_date:
+        footer_str = "All time stats"
+    if from_date and not to_date:
+        footer_str = "Stats after " + from_date
+    if not from_date and to_date:
+        footer_str = "Stats before " + to_date
+    if from_date and to_date:
+        footer_str = "Stats after " + from_date + " and before " + to_date
+    
+
+    embed.set_footer(text=footer_str)
+
     for stock in stock_prices_list:
         ticker = stock[0]
-        times_mentioned = stock[1]
+        tweeeters = stock[1]
+        tweeter_str = ', '.join(tweeeters)
+        times_mentioned = stock[2]
         ticker_without_dollar = ticker[1:]
         ticker_info = yf.Ticker(ticker_without_dollar)
 
         todays_data = ticker_info.history(period='1d')
 
         if len(todays_data) > 0:
-
             todays_close = todays_data['Close'][0]
             todays_open = todays_data['Open'][0]
             percent_change = ((todays_close - todays_open)/todays_open)
             
             percent_change = "{:.2f}".format(percent_change * 100) + "%"
 
-            embed.add_field(name=f'**{ticker.upper()}**', value=f'> Mentioned count: {times_mentioned}\n> Today\'s Change: {percent_change}\n> Open: {"{:.2f}".format(todays_open)}\n> Close: {"{:.2f}".format(todays_close)}',inline=False)
+            embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
+        else:
+            embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
+
 
     return embed
 
@@ -139,10 +157,19 @@ async def on_message(message):
             from_date = msg_array[1]
         if len(msg_array) == 3:
             to_date = msg_array[2]
-        print(from_date)
-        print(to_date)
+
+        # if no FROM DATE supplied, use 1 that is 2 days ago
+
+        if not from_date:
+            now = datetime.today() - timedelta(days=2)
+            year =  now.year
+            month = now.month
+            day = now.day
+
+            from_date = str(year) + "-" + str(month) + "-" + str(day)
+
         top_stocks = get_top_stocks(from_date, to_date)
-        await message.channel.send(embed=create_stock_embed(top_stocks))
+        await message.channel.send(embed=create_stock_embed(top_stocks, from_date, to_date))
         # channels = await message.channel.webhooks()
         # send_the_message(username="pop tickers", \
         #     webhook=create_webhook_url(channels[0].id, channels[0].token), \

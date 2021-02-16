@@ -74,7 +74,10 @@ stocks_peeps = {
     "44366481" : "hulkcapital", 
     "40942576" : "thrackx",
     "1615735502": "solonoid12",
-    "985721299078070272" : "thetaWarrior"
+    "985721299078070272" : "thetaWarrior",
+    "427693716": "PandaOptions",
+    "728291846": "d_pavlos",
+    "150094848": "sssvenky"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
@@ -123,8 +126,8 @@ class listener(StreamListener):
                 full_text = json_data.get("extended_tweet").get("full_text")
             else:
                 full_text = json_data.get("text")
-            logger.info(json_data.get("user").get("name"))
-            logger.info(full_text)
+            # logger.info(json_data.get("user").get("name"))
+            # logger.info(full_text)
             full_text_list = []
             c = full_text.split(" ")
             for a in c:
@@ -139,14 +142,12 @@ class listener(StreamListener):
             for each_element in full_text_list:
                 if "$" in each_element:
                     each_element = each_element[each_element.find("$"):]
-                    logger.info(each_element)
                     each_element = ''.join([c for c in each_element if (c in WANTED_CHARS) or (c in UPPER_WANTED_CHARS)])
                     each_element = "$" + each_element
                     # remove everything before the dollar sign
-                    logger.info(each_element)
                     if len(each_element) > 1:
                         # filter out unwanted chars
-                        add_to_tweeter_tickers(user, each_element, current_date_str)
+                        add_to_tweeter_tickers(user, each_element, current_date_str, full_text)
                         should_send_to_discord = True
                         logger.info(each_element + " added to db!")
             
