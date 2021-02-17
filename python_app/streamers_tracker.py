@@ -164,3 +164,12 @@ def get_top_stocks(from_date = None, to_date = None):
     #     final_str = final_str + '{:<10}{:>4}\n'.format(ticker.rstrip(), str(ticker_count))
 
     return resp
+
+
+def get_specific_tickers(ticker):
+    # SELECT tweeter, lower(ticker) AS ticker, date, tweet_text from common_tickers where ticker = '$tsla'
+
+    query = "SELECT tweeter, ticker, date, tweet_text from common_tickers where LOWER(ticker) = \'$" + ticker.lower() + "\' ORDER BY date DESC limit 25"
+    print(query)
+    resp = execute_select_query("kapp", query)
+    return resp

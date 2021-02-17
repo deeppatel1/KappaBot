@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, SoupStrainer
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
-from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count, get_top_stocks
+from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count, get_top_stocks, get_specific_tickers
 from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds, send_the_message
 
 client = discord.Client()
@@ -96,6 +96,23 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
             embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
 
 
+    return embed
+
+
+def get_ticker_embed(ticker_resp):
+    print('---- ticker resp')
+    print(ticker_resp)
+    ticker = ticker_resp[0][1]
+    embed=discord.Embed(title=ticker, color=0x00ff00)
+
+    for tweet in ticker_resp:
+        tweeter_name = tweet[0]
+        date = tweet[2]
+        text = tweet[3]
+
+        if text:
+            embed.add_field(name=str(date) + " " + tweeter_name, value = "```" + text + "```")
+        
     return embed
 
 
@@ -186,6 +203,21 @@ async def on_message(message):
             file = discord.File("logs/" + file_path)
             await message.channel.send(file=file)
 
+    if message.content.startswith("!ticker"):
+        msg = message.content
+        msg_array = msg.split(" ")
+        if len(msg_array) == 2:
+            ticker = msg_array[1]
+            print("!!! input ticker " + ticker)
+            ticker_info = get_specific_tickers(ticker)
+            if not ticker_info:
+                await message.channel.send("no tweets for this ticker found")
+            ticker_embed = get_ticker_embed(ticker_info)
+            if not ticker_embed:
+                await message.channel.send("no tweets for this ticker")
+            await message.channel.send(embed = ticker_embed)
+        else:
+            await message.channel.send("enter a ticker")
 # youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
 # twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
 # anime_updates = open("logs/post-anime-episodes-updates.txt", "a+")
