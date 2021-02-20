@@ -101,9 +101,9 @@ def update_viewer_count(streamer_name, new_viewer_count):
 def update_video_id(streamer_name, new_video_id):
     update_specific_field(streamer_name, "video_id", new_video_id)
 
-def add_to_tweeter_tickers(tweeter, ticker, date, full_text):
+def add_to_tweeter_tickers(tweeter, ticker, date, full_text, url):
     db_name = "kapp"
-    query = "INSERT INTO common_tickers(tweeter, ticker, date, tweet_text) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\',\'" + full_text + "\')"
+    query = "INSERT INTO common_tickers(tweeter, ticker, date, tweet_text, tweet_url) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\',\'" + full_text + "\',\'" + url +"\')"
     return execute_insert_query(db_name, query)
 
 """
@@ -169,7 +169,7 @@ def get_top_stocks(from_date = None, to_date = None):
 def get_specific_tickers(ticker):
     # SELECT tweeter, lower(ticker) AS ticker, date, tweet_text from common_tickers where ticker = '$tsla'
 
-    query = "SELECT tweeter, ticker, date, tweet_text from common_tickers where LOWER(ticker) = \'$" + ticker.lower() + "\' ORDER BY date DESC limit 25"
+    query = "SELECT tweeter, ticker, date, tweet_text, tweet_url from common_tickers where LOWER(ticker) = \'$" + ticker.lower() + "\' ORDER BY date DESC limit 25"
     print(query)
     resp = execute_select_query("kapp", query)
     return resp

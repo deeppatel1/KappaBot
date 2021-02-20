@@ -78,7 +78,8 @@ stocks_peeps = {
     "427693716": "PandaOptions",
     "728291846": "d_pavlos",
     "150094848": "sssvenky",
-    "1014726871911714816": "dougie_dee"
+    "1014726871911714816": "dougie_dee",
+    "1118235493030866944": "yatesinvesting"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
@@ -123,6 +124,9 @@ class listener(StreamListener):
         else:
             logger.info('!!!------ Stock person, maybe posting to discord')
             should_send_to_discord = False
+            screen_name = json_data.get('user').get('screen_name')
+            id = json_data.get('id')
+            url = 'https://twitter.com/' + screen_name + '/status/' + str(id)
             if json_data.get("truncated"):
                 full_text = json_data.get("extended_tweet").get("full_text")
             else:
@@ -148,7 +152,7 @@ class listener(StreamListener):
                     # remove everything before the dollar sign
                     if len(each_element) > 1:
                         # filter out unwanted chars
-                        add_to_tweeter_tickers(user, each_element, current_date_str, full_text)
+                        add_to_tweeter_tickers(user, each_element, current_date_str, full_text, url)
                         should_send_to_discord = True
                         logger.info(each_element + " added to db!")
             

@@ -1,0 +1,128 @@
+error! syntax error at or near "s"
+LINE 1: .... Two days ago everybody hated this stock, now it's trending...
+                                                             ^
+
+error! syntax error at or near "re"
+LINE 1: ...,'$PTON','2021-02-20','@tradecruz @traderdavy You're not par...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 1: ... VALUES ('Ben','$FLGT','2021-02-20','@Omer_Aus It's always a...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...ES ('Ben','$FUTU','2021-02-20','@SpeQul8tor I don't own them...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "t"
+LINE 3: ...just maybe, this is pretty damn close... I wouldn't hold my ...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 1: ...l 3 connected IMO. Discussed DFEN yesterday. Here's RTX. You...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...l 3 connected IMO. Discussed DFEN yesterday. Here's RTX. You...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...l 3 connected IMO. Discussed DFEN yesterday. Here's RTX. You...
+                                                             ^
+
+error! syntax error at or near "ve"
+LINE 3: ... correction in the second half of January. And we've seen pr...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...ng the spreadsheet you sent to us last week. If I'm not mist...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ... is more of an update since this was on last week's watchlis...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "t"
+LINE 1: ...w RSI 30 on the daily. And although RSI alone isn't necessar...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...w RSI 30 on the daily. And although RSI alone isn't necessar...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...w RSI 30 on the daily. And although RSI alone isn't necessar...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 1: ...tock should be doing something other than what it's actually...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...tock should be doing something other than what it's actually...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...tock should be doing something other than what it's actually...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...tock should be doing something other than what it's actually...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...tock should be doing something other than what it's actually...
+                                                             ^
+
+error! syntax error at or near "ll"
+LINE 1: ...major averages or any of the large cap names. You'll see tha...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...ifferent $PLTR that was actually showing power? I'm only fam...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...ifferent $PLTR that was actually showing power? I'm only fam...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 3: I don't normally look at 1 min candles but I show them here ...
+              ^
+
+error! syntax error at or near "t"
+LINE 3: I don't normally look at 1 min candles but I show them here ...
+              ^
+

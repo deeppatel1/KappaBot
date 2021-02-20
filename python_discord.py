@@ -109,9 +109,15 @@ def get_ticker_embed(ticker_resp):
         tweeter_name = tweet[0]
         date = tweet[2]
         text = tweet[3]
+        link = tweet[4]
 
         if text:
-            embed.add_field(name=str(date) + " " + tweeter_name, value = "```" + text + "```")
+            if link:
+                field_value = '[' + text + '](' + link + ')'
+            else:
+                field_value = text
+            
+            embed.add_field(name="```" + str(date) + " " + tweeter_name + "```", value = field_value)
         
     return embed
 
@@ -178,7 +184,7 @@ async def on_message(message):
         # if no FROM DATE supplied, use 1 that is 2 days ago
 
         if not from_date:
-            now = datetime.today() - timedelta(days=2)
+            now = datetime.today() - timedelta(days=1)
             year =  now.year
             month = now.month
             day = now.day
