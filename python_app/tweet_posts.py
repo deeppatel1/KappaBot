@@ -81,7 +81,8 @@ stocks_peeps = {
     "150094848": "sssvenky",
     "1014726871911714816": "dougie_dee",
     "1118235493030866944": "yatesinvesting",
-    "1007420368288714754": "tradingthomas3"
+    "1007420368288714754": "tradingthomas3",
+    "943883051989221376": "chrisRandone"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
