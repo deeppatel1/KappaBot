@@ -36,7 +36,8 @@ people_to_follow = {
     "934165701220282368": "macawcaw123",
     "1648029396": "c9perkz",
     "3291691": "chamath",
-    "44196397": "elon"
+    "44196397": "elon",
+    "273519109": "ls"
 }
 
 stocks_peeps = {
@@ -79,7 +80,8 @@ stocks_peeps = {
     "728291846": "d_pavlos",
     "150094848": "sssvenky",
     "1014726871911714816": "dougie_dee",
-    "1118235493030866944": "yatesinvesting"
+    "1118235493030866944": "yatesinvesting",
+    "1007420368288714754": "tradingthomas3"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())

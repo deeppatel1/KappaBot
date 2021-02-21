@@ -224,6 +224,7 @@ async def on_message(message):
             await message.channel.send(embed = ticker_embed)
         else:
             await message.channel.send("enter a ticker")
+
 # youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
 # twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
 # anime_updates = open("logs/post-anime-episodes-updates.txt", "a+")
