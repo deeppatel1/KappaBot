@@ -32,7 +32,9 @@ def get_latest_video_in_channel(channel_id):
     base_video_url = 'https://www.youtube.com/watch?v='
     base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
 
-    first_url = base_search_url+'key={}&channelId={}&part=snippet,id&order=date&maxResults=1'.format(api_key, channel_id)
+    first_url = base_search_url+'key={}&channelId={}&part=snippet,id&order=date&maxResults=1&broadcastStatus=active'.format(api_key, channel_id)
+
+    logger.info(first_url)
 
     video_links = []
     url = first_url
@@ -43,6 +45,12 @@ def get_latest_video_in_channel(channel_id):
         
         resp = json.dumps(resp.json())
         resp = json.loads(resp)
+        logger.info('---')
+        logger.info('---')
+        logger.info('---')
+        logger.info('---')
+        logger.info('---')
+        logger.info(resp)
 
         first_url = resp["items"][0]["id"]["videoId"]
         title = resp["items"][0]["snippet"]["title"]
@@ -140,25 +148,45 @@ def get_who_to_at(who_to_at_string):
 
 
 def check_youtube_live(channel_id):
-    url = "https://www.youtube.com/channel/" + channel_id
-    content = requests.get(url).text
-    soup = BeautifulSoup(content)
-    raw = soup.findAll('script')
+    api_key = config.get("gKey")
 
-    try:
-        if len(raw) < 29:
-            return False
-        main_json_str = str(raw[27])[59:-10]
-        main_json = json.loads(main_json_str)
-    except:
-        return False
+    base_video_url = 'https://www.youtube.com/watch?v='
+    base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
 
-    if "channelFeaturedContentRenderer" not in main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]:
-        return False
-    # if it gets to here, user is live, need to get their URL
-    live_url = main_json["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]["channelFeaturedContentRenderer"]["items"][0]["videoRenderer"]["videoId"]
+    first_url = base_search_url+'key={}&channelId={}&part=snippet,id&order=date&maxResults=1&type=video&eventType=live'.format(api_key, channel_id)
+
+    logger.info(first_url)
+
+    video_links = []
+    url = first_url
+
+    resp = requests.get(url)
+
+    if resp.status_code == 200:
         
-    return live_url
+        resp = json.dumps(resp.json())
+        resp = json.loads(resp)
+        logger.info('---')
+        logger.info('---')
+        logger.info('---')
+        logger.info('---')
+        logger.info('---')
+        logger.info(resp)
+
+        first_url = resp["items"][0]["id"]["videoId"]
+        title = resp["items"][0]["snippet"]["title"]
+
+    else:
+
+        logger.info('!!!!')
+        logger.info(resp.status_code)
+        logger.info(resp.text)
+        return None, None
+
+    logger.info('got title, first_url' )
+    logger.info(title)
+    logger.info(first_url)
+    return (title, first_url)
 
 
 def start_youtube_checks(scheduler):
@@ -175,27 +203,30 @@ def start_youtube_checks(scheduler):
         who_to_at_str = streamer[7]
 
         if channel_id:
-            # IF ITS ICE, we take BETTER PRECAUTIONS!!!!!!!!!!!!!!!
-            if channel_id == "UCv9Edl_WbtbPeURPtFDo-uA":
-                live_url = check_youtube_live(channel_id)
+            # # IF ITS ICE, we take BETTER PRECAUTIONS!!!!!!!!!!!!!!! or dip
+            # if channel_id == "UCv9Edl_WbtbPeURPtFDo-uA" or channel_id == "UCakgsb0w7QB0VHdnCc-OVEA":
+            # #  or channel_id == "UC3Nlcpu-kbLmdhph_BN7OwQ":
+            #     logger.info("BEGINNING ICE CHECKS")
+            #     logger.info("BEGINNING ICE CHECKS")
+            #     logger.info("BEGINNING ICE CHECKS")
+            #     live_url = check_youtube_live(channel_id)
                 
-                if live_url:
-                    logger.info("ICE is online! with URL : " + live_url)
-                    update_video_id(name, live_url)
-                    if not is_online:
-                        sendWebhookMessage(MAIN_SERVER_WEBHOOK, "<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
-                    update_streamer_online_status(name, "TRUE")
-                if not live_url:
-                    logger.info("ICE is offline!!!")
-                    update_streamer_online_status(name, "FALSE")
-                    update_video_id(name, "NULL")
+            #     if live_url:
+            #         logger.info("ICE is online! with URL : " + live_url)
+            #         update_video_id(name, live_url)
+            #         if not is_online:
+            #             sendWebhookMessage(MAIN_SERVER_WEBHOOK, "<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
+            #         update_streamer_online_status(name, "TRUE")
+            #     if not live_url:
+            #         logger.info("ICE is offline!!!")
+            #         update_streamer_online_status(name, "FALSE")
+            #         update_video_id(name, "NULL")
 
-            else:
-                last_youtube_video = get_filtered_video(name, channel_id, filter_str)
-                if last_youtube_video and last_youtube_video != last_video_id:
-                    who_to_at_discord_ats = get_who_to_at(who_to_at_str)
-                    sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video + " " + who_to_at_discord_ats)
-                    update_video_id(name, last_youtube_video)
+            last_youtube_video = get_filtered_video(name, channel_id, filter_str)
+            if last_youtube_video and last_youtube_video != last_video_id:
+                who_to_at_discord_ats = get_who_to_at(who_to_at_str)
+                sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video + " " + who_to_at_discord_ats)
+                update_video_id(name, last_youtube_video)
 
     scheduler.enter(900, 1, start_youtube_checks, (scheduler,))
 
@@ -225,6 +256,6 @@ def update_youtube_view_count():
         update_viewer_counts(name, viewer_count)
 
 
-if __name__ == "__main__":
-    logger.info(get_filtered_video("test", "UCESLZhusAkFfsNsApnjF_Cg", "xx"))
+# if __name__ == "__main__":
+#     logger.info(check_youtube_live("UCESLZhusAkFfsNsApnjF_Cg"))
 

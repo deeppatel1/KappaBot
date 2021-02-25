@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, SoupStrainer
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
-from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count, get_top_stocks, get_specific_tickers
+from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count, get_top_stocks, get_specific_tickers, get_most_pumped
 from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds, send_the_message
 
 client = discord.Client()
@@ -80,7 +80,6 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         tweeter_str = ', '.join(tweeeters)
         times_mentioned = stock[2]
         ticker_without_dollar = ticker[1:]
-        ticker_info = yf.Ticker(ticker_without_dollar)
 
         todays_data = ticker_info.history(period='1d')
 
@@ -100,8 +99,6 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
 
 
 def get_ticker_embed(ticker_resp):
-    print('---- ticker resp')
-    print(ticker_resp)
     ticker = ticker_resp[0][1]
     embed=discord.Embed(title=ticker, color=0x00ff00)
 
@@ -118,21 +115,32 @@ def get_ticker_embed(ticker_resp):
                 field_value = text
             
             embed.add_field(name="```" + str(date) + " " + tweeter_name + "```", value = field_value)
-        
+
     return embed
 
 
-@bot.command()
-async def zclean(client):
-    print('entere dzClean')
-    known_names = ["python_discord.py", "live_youtube_check.py", "get_twitch_live.py", "post_anime_episode_updates.py", "tweet_posts.py"]
+def pumped_ticker_embed(ticker_resp, date):
+    
+    embed=discord.Embed(title='Most Pumped after ' + str(date), color=0x00ff00)
 
-    for python_script in known_names:
-        #pkill -9 -f script.py
-        output = subprocess.run(["sudo", "pkill", "-9", "-f", python_script], capture_output=True).stdout.decode('UTF-8')
+    for tweet in ticker_resp:
+        tweeter_name = tweet[0]
+        ticker = tweet[1]
+        count = tweet[2]
+        percent_change = 'test'
+        data = yf.download(ticker[1:], start=date)
+        if len(data) > 0:
+            start_value = data['Open'][0]
+            end_value = data['Close'][-1]
+                    
+            percent_change = ((end_value - start_value)/start_value)   
+            percent_change = "{:.2f}".format(percent_change * 100) + "%"
+            field_value = tweeter_name + "  --  " + str(count) + " times"    
+        
+        embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Overall Change: {percent_change}   Start: {"{:.2f}".format(start_value)}   End: {"{:.2f}".format(end_value)}\n> Tweeted by: {tweeter_name}```',inline=False)
 
-    os.system('cd /home/kapp/KappaBot/KappaBot/ && python3 python_discord.py')
-    await client.send("done")
+    embed.set_footer(text="Since " + date)
+    return embed
 
 @client.event
 async def on_message(message):
@@ -224,6 +232,27 @@ async def on_message(message):
             await message.channel.send(embed = ticker_embed)
         else:
             await message.channel.send("enter a ticker")
+
+    if message.content.startswith("!pumped"):
+        msg = message.content
+        msg_array = msg.split(" ")
+        from_date = None
+        to_date = None
+        
+        if len(msg_array) == 2:
+            from_date = msg_array[1]
+            ticker = msg_array[0]
+        
+        else:
+            from_date = None
+            ticker = message.content
+        
+        
+        if not from_date:
+            from_date = '2021-02-02'
+        resp = get_most_pumped(from_date)
+        embed = pumped_ticker_embed(resp, from_date)
+        await message.channel.send(embed = embed)
 
 # youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
 # twitch_live = open("logs/get-twitch-live-logs.txt", "a+")

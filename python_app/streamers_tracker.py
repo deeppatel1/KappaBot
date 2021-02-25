@@ -169,7 +169,13 @@ def get_top_stocks(from_date = None, to_date = None):
 def get_specific_tickers(ticker):
     # SELECT tweeter, lower(ticker) AS ticker, date, tweet_text from common_tickers where ticker = '$tsla'
 
-    query = "SELECT tweeter, ticker, date, tweet_text, tweet_url from common_tickers where LOWER(ticker) = \'$" + ticker.lower() + "\' ORDER BY date DESC limit 25"
+    query = "SELECT tweeter, ticker, date, tweet_text, tweet_url from common_tickers where LOWER(ticker) = \'$" + ticker.lower() + "\' ORDER BY date DESC limit 15"
     print(query)
     resp = execute_select_query("kapp", query)
+    return resp
+
+
+def get_most_pumped(after_date):
+    query = 'SELECT DISTINCT f.tweeter, lower(f.ticker), count(f.ticker) from (SELECT * from common_tickers WHERE (date >= \'' + after_date + '\' and tweeter != \'Moonshine\' and lower(ticker) != \'$spy\' and lower(ticker) != \'$qqq\' and char_length(ticker) > 2)) as f GROUP BY tweeter, ticker ORDER BY count DESC limit 10'
+    resp = execute_select_query('kapp', query)
     return resp

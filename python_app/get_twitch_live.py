@@ -15,7 +15,7 @@ handler = RotatingFileHandler('logs/get-twitch-live.log', maxBytes=7000000, back
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
+WEBHOOKS_TO_POST = [config.get("twitch-webhook")]
 
 
 def get_who_to_at(who_to_at_string):
@@ -57,6 +57,7 @@ def check_streamer_live(streamer):
     streamer_name = streamer[0]
     streamer_id = streamer[1]
     online_status = streamer[3]
+    filters = streamer[6]
     who_to_at = streamer[7]
 
     auth_token = get_auth_token()
@@ -77,14 +78,38 @@ def check_streamer_live(streamer):
         return
 
     resp = streamer_resp.json()
+    should_post_to_discord = False
     if "data" in resp and len(resp.get("data")) > 0:
-        logger.info("streamer " + streamer_name + " is ONLINE")
+        logger.info("streamer " + streamer_name + " is ONLINE current status " + str(online_status))
 
         if not online_status:
-            url = "https://twitch.tv/" + streamer_name
-            who_to_at = get_who_to_at(who_to_at)
-            discord_post = streamer_name + " IS LIVE " + who_to_at + " " + url
-            sendWebhookMessage(discord_post)
+            # check if filters exist, than if filter exists, that filter must exist in the title.
+            title = resp.get("data")[0].get("title")
+            title = "#lcsCoStream"
+            if filters:
+                logger.info(filters)
+                filters_list = filters.split(",")
+                for filter in filters_list:
+                    logger.info(filter)
+                    logger.info("checking for filter " + filter)
+                    if filter.lower() in title.lower():
+                        logger.info("filter found, posting to discord")
+                        should_post_to_discord = True
+                        break
+                    else:
+                        logger.info("filter not found, moving on")
+
+            else:
+                logger.info("no filters found, posting to discord anyway")
+                should_post_to_discord = True
+
+            if should_post_to_discord:
+                url = "https://twitch.tv/" + streamer_name
+                who_to_at = get_who_to_at(who_to_at)
+                discord_post = streamer_name + " IS LIVE " + who_to_at + " " + url
+                if filters:
+                    discord_post = discord_post + " " + str(filters)
+                sendWebhookMessage(discord_post)
 
         # Update the db now
         update_streamer_online_status(streamer_name, "TRUE")
@@ -98,7 +123,6 @@ def check_streamer_live(streamer):
 
 
 def check_all_streamers(scheduler):
-
     # First, get all twitch streamers saved in the db
     all_twitch_streamers = []
     streamer_infos = get_platform_streamers("twitch")
@@ -118,8 +142,7 @@ def start_checks():
 def sendWebhookMessage(body_to_post):
     for webhook in WEBHOOKS_TO_POST:
         webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
-
-    webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
+        webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
 
 start_checks()
