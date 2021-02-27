@@ -81,6 +81,8 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         times_mentioned = stock[2]
         ticker_without_dollar = ticker[1:]
 
+        ticker_info = yf.Ticker(ticker_without_dollar)
+
         todays_data = ticker_info.history(period='1d')
 
         if len(todays_data) > 0:
@@ -157,7 +159,7 @@ async def on_message(message):
     if message.content.startswith('!league'):
         future_games, future_embeds = get_future_league_games()
         for x in range(0, len(future_games)):
-            if x < 5:
+            if x < 7:
                 await message.channel.send(future_games[x])
                 await message.channel.send(embed=future_embeds[x])
 

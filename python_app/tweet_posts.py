@@ -82,7 +82,21 @@ stocks_peeps = {
     "1014726871911714816": "dougie_dee",
     "1118235493030866944": "yatesinvesting",
     "1007420368288714754": "tradingthomas3",
-    "943883051989221376": "chrisRandone"
+    "943883051989221376": "chrisRandone",
+    "373620043": "mrzackmorris",
+    "888225282334871553": "pj_matlock",
+    "946470689367842816" : "hugh_Henne",
+    "89517375": "ultra_calls",
+    "1054561163843751936": "ripstter47",
+    "1348662936865288192": "moosetrading1",
+    "1285335881121923075": "verdetrades",
+    "1047325862675324928": "joealertz",
+    "1595615893": "polkadot",
+    "758386485846544384": "realwillmeade",
+    "1054661392119283712": "thestockguytv",
+    "1243273376023621639": "puppytrades",
+    "1243680071304404993": "hawk_stocks",
+    "1208632009817354241": "the_trade_journey"
 }
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
