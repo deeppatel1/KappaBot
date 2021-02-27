@@ -58,6 +58,7 @@ def do_reminders(anime_object):
     thumbnail_url = anime_object.thumbnail
     image = anime_object.image
 
+    # if True:
     if (airing_datetime - datetime.now()).days == 0:
         airing_datetime = airing_datetime + timedelta(minutes=30)
         hours = airing_datetime.hour
@@ -69,6 +70,9 @@ def do_reminders(anime_object):
             minutes = "0" + str(minutes)
 
         hour_minutes_str = str(hours) + ":" + str(minutes)
+
+        # airing_datetime = "2021-02-27 00:30:00"
+        # hour_minutes_str = "03:21:00"
 
         logger.info("!!! TODAYS THE BIG DAY Scheduling anime " + anime_title + " for time " + str(airing_datetime))
         # schedule.every(2).seconds.do(set_reminder, airing_datetime, anime_title, episode, total_episodes,  four_anime_url, thumbnail_url, image)
@@ -90,8 +94,11 @@ def set_reminder(airing_datetime, anime_title, episode, total_episodes, four_ani
     embed.set_image(url=image)
     embed.set_footer(text="Aired")
 
-    sendWebhookMessage(username=anime_title, avatar_url=avatar_url, content="@everyone")
-    sendWebhookListEmbeds(username=anime_title, avatar_url=thumbnail, embeds=[embed])
+    if not thumbnail:
+        thumbnail = "https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.pn"
+
+    sendWebhookMessage(username=anime_title, avatar_url=thumbnail, content="@everyone")
+    sendWebhookListEmbeds(username=anime_title, avatar_url=thumbnail, embeds=[embed], content="@everyone")
     
     return
 
@@ -151,4 +158,5 @@ set_manual_manga_reminder("dragon ball super", 20, "https://www.viz.com/shonenju
 
 while 1:
     schedule.run_pending()
+    # logger.info(schedule.next_run())
     time.sleep(900)
