@@ -45,11 +45,11 @@ def get_latest_video_in_channel(channel_id):
         
         resp = json.dumps(resp.json())
         resp = json.loads(resp)
-        logger.info('---')
-        logger.info('---')
-        logger.info('---')
-        logger.info('---')
-        logger.info('---')
+        # logger.info('---')
+        # logger.info('---')
+        # logger.info('---')
+        # logger.info('---')
+        # logger.info('---')
         logger.info(resp)
 
         first_url = resp["items"][0]["id"]["videoId"]
@@ -57,9 +57,9 @@ def get_latest_video_in_channel(channel_id):
 
     else:
 
-        logger.info('!!!!')
-        logger.info(resp.status_code)
-        logger.info(resp.text)
+        # logger.info('!!!!')
+        # logger.info(resp.status_code)
+        # logger.info(resp.text)
         return None, None
 
     logger.info('got title, first_url' )
