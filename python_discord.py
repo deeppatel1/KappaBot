@@ -52,9 +52,9 @@ def update_youtube_view_count():
     for streamer in get_platform_streamers("youtube"):
         name = streamer[0]
         channel_id = streamer[1]
-        if name == "ice":
-            viewer_count = get_live_viewers(channel_id)
-            update_viewer_count(name, str(viewer_count))
+        # if name == "ice":
+        #     viewer_count = get_live_viewers(channel_id)
+        #     update_viewer_count(name, str(viewer_count))
 
 
 def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
@@ -81,19 +81,21 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         times_mentioned = stock[2]
         ticker_without_dollar = ticker[1:]
 
-        ticker_info = yf.Ticker(ticker_without_dollar)
+        # ticker_info = yf.Ticker(ticker_without_dollar)
 
-        todays_data = ticker_info.history(period='1d')
+        # todays_data = ticker_info.history(period='1d')
 
-        if len(todays_data) > 0:
-            todays_close = todays_data['Close'][0]
-            todays_open = todays_data['Open'][0]
-            percent_change = ((todays_close - todays_open)/todays_open)
+        # if len(todays_data) > 0:
+        #     todays_close = todays_data['Close'][0]
+        #     todays_open = todays_data['Open'][0]
+        #     percent_change = ((todays_close - todays_open)/todays_open)
             
-            percent_change = "{:.2f}".format(percent_change * 100) + "%"
+        #     percent_change = "{:.2f}".format(percent_change * 100) + "%"
 
-            embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
-        else:
+        #     embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
+        # else:
+
+        if ticker.upper() not in ["$SPY", "$QQQ"]:
             embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
 
 
@@ -126,20 +128,23 @@ def pumped_ticker_embed(ticker_resp, date):
     embed=discord.Embed(title='Most Pumped after ' + str(date), color=0x00ff00)
 
     for tweet in ticker_resp:
-        tweeter_name = tweet[0]
-        ticker = tweet[1]
-        count = tweet[2]
-        percent_change = 'test'
-        data = yf.download(ticker[1:], start=date)
-        if len(data) > 0:
-            start_value = data['Open'][0]
-            end_value = data['Close'][-1]
-                    
-            percent_change = ((end_value - start_value)/start_value)   
-            percent_change = "{:.2f}".format(percent_change * 100) + "%"
-            field_value = tweeter_name + "  --  " + str(count) + " times"    
-        
-        embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Overall Change: {percent_change}   Start: {"{:.2f}".format(start_value)}   End: {"{:.2f}".format(end_value)}\n> Tweeted by: {tweeter_name}```',inline=False)
+        if tweet[1].upper() not in ["$INTEREST", "$DAILY", "$SECTOR", "$BIDASK"]:
+            tweeter_name = tweet[0]
+            ticker = tweet[1]
+            count = tweet[2]
+            percent_change = 'test'
+            # data = yf.download(ticker[1:], start=date)
+            # if len(data) > 0:
+            #     start_value = data['Open'][0]
+            #     end_value = data['Close'][-1]
+                        
+            #     percent_change = ((end_value - start_value)/start_value)   
+            #     percent_change = "{:.2f}".format(percent_change * 100) + "%"
+            #     field_value = tweeter_name + "  --  " + str(count) + " times"    
+            
+            # embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Overall Change: {percent_change}   Start: {"{:.2f}".format(start_value)}   End: {"{:.2f}".format(end_value)}\n> Tweeted by: {tweeter_name}```',inline=False)
+
+            embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Tweeted by: {tweeter_name}```',inline=False)
 
     embed.set_footer(text="Since " + date)
     return embed
@@ -167,18 +172,14 @@ async def on_message(message):
 
         embed = discord.Embed(colour=discord.Colour(12320855))
         is_anyone_online = False
-
         update_youtube_view_count()
-
         for streamer in get_everyone_online():
             is_anyone_online = True
             name = streamer[0]
             viewer_count = streamer[4]
             embed.add_field(name=name, value="[" + viewer_count + " viewers](https://twitch.tv/" + name + ")")
-
         if not is_anyone_online:
             embed = discord.Embed(tite="no ones online...")
-
         await message.channel.send(embed=embed)
 
     if message.content.startswith("!stocks"):
@@ -248,10 +249,14 @@ async def on_message(message):
         else:
             from_date = None
             ticker = message.content
-        
-        
+
         if not from_date:
-            from_date = '2021-02-02'
+            now = datetime.today() - timedelta(days=3)
+            year =  now.year
+            month = now.month
+            day = now.day
+            from_date = str(year) + "-" + str(month) + "-" + str(day)
+
         resp = get_most_pumped(from_date)
         embed = pumped_ticker_embed(resp, from_date)
         await message.channel.send(embed = embed)

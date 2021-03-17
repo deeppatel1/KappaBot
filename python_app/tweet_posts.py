@@ -47,7 +47,6 @@ stocks_peeps = {
     "1157015667842920450": "greenarrowtrade",
     "1281015843044970496": "jmoneystonks",
     "1290852657033338886": "thomascwatts",
-    "332358429": "traderstewe",
     "52166809": "traderstewie",
     "1260551652479647745": "stockdweebs",
     "914627036081041408": "rebecca_trades",
@@ -95,16 +94,30 @@ stocks_peeps = {
     "758386485846544384": "realwillmeade",
     "1054661392119283712": "thestockguytv",
     "1243273376023621639": "puppytrades",
-    "1243680071304404993": "hawk_stocks",
-    "1208632009817354241": "the_trade_journey"
+    "1243680071304404993": "hawkstocks",
+    "1208632009817354241": "the_trade_journey",
+    "1200616796295847936": "unusual_whales",
+    "83150642": "thelioncom",
+    "204531012": "data168"
 }
+
+
+calls_people = {
+    "1200616796295847936": "unusual_whales",
+    "52166809": "traderstewie",
+    "204531012": "data168",
+    "1615735502": "solonoid12",
+    "748611168168644612": "walrustrades",
+    "3083109892" : "avataraidan",
+    "1014726871911714816": "dougie_dee"
+}
+
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
 
 TWEETS_CHANNEL_WEBHOOK = config.get("tweets")
 STOCKS_STUFF_WEBHOOK = config.get("stock-stuff")
-
-NORMAL_TWEETS_CHANNELS = [config.get("tweets")]
+STOCKS_CALLS_WEBHOOK = config.get("stock-calls")
 
 # WANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
 WANTED_CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
@@ -172,9 +185,12 @@ class listener(StreamListener):
                         add_to_tweeter_tickers(user, each_element, current_date_str, full_text, url)
                         should_send_to_discord = True
                         logger.info(each_element + " added to db!")
-            
+
             if should_send_to_discord:
-                sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)
+                sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)                
+                # If the tweeter poster is posting a option (right now, we've hardcoded 2 people who post options)
+                if str(id_str) in calls_people.keys():
+                    sendWebhookMessage(user, url, None, STOCKS_CALLS_WEBHOOK)
 
     def on_error(self, status):
         logger.info("!!!!! something happend GASP")

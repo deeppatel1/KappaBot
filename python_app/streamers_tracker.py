@@ -145,13 +145,13 @@ def get_top_stocks(from_date = None, to_date = None):
     # If no dates are provided, get top 10 tickers all time:
 
     if not from_date and not to_date:   
-        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= '2021-02-14') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 8"
+        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= '2021-02-14') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
 
     if from_date and not to_date:
-        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= \'" + from_date + "\') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 8"
+        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= \'" + from_date + "\') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
 
     if from_date and to_date:
-        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= \'" + from_date + "\' AND date <= \'" + to_date + "\') as  d) as f GROUP BY ticker ORDER BY array_length DESC limit 8"
+        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= \'" + from_date + "\' AND date <= \'" + to_date + "\') as  d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
         # query = "SELECT f.ticker,array_agg(f.tweeter) as tweeters,  COUNT(f.ticker) as ticker_mention_count FROM (SELECT DISTINCT tweeter, date, lower(ticker) AS ticker, date FROM common_tickers WHERE date >= \'" + from_date + "\' AND date <= \'" + to_date + "\') as f GROUP BY ticker, tweeter ORDER BY ticker_mention_count DESC LIMIT 6"
     print(query)
     resp = execute_select_query("kapp", query)
@@ -177,5 +177,6 @@ def get_specific_tickers(ticker):
 
 def get_most_pumped(after_date):
     query = 'SELECT DISTINCT f.tweeter, lower(f.ticker), count(f.ticker) from (SELECT * from common_tickers WHERE (date >= \'' + after_date + '\' and tweeter != \'Moonshine\' and lower(ticker) != \'$spy\' and lower(ticker) != \'$qqq\' and char_length(ticker) > 2)) as f GROUP BY tweeter, ticker ORDER BY count DESC limit 10'
+    print(query)
     resp = execute_select_query('kapp', query)
     return resp
