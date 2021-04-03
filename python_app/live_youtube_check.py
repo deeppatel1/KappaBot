@@ -166,12 +166,6 @@ def check_youtube_live(channel_id):
         
         resp = json.dumps(resp.json())
         resp = json.loads(resp)
-        logger.info('---')
-        logger.info('---')
-        logger.info('---')
-        logger.info('---')
-        logger.info('---')
-        logger.info(resp)
 
         first_url = resp["items"][0]["id"]["videoId"]
         title = resp["items"][0]["snippet"]["title"]

@@ -24,7 +24,6 @@ logger.addHandler(handler)
 
 all_embeds = []
 
-
 @lru_cache(maxsize=256)
 def call_anilist_api(id):
     graph_ql_query = """
@@ -61,7 +60,7 @@ def call_anilist_api(id):
 
     logger.info('making api call')
     response = requests.post(url, json={'query': graph_ql_query, 'variables': {'id': id}})
-
+    logger.info(response)
     #process_embed(response, watch_anime_url)
     ##logger.info(response.json())
     return response
@@ -185,6 +184,10 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             embed.add_field(name="Episode " + str(next_episode - 2), value="[Watch this episode](" + str(second_last_episode_str) + ")")
     
     all_embeds.append(embed)
+    # all_embeds[name] = {
+    #     "embed": embed,
+    #     "datetime": airdate
+    # }
 
 
 def load_all_embeds():

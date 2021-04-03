@@ -11,6 +11,8 @@ from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
 from python_app.streamers_tracker import get_platform_streamers, get_everyone_online, update_viewer_count, get_top_stocks, get_specific_tickers, get_most_pumped
 from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds, send_the_message
+from collections import OrderedDict
+from operator import itemgetter   
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='$')
@@ -81,22 +83,22 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         times_mentioned = stock[2]
         ticker_without_dollar = ticker[1:]
 
-        # ticker_info = yf.Ticker(ticker_without_dollar)
+        ticker_info = yf.Ticker(ticker_without_dollar)
 
-        # todays_data = ticker_info.history(period='1d')
-
-        # if len(todays_data) > 0:
-        #     todays_close = todays_data['Close'][0]
-        #     todays_open = todays_data['Open'][0]
-        #     percent_change = ((todays_close - todays_open)/todays_open)
-            
-        #     percent_change = "{:.2f}".format(percent_change * 100) + "%"
-
-        #     embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
-        # else:
+        todays_data = ticker_info.history(period='1d')
 
         if ticker.upper() not in ["$SPY", "$QQQ"]:
-            embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
+            if len(todays_data) > 0:
+                todays_close = todays_data['Close'][0]
+                todays_open = todays_data['Open'][0]
+                percent_change = ((todays_close - todays_open)/todays_open)
+                
+                percent_change = "{:.2f}".format(percent_change * 100) + "%"
+
+                embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
+            else:
+
+                embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
 
 
     return embed
@@ -133,18 +135,18 @@ def pumped_ticker_embed(ticker_resp, date):
             ticker = tweet[1]
             count = tweet[2]
             percent_change = 'test'
-            # data = yf.download(ticker[1:], start=date)
-            # if len(data) > 0:
-            #     start_value = data['Open'][0]
-            #     end_value = data['Close'][-1]
+            data = yf.download(ticker[1:], start=date)
+            if len(data) > 0:
+                start_value = data['Open'][0]
+                end_value = data['Close'][-1]
                         
-            #     percent_change = ((end_value - start_value)/start_value)   
-            #     percent_change = "{:.2f}".format(percent_change * 100) + "%"
-            #     field_value = tweeter_name + "  --  " + str(count) + " times"    
+                percent_change = ((end_value - start_value)/start_value)   
+                percent_change = "{:.2f}".format(percent_change * 100) + "%"
+                field_value = tweeter_name + "  --  " + str(count) + " times"    
             
-            # embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Overall Change: {percent_change}   Start: {"{:.2f}".format(start_value)}   End: {"{:.2f}".format(end_value)}\n> Tweeted by: {tweeter_name}```',inline=False)
+            embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Overall Change: {percent_change}   Start: {"{:.2f}".format(start_value)}   End: {"{:.2f}".format(end_value)}\n> Tweeted by: {tweeter_name}```',inline=False)
 
-            embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Tweeted by: {tweeter_name}```',inline=False)
+            # embed.add_field(name="```" + ticker.upper() +  "```", value=f'```> Tweeted by count: {count}\n> Tweeted by: {tweeter_name}```',inline=False)
 
     embed.set_footer(text="Since " + date)
     return embed
@@ -152,16 +154,26 @@ def pumped_ticker_embed(ticker_resp, date):
 @client.event
 async def on_message(message):
     if message.content.startswith('!weeb'):
+        dict_embeds = {}
         load_all_embeds()
         channels = await message.channel.webhooks()
+        # print(all_embeds)
+        # aa = sorted(all_embeds, key = lambda i: i['datetime'])
+        for embed in all_embeds:
+            embed_dict = embed.to_dict()
+            dict_embeds[embed] = embed_dict.get("timestamp", "")
+
+        dict_embeds = OrderedDict(sorted(dict_embeds.items(), key = itemgetter(1), reverse = True))
+
         send_the_message(username="anime updates", \
             webhook=create_webhook_url(channels[0].id, channels[0].token), \
             avatar_url="https://media.discordapp.net/attachments/306941063497777152/792210065523998740/image.png", \
-            embeds=all_embeds)
+            embeds=dict_embeds.keys())
 
         all_embeds.clear()
 
     if message.content.startswith('!league'):
+        print("in here")
         future_games, future_embeds = get_future_league_games()
         for x in range(0, len(future_games)):
             if x < 7:
