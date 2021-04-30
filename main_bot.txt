@@ -1,77 +1,275 @@
-error! syntax error at or near "s"
-LINE 1: .... Two days ago everybody hated this stock, now it's trending...
-                                                             ^
-
-error! syntax error at or near "re"
-LINE 1: ...,'$PTON','2021-02-20','@tradecruz @traderdavy You're not par...
-                                                             ^
-
-error! value too long for type character varying(255)
-
-error! value too long for type character varying(255)
-
-error! value too long for type character varying(255)
-
-error! value too long for type character varying(255)
-
 error! value too long for type character varying(255)
 
 error! value too long for type character varying(255)
 
 error! syntax error at or near "s"
-LINE 1: ... VALUES ('Ben','$FLGT','2021-02-20','@Omer_Aus It's always a...
+LINE 5: Numerous alerts printed yesterday. Here's two:
+                                                ^
+
+error! syntax error at or near "s"
+LINE 5: Numerous alerts printed yesterday. Here's two:
+                                                ^
+
+error! syntax error at or near "s"
+LINE 5: Numerous alerts printed yesterday. Here's two:
+                                                ^
+
+error! syntax error at or near "s"
+LINE 1: ...ES ('unusual_whales','$VXRTJoin','2021-04-29','It's always n...
                                                              ^
 
-error! syntax error at or near "t"
-LINE 1: ...ES ('Ben','$FUTU','2021-02-20','@SpeQul8tor I don't own them...
+error! syntax error at or near "m"
+LINE 5: I'm avoiding going into a position for now as it's in the mi...
+          ^
+
+error! syntax error at or near "ll"
+LINE 3: I'll update if I see $APPL becoming bullish. I'm still seein...
+          ^
+
+error! syntax error at or near "ll"
+LINE 3: I'll update if I see $APPL becoming bullish. I'm still seein...
+          ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "d"
+LINE 3: I'd begin to excise caution short term here if you are a bul...
+          ^
+
+error! syntax error at or near "d"
+LINE 3: I'd begin to excise caution short term here if you are a bul...
+          ^
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "OG"
+LINE 1: ...Inc. Provides Update on Plans to Leverage Iconic 'OG Collect...
+                                                             ^
+
+error! syntax error at or near "OG"
+LINE 1: ...Inc. Provides Update on Plans to Leverage Iconic 'OG Collect...
                                                              ^
 
 error! value too long for type character varying(255)
 
-error! syntax error at or near "t"
-LINE 3: ...just maybe, this is pretty damn close... I wouldn't hold my ...
-                                                             ^
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
 
 error! value too long for type character varying(255)
 
 error! value too long for type character varying(255)
 
 error! syntax error at or near "s"
-LINE 1: ...l 3 connected IMO. Discussed DFEN yesterday. Here's RTX. You...
+LINE 1: ...ve on a relative basis yet again. No surprise. It's such a s...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...ck','$BTX','2021-04-29','$BTX looking rough but I'm still ho...
                                                              ^
 
 error! syntax error at or near "s"
-LINE 1: ...l 3 connected IMO. Discussed DFEN yesterday. Here's RTX. You...
-                                                             ^
-
-error! syntax error at or near "s"
-LINE 1: ...l 3 connected IMO. Discussed DFEN yesterday. Here's RTX. You...
+LINE 1: ...UES ('PJ Matlock','$VXRT','2021-04-29','$VXRT let's break 11...
                                                              ^
 
 error! syntax error at or near "ve"
-LINE 3: ... correction in the second half of January. And we've seen pr...
+LINE 1: ...ockDweebs','$NIO','2021-04-29','@MountainMscMan I've been in...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...eet_url) VALUES ('Thrack','$s','2021-04-29','$170's broke.  ...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...Millan, CMT','$XLK','2021-04-29','They still aren't in a hur...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...uffed. over 11 it would have squeezed but here it's dangerou...
                                                              ^
 
 error! syntax error at or near "m"
-LINE 1: ...ng the spreadsheet you sent to us last week. If I'm not mist...
+LINE 1: ...ng to trigger china EDU. $EEIQ $WAFU $CLEU etc. I'm watching...
                                                              ^
 
-error! syntax error at or near "s"
-LINE 1: ... is more of an update since this was on last week's watchlis...
+error! syntax error at or near "m"
+LINE 1: ...ng to trigger china EDU. $EEIQ $WAFU $CLEU etc. I'm watching...
                                                              ^
+
+error! syntax error at or near "m"
+LINE 1: ...ng to trigger china EDU. $EEIQ $WAFU $CLEU etc. I'm watching...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...ng to trigger china EDU. $EEIQ $WAFU $CLEU etc. I'm watching...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...ng to trigger china EDU. $EEIQ $WAFU $CLEU etc. I'm watching...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
 
 error! value too long for type character varying(255)
 
 error! syntax error at or near "t"
-LINE 1: ...w RSI 30 on the daily. And although RSI alone isn't necessar...
+LINE 1: ...'$NIO','2021-04-29','@JonJRambo2 At least you don't have an ...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...-29','$SPX is green on the day and I feel like it's limit do...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "re"
+LINE 3: We're now offering customers in the US a simple and speedy w...
+           ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 3: So my projection was off by roughly $2's but non-the-less we...
+                                               ^
+
+error! syntax error at or near "s"
+LINE 3: So my projection was off by roughly $2's but non-the-less we...
+                                               ^
+
+error! syntax error at or near "s"
+LINE 3: So my projection was off by roughly $2's but non-the-less we...
+                                               ^
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "t"
+LINE 1: ...-04-29','If Crude can recapture $66-67, there isn't much in ...
                                                              ^
 
 error! syntax error at or near "t"
-LINE 1: ...w RSI 30 on the daily. And although RSI alone isn't necessar...
+LINE 1: ...-04-29','If Crude can recapture $66-67, there isn't much in ...
                                                              ^
 
 error! syntax error at or near "t"
-LINE 1: ...w RSI 30 on the daily. And although RSI alone isn't necessar...
+LINE 1: ...-04-29','If Crude can recapture $66-67, there isn't much in ...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 1: ...4-29','$HYFM prices their secondary at $59 and it's already ...
                                                              ^
 
 error! value too long for type character varying(255)
@@ -86,43 +284,203 @@ error! value too long for type character varying(255)
 
 error! value too long for type character varying(255)
 
-error! syntax error at or near "s"
-LINE 1: ...tock should be doing something other than what it's actually...
+error! syntax error at or near "t"
+LINE 1: ...this afternoon.  Not too disciplined.  Hope I won't get slau...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...this afternoon.  Not too disciplined.  Hope I won't get slau...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...this afternoon.  Not too disciplined.  Hope I won't get slau...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...this afternoon.  Not too disciplined.  Hope I won't get slau...
                                                              ^
 
 error! syntax error at or near "s"
-LINE 1: ...tock should be doing something other than what it's actually...
+LINE 1: ...llaMCC $UBER $LYFT $DASH...ugly charts with today's drop. NP
                                                              ^
 
 error! syntax error at or near "s"
-LINE 1: ...tock should be doing something other than what it's actually...
+LINE 1: ...llaMCC $UBER $LYFT $DASH...ugly charts with today's drop. NP
                                                              ^
 
 error! syntax error at or near "s"
-LINE 1: ...tock should be doing something other than what it's actually...
+LINE 1: ...llaMCC $UBER $LYFT $DASH...ugly charts with today's drop. NP
                                                              ^
 
 error! syntax error at or near "s"
-LINE 1: ...tock should be doing something other than what it's actually...
+LINE 1: ...e bottom for a quick bounce if market suggests it's a good t...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...ngOptions','$SPCE','2021-04-29','RT @manrav: That's a monste...
                                                              ^
 
 error! syntax error at or near "ll"
-LINE 1: ...major averages or any of the large cap names. You'll see tha...
+LINE 1: ...Has a history of such type moves. In this tape, I'll take wh...
                                                              ^
 
-error! syntax error at or near "m"
-LINE 1: ...ifferent $PLTR that was actually showing power? I'm only fam...
-                                                             ^
+error! value too long for type character varying(255)
 
-error! syntax error at or near "m"
-LINE 1: ...ifferent $PLTR that was actually showing power? I'm only fam...
+error! value too long for type character varying(255)
+
+error! syntax error at or near "t"
+LINE 1: ...ES ('Ben','$UNFI','2021-04-29','@TrendSpider Didn't clear th...
                                                              ^
 
 error! syntax error at or near "t"
-LINE 3: I don't normally look at 1 min candles but I show them here ...
-              ^
+LINE 1: ...et_url) VALUES ('HULK👊','$AMZN','2021-04-29','Don't see any ...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! syntax error at or near "s"
+LINE 3: Inside D Add's... $PFG $MDLZ $ETWO $SCHP $MUDS $TIP $EWZ $CR...
+                     ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
 
 error! syntax error at or near "t"
-LINE 3: I don't normally look at 1 min candles but I show them here ...
-              ^
+LINE 3: ...g on until Thurs AH to announce it.  Lucky I didn't cut all ...
+                                                             ^
+
+error! syntax error at or near "me"
+LINE 1: ... to $80 AH.  My 150 cheap contracts were cut!! F' me 🤬🤬🤬 onl...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...eve that goes to show how the EPS/rev numbers don't tell the...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...eve that goes to show how the EPS/rev numbers don't tell the...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...eve that goes to show how the EPS/rev numbers don't tell the...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...eve that goes to show how the EPS/rev numbers don't tell the...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...eve that goes to show how the EPS/rev numbers don't tell the...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "m"
+LINE 1: ...021-04-29','RT @RelaxAndStack: If $NAKD hits $1 I'm posting ...
+                                                             ^
+
+error! syntax error at or near "t"
+LINE 1: ...0ma like closework, I felt sth cooking.  But didn't wanna ha...
+                                                             ^
+
+error! syntax error at or near "s"
+LINE 1: ...-04-29','$NIO Shall do well in the long term.  It's a name u...
+                                                             ^
+
+error! syntax error at or near "m"
+LINE 1: ...,'2021-04-29','RT @TrevenSharp: @unusual_whales I'm going to...
+                                                             ^
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! value too long for type character varying(255)
+
+error! syntax error at or near "s"
+LINE 3: The bot has been all over it once it reached it's peak expec...
+                                                        ^
 

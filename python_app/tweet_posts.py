@@ -98,18 +98,25 @@ stocks_peeps = {
     "1208632009817354241": "the_trade_journey",
     "1200616796295847936": "unusual_whales",
     "83150642": "thelioncom",
-    "204531012": "data168"
+    "204531012": "data168",
+    "1231876668865695744": "iTradeContracts",
+    "1240151681851146247": "pKdayTrading1",
+    "1285245919609462786": "TheATMTrades",
+    "345525945": "TicTockTik"
 }
 
 
 calls_people = {
-    "1200616796295847936": "unusual_whales",
     "52166809": "traderstewie",
-    "204531012": "data168",
     "1615735502": "solonoid12",
     "748611168168644612": "walrustrades",
     "3083109892" : "avataraidan",
-    "1014726871911714816": "dougie_dee"
+    "1014726871911714816": "dougie_dee",
+    "1231876668865695744": "iTradeContracts",
+    "1240151681851146247": "pKdayTrading1",
+    "1285245919609462786": "TheATMTrades",
+    "345525945": "TicTockTik",
+    "1285245919609462786": "TheATMTrades"
 }
 
 
@@ -187,7 +194,7 @@ class listener(StreamListener):
                         logger.info(each_element + " added to db!")
 
             if should_send_to_discord:
-                sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)                
+                # sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)          
                 # If the tweeter poster is posting a option (right now, we've hardcoded 2 people who post options)
                 if str(id_str) in calls_people.keys():
                     sendWebhookMessage(user, url, None, STOCKS_CALLS_WEBHOOK)
@@ -196,7 +203,7 @@ class listener(StreamListener):
         logger.info("!!!!! something happend GASP")
         logger.info(status)
         
-        sendWebhookMessage(None, "420 420 420 420!!!! error in starting the tweet bot", None, STOCKS_STUFF_WEBHOOK)
+        # sendWebhookMessage(None, "420 420 420 420!!!! error in starting the tweet bot", None, STOCKS_STUFF_WEBHOOK)
 
 
 auth = OAuthHandler(ckey, csecret)

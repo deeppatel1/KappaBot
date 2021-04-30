@@ -175,9 +175,9 @@ async def on_message(message):
     if message.content.startswith('!league'):
         print("in here")
         future_games, future_embeds = get_future_league_games()
-        for x in range(0, len(future_games)):
+        for x in range(0, len(future_embeds)):
             if x < 7:
-                await message.channel.send(future_games[x])
+                # await message.channel.send(future_games[x])
                 await message.channel.send(embed=future_embeds[x])
 
     if message.content.startswith('!live'):
