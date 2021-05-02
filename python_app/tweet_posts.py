@@ -116,7 +116,11 @@ calls_people = {
     "1240151681851146247": "pKdayTrading1",
     "1285245919609462786": "TheATMTrades",
     "345525945": "TicTockTik",
-    "1285245919609462786": "TheATMTrades"
+    "1007420368288714754": "tradingthomas3",
+    "1310326298527571971": "Albert_Trades",
+    "1300807912835690497": "taytrades11",
+    "1290864917835390976": "tomikazi1",
+    "1290852657033338886": "thomascwatts"
 }
 
 
