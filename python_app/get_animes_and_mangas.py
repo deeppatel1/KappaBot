@@ -178,9 +178,9 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
         if image:
             embed.set_image(url=image)
         embed.set_footer(text="Episode " + str(next_episode) + " will air ")
-        if last_episode_aired_str and total_episodes:
+        if last_episode_aired_str:
             embed.add_field(name="Episode " + str(next_episode - 1), value="[Watch this episode](" + str(last_episode_aired_str) + ")")
-        if second_last_episode_str and total_episodes:
+        if second_last_episode_str:
             embed.add_field(name="Episode " + str(next_episode - 2), value="[Watch this episode](" + str(second_last_episode_str) + ")")
     
     all_embeds.append(embed)
