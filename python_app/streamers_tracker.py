@@ -78,6 +78,24 @@ def get_everyone_online():
     return execute_select_query(db_name, query)
 
 
+def does_utube_link_exist(link):
+    db_name = "kapp"
+    query = "SELECT * FROM utube_links WHERE id=\'" + link + "\'"
+    
+    link_returns = execute_select_query(db_name, query)
+
+    if link_returns:
+        return True
+
+    return False
+
+
+def add_utube_link(link):
+    db_name = "kapp"
+    query = "INSERT INTO utube_links(id) VALUES (\'" + link + "\')"
+    return execute_insert_query(db_name, query)
+
+
 """
 Update specific fields
 """

@@ -7,3 +7,4 @@ python_app/__pycache__/
 /.vscode
 /logs
 /pages
+/venv

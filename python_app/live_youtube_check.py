@@ -2,7 +2,7 @@ import requests, sched, time, re, json, time
 # from bs4 import BeautifulSoup
 from discord import Webhook, RequestsWebhookAdapter, Embed
 from bs4 import BeautifulSoup, SoupStrainer
-from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id, get_video_id
+from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id, get_video_id, does_utube_link_exist, add_utube_link
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
@@ -217,9 +217,14 @@ def start_youtube_checks(scheduler):
             #         update_video_id(name, "NULL")
 
             last_youtube_video = get_filtered_video(name, channel_id, filter_str)
-            if last_youtube_video and last_youtube_video != last_video_id:
+            if last_youtube_video and last_youtube_video != last_video_id and not does_utube_link_exist(last_youtube_video):
                 who_to_at_discord_ats = get_who_to_at(who_to_at_str)
+                # print("output")
+                # print(does_utube_link_exist(last_youtube_video))
+                # if not does_utube_link_exist(last_youtube_video):
                 sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video + " " + who_to_at_discord_ats)
+
+                add_utube_link(last_youtube_video)
                 update_video_id(name, last_youtube_video)
 
     scheduler.enter(900, 1, start_youtube_checks, (scheduler,))
