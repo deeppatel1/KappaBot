@@ -190,7 +190,7 @@ def generate_embeds(list_of_games):
 
 
 def get_future_league_games():
-    schedule = requests.get("https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?MCE%5B1%5D=2021+Mid-Season+Invitational&pfRunQueryFormName=MatchCalendarExport").text
+    schedule = requests.get("https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season&wpRunQuery=Run+query&pf_free_text=").text
     soup = BeautifulSoup(schedule, 'html.parser')
 
     content = soup.find(id='mw-content-text').get_text()
