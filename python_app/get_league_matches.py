@@ -17,18 +17,18 @@ handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%
 logger.addHandler(handler)
 
 relevant_teams = [
-    # "TSM",
-    # "FLY",
+    "TSM",
+    "FLY",
     "C9",
-    # "CLG",
-    # "TL",
-    # "EG",
-    # "100",
-    # "G2",
-    # "FNC",
+    "CLG",
+    "TL",
+    "EG",
+    "100",
+    "G2",
+    "FNC",
     "DK",
-    # "T1",
-    # "HLE",
+    "T1",
+    "HLE",
 
     "RNG",
     "MAD",
