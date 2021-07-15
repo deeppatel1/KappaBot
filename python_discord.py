@@ -1,10 +1,12 @@
 import discord, json
+import asyncio
 from discord.ext import commands
 import subprocess
 import os
 import requests
 import yfinance as yf
 import importlib
+import time
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, SoupStrainer
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
@@ -13,6 +15,8 @@ from python_app.streamers_tracker import get_platform_streamers, get_everyone_on
 from python_app.post_discord_webhook import sendWebhookMessage, sendWebhookListEmbeds, send_the_message
 from collections import OrderedDict
 from operator import itemgetter   
+from PIL import Image
+from io import BytesIO
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='$')
@@ -22,6 +26,7 @@ with open('configuration.json') as json_file :
 
 def create_webhook_url(id, token):
     return "https://discordapp.com/api/webhooks/" + str(id) + "/" + str(token)
+
 
 def update_youtube_view_count():     
     """
@@ -151,6 +156,22 @@ def pumped_ticker_embed(ticker_resp, date):
     embed.set_footer(text="Since " + date)
     return embed
 
+
+def get_all_live_embed():
+    embed = discord.Embed(colour=discord.Colour(12320855))
+    is_anyone_online = False
+    update_youtube_view_count()
+    for streamer in get_everyone_online():
+        is_anyone_online = True
+        name = streamer[0]
+        viewer_count = streamer[4]
+        embed.add_field(name=name, value="[" + viewer_count + " viewers](https://twitch.tv/" + name + ")")
+    if not is_anyone_online:
+        embed = discord.Embed(tite="no ones online...")
+
+    return embed
+
+
 @client.event
 async def on_message(message):
     if message.content.startswith('!weeb'):
@@ -181,17 +202,7 @@ async def on_message(message):
                 await message.channel.send(embed=future_embeds[x])
 
     if message.content.startswith('!live'):
-
-        embed = discord.Embed(colour=discord.Colour(12320855))
-        is_anyone_online = False
-        update_youtube_view_count()
-        for streamer in get_everyone_online():
-            is_anyone_online = True
-            name = streamer[0]
-            viewer_count = streamer[4]
-            embed.add_field(name=name, value="[" + viewer_count + " viewers](https://twitch.tv/" + name + ")")
-        if not is_anyone_online:
-            embed = discord.Embed(tite="no ones online...")
+        embed = get_all_live_embed()
         await message.channel.send(embed=embed)
 
     if message.content.startswith("!stocks"):
@@ -223,9 +234,6 @@ async def on_message(message):
         #     content=top_stocks)
 
         # await message.channel.send(top_stocks)
-
-    if message.content.startswith('!test'):
-        await message.channel.send("hello")
 
     if message.content.startswith('!logstocks'):
         for file_path in os.listdir("logs/"):
@@ -272,6 +280,20 @@ async def on_message(message):
         resp = get_most_pumped(from_date)
         embed = pumped_ticker_embed(resp, from_date)
         await message.channel.send(embed = embed)
+
+@client.event
+async def on_ready():
+    
+    TWITCH_CHANNEL_ID = 813935859002900500
+    REFRESH_WHOS_LIVE_SECONDS = 120
+
+    while True:
+        embed = get_all_live_embed()
+        channel = client.get_channel(TWITCH_CHANNEL_ID)
+        await channel.send(embed=embed, delete_after=float(REFRESH_WHOS_LIVE_SECONDS))
+        await asyncio.sleep(REFRESH_WHOS_LIVE_SECONDS)
+
+
 
 # youtube_checks = open("logs/live-youtube-checks-logs.txt", "a+")
 # twitch_live = open("logs/get-twitch-live-logs.txt", "a+")
