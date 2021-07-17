@@ -37,7 +37,8 @@ people_to_follow = {
     "1648029396": "c9perkz",
     "3291691": "chamath",
     "44196397": "elon",
-    "273519109": "ls"
+    "273519109": "ls",
+    "1615735502": "solonoid12",
 }
 
 stocks_peeps = {
@@ -134,10 +135,24 @@ class listener(StreamListener):
         if id_str in list(people_to_follow.keys()):
             logger.info("!!!!!------ Main person, posting to discord")
             logger.info(json_data)
+
             user = json_data.get("user").get("screen_name")
+            profile_pic = json_data.get("user").get("profile_image_url_https")
+
+            is_reply = True if json_data.get("in_reply_to_status_id") else False
+
+            if is_reply:
+                replied_to_user_name = json_data.get("in_reply_to_screen_name")
+                replied_to_id = json_data.get("in_reply_to_status_id")
+                url = "https://twitter.com/" + str(replied_to_user_name) + "/status/" + str(replied_to_id)
+                sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
+
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
-            profile_pic = json_data.get("user").get("profile_image_url_https")
+
+            if is_reply:
+                url = "REPLY TO ABOVE " + url
+
             sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
         # if its 1 of the stock people
         else:

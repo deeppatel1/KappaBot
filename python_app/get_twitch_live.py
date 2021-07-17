@@ -1,6 +1,6 @@
 import json, sched, time, requests
 from discord import Webhook, RequestsWebhookAdapter, Embed
-from streamers_tracker import get_platform_streamers, update_viewer_count, update_streamer_online_status, update_viewer_count, get_everyone_online
+from streamers_tracker import get_platform_streamers, update_viewer_count, update_streamer_online_status, update_viewer_count, get_everyone_online, update_stream_start_time
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
@@ -59,6 +59,7 @@ def check_streamer_live(streamer):
     online_status = streamer[3]
     filters = streamer[6]
     who_to_at = streamer[7]
+    should_it_post_to_twitch_channel = streamer[8]
 
     auth_token = get_auth_token()
 
@@ -73,6 +74,8 @@ def check_streamer_live(streamer):
 
     streamer_resp = requests.get("https://api.twitch.tv/helix/streams?user_id=" + streamer_id, headers=API_CALL_HEADERS)
 
+    print(streamer_resp.content)
+
     if streamer_resp.status_code != 200:
         logger.info("Streamer check failed, got auth token but failed on getting data from the API")
         return
@@ -86,7 +89,7 @@ def check_streamer_live(streamer):
             # check if filters exist, than if filter exists, that filter must exist in the title.
             title = resp.get("data")[0].get("title")
             title = "#lcsCoStream"
-            if filters:
+            if filters and should_it_post_to_twitch_channel:
                 logger.info(filters)
                 filters_list = filters.split(",")
                 for filter in filters_list:
@@ -114,13 +117,14 @@ def check_streamer_live(streamer):
         # Update the db now
         update_streamer_online_status(streamer_name, "TRUE")
         update_viewer_count(streamer_name,  str(resp.get("data")[0]["viewer_count"]))
+        update_stream_start_time(streamer_name, str(resp.get("data")[0]["started_at"]))
 
     else:
         logger.info("streamer " + streamer_name + " is offline")
         # Update the db now
         update_streamer_online_status(streamer_name, "FALSE")
         update_viewer_count(streamer_name,  "0")
-
+        update_stream_start_time(streamer_name, "never")
 
 def check_all_streamers(scheduler):
     # First, get all twitch streamers saved in the db
