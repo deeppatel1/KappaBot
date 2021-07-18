@@ -188,7 +188,7 @@ def generate_embeds(list_of_games):
 
 
 
-def get_future_league_games():
+def get_future_league_games(league=None):
     schedule = requests.get("https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season&wpRunQuery=Run+query&pf_free_text=").text
     soup = BeautifulSoup(schedule, 'html.parser')
 
@@ -199,15 +199,33 @@ def get_future_league_games():
 
     games = []
 
-    for k in list_content:
-        if "LCK 2021" in k:
-            games.append(k)
-        elif "LCS" in k:
-            games.append(k)
-        elif "LEC 2021" in k:
-            games.append(k)
-        elif "MSI" in k:
-            games.append(k)
+    print("leagueee")
+    print(league)
+
+
+    if league:
+        if league.upper() == "LEC":
+            league = "LEC 2021"
+        elif league.upper() == "LCK":
+            league = "LCK 2021"
+        for k in list_content:
+            if league.upper() in k.upper():
+                games.append(k)
+
+    else:
+
+        for k in list_content:
+            if "LCK 2021" in k:
+                games.append(k)
+            elif "LCS" in k:
+                games.append(k)
+            elif "LEC 2021" in k:
+                games.append(k)
+            elif "MSI" in k:
+                games.append(k)
+
+    print("Gamessss")
+    print(games)
 
     now = datetime.datetime.now()
     for game_line in games:
