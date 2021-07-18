@@ -45,7 +45,7 @@ async def on_ready():
         await asyncio.sleep(REFRESH_WHOS_LIVE_SECONDS)
 
 
-@bot.command(name="weeb")
+@bot.command(name="weeb", brief="Prints episode info about latest stored animes")
 async def weeb(ctx):
     print("started")
     dict_embeds = {}
@@ -68,22 +68,22 @@ async def weeb(ctx):
     all_embeds.clear()
 
 
-@bot.command(name="league")
-async def league(ctx):
-    future_games, future_embeds = get_future_league_games()
+@bot.command(name="league", brief="Prints upcoming league schedule. Add name of league to only include that league. Ex: !league lcs")
+async def league(ctx, arg=None):
+    future_games, future_embeds = get_future_league_games(arg)
     for x in range(0, len(future_embeds)):
         if x < 7:
             # await ctx.send(future_games[x])
             await ctx.send(embed=future_embeds[x])
 
 
-@bot.command(name="live")
+@bot.command(name="live", brief="Prints live streamers")
 async def live(ctx):
     embed = get_all_live_embed()
     await ctx.send(embed=embed)
 
 
-@bot.command(name="stocks")
+@bot.command(name="stocks", brief="Lists top mentioned stocks by furus in the past 2 days")
 async def stocks(ctx):
     msg = message.content
     msg_array = msg.split(" ")
@@ -113,7 +113,7 @@ async def stocks(ctx):
     # await ctx.send(top_stocks)
 
 
-@bot.command(name="ticker")
+@bot.command(name="ticker", brief="Prints latest tweets from furus")
 async def ticker(ctx):
     msg = message.content
     msg_array = msg.split(" ")
@@ -131,7 +131,7 @@ async def ticker(ctx):
         await ctx.send("enter a ticker")
 
 
-@bot.command(name="pumped")
+@bot.command(name="pumped", brief="Check which stocks are pumped")
 async def pumped(ctx):
     msg = message.content
     msg_array = msg.split(" ")
