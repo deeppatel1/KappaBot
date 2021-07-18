@@ -1,4 +1,4 @@
-from discord import Webhook, RequestsWebhookAdapter, Embed
+from discord import RequestsWebhookAdapter, Webhook
 import json
 
 with open('./configuration.json') as json_file :

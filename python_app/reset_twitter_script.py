@@ -1,4 +1,5 @@
-import os, subprocess, time
+import subprocess
+import time
 
 while True:
     print('---in reset twitter script')

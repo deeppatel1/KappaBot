@@ -1,4 +1,3 @@
-import glob
 import datetime
 import discord
 import requests

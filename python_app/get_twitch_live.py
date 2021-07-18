@@ -1,6 +1,6 @@
 import json, sched, time, requests
-from discord import Webhook, RequestsWebhookAdapter, Embed
-from streamers_tracker import get_platform_streamers, update_viewer_count, update_streamer_online_status, update_viewer_count, get_everyone_online, update_stream_start_time
+from discord import RequestsWebhookAdapter, Webhook
+from streamers_tracker import get_platform_streamers, update_stream_start_time, update_streamer_online_status, update_viewer_count, update_viewer_count
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
@@ -89,7 +89,7 @@ def check_streamer_live(streamer):
             # check if filters exist, than if filter exists, that filter must exist in the title.
             title = resp.get("data")[0].get("title")
             title = "#lcsCoStream"
-            if filters and should_it_post_to_twitch_channel:
+            if filters:
                 logger.info(filters)
                 filters_list = filters.split(",")
                 for filter in filters_list:
@@ -106,7 +106,7 @@ def check_streamer_live(streamer):
                 logger.info("no filters found, posting to discord anyway")
                 should_post_to_discord = True
 
-            if should_post_to_discord:
+            if should_post_to_discord and should_it_post_to_twitch_channel:
                 url = "https://twitch.tv/" + streamer_name
                 who_to_at = get_who_to_at(who_to_at)
                 discord_post = streamer_name + " IS LIVE " + who_to_at + " " + url
@@ -134,7 +134,7 @@ def check_all_streamers(scheduler):
         logger.info("--- Twitch Live Check for " + streamer[0])
         check_streamer_live(streamer)
 
-    scheduler.enter(180, 1, check_all_streamers, (scheduler,))
+    scheduler.enter(600, 1, check_all_streamers, (scheduler,))
 
 
 def start_checks():

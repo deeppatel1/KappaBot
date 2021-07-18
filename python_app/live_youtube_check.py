@@ -1,8 +1,12 @@
-import requests, sched, time, re, json, time
+import json
+import requests
+import sched
+import time
+import time
 # from bs4 import BeautifulSoup
-from discord import Webhook, RequestsWebhookAdapter, Embed
-from bs4 import BeautifulSoup, SoupStrainer
-from streamers_tracker import get_platform_streamers, update_streamer_online_status, update_viewer_count, update_video_id, get_video_id, does_utube_link_exist, add_utube_link
+from discord import RequestsWebhookAdapter, Webhook
+from bs4 import BeautifulSoup
+from streamers_tracker import add_utube_link, does_utube_link_exist, get_platform_streamers, get_video_id, update_video_id
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging

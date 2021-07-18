@@ -72,10 +72,13 @@ def get_platform_streamers(platform):
 
 def get_everyone_online():
     db_name = "kapp"
-    query = "SELECT * FROM streamer_tracker WHERE online=TRUE"
-    print('--- query')
-    print(query)
-    return execute_select_query(db_name, query)
+    query = "SELECT * FROM streamer_tracker WHERE online=TRUE ORDER BY viewer_count DESC"
+    resp = execute_select_query(db_name, query)
+    resp.sort(key=lambda x:int(x[4]))
+    resp = reversed(resp)
+    print(resp)
+
+    return resp
 
 
 def does_utube_link_exist(link):
@@ -114,7 +117,11 @@ def update_streamer_online_status(streamer_name, new_status):
     update_specific_field(streamer_name, "online", new_status)
 
 def update_viewer_count(streamer_name, new_viewer_count):
+    print("UPDATE " + streamer_name + " WITH viewer count " + new_viewer_count)
     update_specific_field(streamer_name, "viewer_count", new_viewer_count)
+
+def update_stream_start_time(streamer_name, stream_start_string):
+    update_specific_field(streamer_name, "start_stream_datetime", stream_start_string)
 
 def update_video_id(streamer_name, new_video_id):
     update_specific_field(streamer_name, "video_id", new_video_id)

@@ -1,13 +1,9 @@
 import discord
 import requests
-import glob
-import asyncio
 import datetime
 from functools import lru_cache
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
-import sched, time
-from threading import Timer
+from datetime import datetime
 #client = discord.Client()
 from logging.handlers import RotatingFileHandler
 import logging
@@ -146,16 +142,16 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             second_last_episode_str = str(next_episode-2)
 
         if last_episode_aired_str:
-            last_episode_aired_str = "https://4anime.to/" + watch_anime_url + "-episode-" + last_episode_aired_str
+            last_episode_aired_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + last_episode_aired_str
         if second_last_episode_str:
-            second_last_episode_str = "https://4anime.to/" + watch_anime_url + "-episode-" + second_last_episode_str
+            second_last_episode_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + second_last_episode_str
 
     else:
         last_episode_aired_str = str(total_episodes)
         second_last_episode_str = str(total_episodes-1)
                 
-        last_episode_aired_str = "https://4anime.to/" + watch_anime_url + "-episode-" + last_episode_aired_str
-        second_last_episode_str = "https://4anime.to/" + watch_anime_url + "-episode-" + second_last_episode_str
+        last_episode_aired_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + last_episode_aired_str
+        second_last_episode_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + second_last_episode_str
 
 
     if status == "FINISHED":

@@ -1,4 +1,6 @@
-import sched, time, schedule, discord
+import discord
+import schedule
+import time
 from datetime import datetime, timedelta
 from get_animes_and_mangas import call_anilist_api
 from post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
@@ -88,7 +90,7 @@ def set_reminder(airing_datetime, anime_title, episode, total_episodes, four_ani
     else:
         episode_str = str(episode)
 
-    url = "https://4anime.to/" + four_anime_url_name + "-episode-" + episode_str
+    url = "https://9anime.to/watch/" + four_anime_url_name + "/ep-" + episode_str
 
     embed = discord.Embed(title=message, url=url, timestamp=airing_datetime)
     embed.set_image(url=image)

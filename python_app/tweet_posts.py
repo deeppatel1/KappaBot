@@ -1,11 +1,8 @@
 import json, datetime
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
-import sys
-import os
-from discord import Webhook, RequestsWebhookAdapter, Embed
+from discord import RequestsWebhookAdapter, Webhook
 from tweepy import OAuthHandler
-from tweepy import API
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 from streamers_tracker import add_to_tweeter_tickers
@@ -39,6 +36,7 @@ people_to_follow = {
     "44196397": "elon",
     "273519109": "ls",
     "1615735502": "solonoid12",
+    "1947617514": "grossie_gore"
 }
 
 stocks_peeps = {

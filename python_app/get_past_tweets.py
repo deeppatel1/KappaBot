@@ -1,10 +1,8 @@
 import json
-import os
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
-from tweepy import OAuthHandler, API, Stream
-from tweepy.streaming import StreamListener
+from tweepy import API, OAuthHandler
 
 atoken = config.get("twitterAccessToken")
 asecret = config.get("twitterTokenSecret")
