@@ -110,7 +110,7 @@ def get_ticker_embed(ticker_resp):
 
     for tweet in ticker_resp:
         tweeter_name = tweet[0]
-        date = tweet[2]
+        date_time = tweet[2]
         text = tweet[3]
         link = tweet[4]
 
@@ -120,7 +120,7 @@ def get_ticker_embed(ticker_resp):
             else:
                 field_value = text
             
-            embed.add_field(name="```" + str(date) + " " + tweeter_name + "```", value = field_value)
+            embed.add_field(name="```" + str(date_time) + " " + tweeter_name + "```", value = field_value)
 
     return embed
 
