@@ -1,9 +1,10 @@
 import json
 import asyncio
 import discord
-from discord.ext import commands
 import subprocess
-from datetime import datetime, timedelta
+from discord.ext import commands, tasks
+from pandas.tseries.offsets import BDay
+from datetime import date, datetime, timedelta
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
 from python_app.streamers_tracker import (
@@ -11,9 +12,8 @@ from python_app.streamers_tracker import (
     get_specific_tickers,
     get_most_pumped,
 )
-from python_app.post_discord_webhook import (
-    send_the_message,
-)
+from python_app.post_discord_webhook import send_the_message
+from python_app.get_latest_mangas_notif import all_fun_manga_check
 from python_helpers import (
     create_webhook_url,
     create_stock_embed,
@@ -84,24 +84,28 @@ async def live(ctx):
 
 
 @bot.command(name="stocks", brief="Lists top mentioned stocks by furus in the past 2 days")
-async def stocks(ctx):
-    msg = message.content
-    msg_array = msg.split(" ")
+async def stocks(ctx, arg1=None, arg2=None):
     from_date = None
     to_date = None
-    if len(msg_array) == 2:
-        from_date = msg_array[1]
-    if len(msg_array) == 3:
-        to_date = msg_array[2]
+    if arg1:
+        from_date = arg1
+    if arg2:
+        to_date = arg2
 
     # if no FROM DATE supplied, use 1 that is 2 days ago
 
     if not from_date:
-        now = datetime.today() - timedelta(days=1)
+        now = date.today() - BDay(1) + timedelta(hours=16)
+        print("Getting stocks after ")
+        print(now)
         year = now.year
         month = now.month
         day = now.day
-        from_date = str(year) + "-" + str(month) + "-" + str(day)
+        hours = now.hour
+        minutes = now.minute
+
+
+        from_date = str(year) + "-" + str(month) + "-" + str(day) + " " + str(hours) + ":" + str(minutes) + ":00"
 
     top_stocks = get_top_stocks(from_date, to_date)
     await ctx.send(embed=create_stock_embed(top_stocks, from_date, to_date))
@@ -114,21 +118,18 @@ async def stocks(ctx):
 
 
 @bot.command(name="ticker", brief="Prints latest tweets from furus")
-async def ticker(ctx):
-    msg = message.content
-    msg_array = msg.split(" ")
-    if len(msg_array) == 2:
-        ticker = msg_array[1]
-        print("!!! input ticker " + ticker)
-        ticker_info = get_specific_tickers(ticker)
-        if not ticker_info:
-            await ctx.send("no tweets for this ticker found")
-        ticker_embed = get_ticker_embed(ticker_info)
-        if not ticker_embed:
-            await ctx.send("no tweets for this ticker")
-        await ctx.send(embed=ticker_embed)
-    else:
+async def ticker(ctx, arg=None):
+    if not arg:
         await ctx.send("enter a ticker")
+    ticker = arg
+    print("!!! input ticker " + ticker)
+    ticker_info = get_specific_tickers(ticker)
+    if not ticker_info:
+        await ctx.send("no tweets for this ticker found")
+    ticker_embed = get_ticker_embed(ticker_info)
+    if not ticker_embed:
+        await ctx.send("no tweets for this ticker")
+    await ctx.send(embed=ticker_embed)
 
 
 @bot.command(name="pumped", brief="Check which stocks are pumped")
@@ -156,6 +157,14 @@ async def pumped(ctx):
     resp = get_most_pumped(from_date)
     embed = pumped_ticker_embed(resp, from_date)
     await ctx.send(embed=embed)
+
+
+@tasks.loop(hours = 1)
+async def check_fun_manga():
+    all_fun_manga_check()
+    # work
+
+check_fun_manga.start()
 
 
 subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])

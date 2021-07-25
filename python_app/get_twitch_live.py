@@ -1,6 +1,6 @@
 import json, sched, time, requests
 from discord import RequestsWebhookAdapter, Webhook
-from streamers_tracker import get_platform_streamers, update_stream_start_time, update_streamer_online_status, update_viewer_count, update_viewer_count
+from streamers_tracker import get_platform_streamers, update_stream_start_time, update_streamer_online_status, update_viewer_count, update_viewer_count, get_who_to_at
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
@@ -18,23 +18,23 @@ logger.addHandler(handler)
 WEBHOOKS_TO_POST = [config.get("twitch-webhook")]
 
 
-def get_who_to_at(who_to_at_string):
+# def get_who_to_at(who_to_at_string):
 
-    if who_to_at_string == "everyone":
-        return "@everyone"
+#     if who_to_at_string == "everyone":
+#         return "@everyone"
 
-    final_who_to_at_string = ""
+#     final_who_to_at_string = ""
 
-    if "deep" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
+#     if "deep" in who_to_at_string:
+#         final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
 
-    if "ragen" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
+#     if "ragen" in who_to_at_string:
+#         final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
     
-    if "priyam" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
+#     if "priyam" in who_to_at_string:
+#         final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
 
-    return final_who_to_at_string
+#     return final_who_to_at_string
 
 
 def get_auth_token():

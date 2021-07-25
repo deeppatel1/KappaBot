@@ -35,8 +35,9 @@ people_to_follow = {
     "3291691": "chamath",
     "44196397": "elon",
     "273519109": "ls",
-    "1615735502": "solonoid12",
-    "1947617514": "grossie_gore"
+    "1947617514": "grossie_gore",
+    "2790180781": "Alphari",
+    "936128517460201473": "SpicaLoL"
 }
 
 stocks_peeps = {
@@ -66,7 +67,6 @@ stocks_peeps = {
     "1014726871911714816": "dougie_dee",
     "1118235493030866944": "yatesinvesting",
     "1007420368288714754": "tradingthomas3",
-    "943883051989221376": "chrisRandone",
     "373620043": "mrzackmorris",
     "888225282334871553": "pj_matlock",
     "946470689367842816" : "hugh_Henne",
@@ -76,13 +76,13 @@ stocks_peeps = {
     "1243273376023621639": "puppytrades",
     "1243680071304404993": "hawkstocks",
     "1208632009817354241": "the_trade_journey",
-    "1200616796295847936": "unusual_whales",
     "83150642": "thelioncom",
     "204531012": "data168",
     "1231876668865695744": "iTradeContracts",
     "1240151681851146247": "pKdayTrading1",
     "1285245919609462786": "TheATMTrades",
-    "345525945": "TicTockTik"
+    "345525945": "TicTockTik",
+    "1615735502": "solonoid12"
 }
 
 
@@ -175,6 +175,8 @@ class listener(StreamListener):
             current_date_str = now.strftime("%Y-%m-%d")
             user = json_data.get("user").get("name")
 
+            current_date_time_str = now.strftime("%Y-%m-%d %H:%M:%S")
+
             sc = set(WANTED_CHARS)
             for each_element in full_text_list:
                 if "$" in each_element:
@@ -182,9 +184,9 @@ class listener(StreamListener):
                     each_element = ''.join([c for c in each_element if (c in WANTED_CHARS) or (c in UPPER_WANTED_CHARS)])
                     each_element = "$" + each_element
                     # remove everything before the dollar sign
-                    if len(each_element) > 1:
+                    if len(each_element) > 2 and len(each_element) < 6:
                         # filter out unwanted chars
-                        add_to_tweeter_tickers(user, each_element, current_date_str, full_text, url)
+                        add_to_tweeter_tickers(user, each_element, current_date_str, current_date_time_str, full_text, url)
                         should_send_to_discord = True
                         logger.info(each_element + " added to db!")
 

@@ -8,3 +8,6 @@ tweepy
 psycopg2
 yfinance
 maya
+past
+mangadex
+future

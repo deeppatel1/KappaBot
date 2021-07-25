@@ -6,7 +6,7 @@ import time
 # from bs4 import BeautifulSoup
 from discord import RequestsWebhookAdapter, Webhook
 from bs4 import BeautifulSoup
-from streamers_tracker import add_utube_link, does_utube_link_exist, get_platform_streamers, get_video_id, update_video_id
+from streamers_tracker import add_utube_link, does_utube_link_exist, get_platform_streamers, get_video_id, update_video_id, get_who_to_at
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
@@ -132,23 +132,23 @@ def get_last_youtube_video_id(channel_id):
     return url
 
 
-def get_who_to_at(who_to_at_string):
+# def get_who_to_at(who_to_at_string):
 
-    if who_to_at_string == "everyone":
-        return "@everyone"
+#     if who_to_at_string == "everyone":
+#         return "@everyone"
 
-    final_who_to_at_string = ""
+#     final_who_to_at_string = ""
 
-    if "deep" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
+#     if "deep" in who_to_at_string:
+#         final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
 
-    if "ragen" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
+#     if "ragen" in who_to_at_string:
+#         final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
     
-    if "priyam" in who_to_at_string:
-        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
+#     if "priyam" in who_to_at_string:
+#         final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
 
-    return final_who_to_at_string
+#     return final_who_to_at_string
 
 
 def check_youtube_live(channel_id):

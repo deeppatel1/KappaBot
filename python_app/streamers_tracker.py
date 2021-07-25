@@ -126,9 +126,9 @@ def update_stream_start_time(streamer_name, stream_start_string):
 def update_video_id(streamer_name, new_video_id):
     update_specific_field(streamer_name, "video_id", new_video_id)
 
-def add_to_tweeter_tickers(tweeter, ticker, date, full_text, url):
+def add_to_tweeter_tickers(tweeter, ticker, date, current_date_str, full_text, url):
     db_name = "kapp"
-    query = "INSERT INTO common_tickers(tweeter, ticker, date, tweet_text, tweet_url) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\',\'" + full_text + "\',\'" + url +"\')"
+    query = "INSERT INTO common_tickers(tweeter, ticker, date, date_time, tweet_text, tweet_url) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\',\'" + current_date_str + "\',\'" + full_text + "\',\'" + url +"\')"
     return execute_insert_query(db_name, query)
 
 """
@@ -173,7 +173,7 @@ def get_top_stocks(from_date = None, to_date = None):
         query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= '2021-02-14') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
 
     if from_date and not to_date:
-        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= \'" + from_date + "\') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
+        query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date_time >= \'" + from_date + "\') as d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
 
     if from_date and to_date:
         query = "SELECT f.ticker, array_agg(f.tweeter) as all_tweeters, array_length(array_agg(f.tweeter), 1) FROM (SELECT DISTINCT d.tweeter, lower(d.ticker) as ticker FROM (SELECT * from common_tickers WHERE date >= \'" + from_date + "\' AND date <= \'" + to_date + "\') as  d) as f GROUP BY ticker ORDER BY array_length DESC limit 10"
@@ -205,3 +205,43 @@ def get_most_pumped(after_date):
     print(query)
     resp = execute_select_query('kapp', query)
     return resp
+
+### MANGAS stuff
+
+def get_all_mangas():
+
+    query = "SELECT * FROM followed_manga"    
+    db_name = "kapp"
+
+    return execute_select_query(db_name, query)    
+
+def update_manga_chapter(manga_name, chapter_id):
+
+    db_name = "kapp"
+    
+    field_to_update = "Latest_chapter"
+    # query = "UPDATE followed_manga SET \'" + field_to_update + "\'=\'" + str(chapter_id) + "\' WHERE manga_name=\'" + manga_name + "\'"
+
+    query = "UPDATE followed_manga SET \"" + field_to_update + "\"=\'" + str(chapter_id) + "\' WHERE manga_name=\'" + manga_name + "\'"
+    print("Running query")
+    print(query)
+    return execute_insert_query(db_name, query)
+
+
+def get_who_to_at(who_to_at_string):
+
+    if who_to_at_string == "everyone":
+        return "@everyone"
+
+    final_who_to_at_string = ""
+
+    if "deep" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
+
+    if "ragen" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
+    
+    if "priyam" in who_to_at_string:
+        final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
+
+    return final_who_to_at_string

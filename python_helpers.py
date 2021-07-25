@@ -73,16 +73,12 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         times_mentioned = stock[2]
         ticker_without_dollar = ticker[1:]
 
-        print('yf.Ticker...')
-        print(ticker_without_dollar)
-        print('/////')
         ticker_info = yf.Ticker(ticker_without_dollar)
 
-        print(ticker_info)
         try:
             todays_data = ticker_info.history(period='1d')
-            print('todays data')
-            print(todays_data)
+            # print('todays data')
+            # print(todays_data)
 
 
         except Exception as error:
