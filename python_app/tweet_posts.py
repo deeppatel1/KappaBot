@@ -37,7 +37,8 @@ people_to_follow = {
     "273519109": "ls",
     "1947617514": "grossie_gore",
     "2790180781": "Alphari",
-    "936128517460201473": "SpicaLoL"
+    "936128517460201473": "SpicaLoL",
+    "785651770697523200": "xQc"
 }
 
 stocks_peeps = {
