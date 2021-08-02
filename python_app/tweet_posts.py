@@ -37,7 +37,10 @@ people_to_follow = {
     "273519109": "ls",
     "1947617514": "grossie_gore",
     "2790180781": "Alphari",
-    "936128517460201473": "SpicaLoL"
+    "1615735502": "solonoid12",
+    "936128517460201473": "SpicaLoL",
+    "785651770697523200": "xQc",
+    "1282068738959749120": "xQCOWUpdates"
 }
 
 stocks_peeps = {
@@ -82,7 +85,7 @@ stocks_peeps = {
     "1240151681851146247": "pKdayTrading1",
     "1285245919609462786": "TheATMTrades",
     "345525945": "TicTockTik",
-    "1615735502": "solonoid12"
+    "1018324467758465024": "EliteOptions2"
 }
 
 
@@ -97,13 +100,15 @@ calls_people = {
     "345525945": "TicTockTik",
     "1007420368288714754": "tradingthomas3",
     "1310326298527571971": "Albert_Trades",
-    "1300807912835690497": "taytrades11"
+    "1300807912835690497": "taytrades11",
+    "1018324467758465024": "EliteOptions2"
 }
 
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
 
 TWEETS_CHANNEL_WEBHOOK = config.get("tweets")
+MAC_TWEETS_ONLY_CHANNEL_WEBHOOK = config.get("mac-tweets-channel")
 STOCKS_STUFF_WEBHOOK = config.get("stock-stuff")
 STOCKS_CALLS_WEBHOOK = config.get("stock-calls")
 
@@ -139,11 +144,14 @@ class listener(StreamListener):
 
             is_reply = True if json_data.get("in_reply_to_status_id") else False
 
+            discord_channel_to_post = TWEETS_CHANNEL_WEBHOOK if str(user) != "macaiyla" else MAC_TWEETS_ONLY_CHANNEL_WEBHOOK
+
+            print("Posting it at " + str(discord_channel_to_post))
             if is_reply:
                 replied_to_user_name = json_data.get("in_reply_to_screen_name")
                 replied_to_id = json_data.get("in_reply_to_status_id")
                 url = "https://twitter.com/" + str(replied_to_user_name) + "/status/" + str(replied_to_id)
-                sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
+                sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
 
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
@@ -151,7 +159,7 @@ class listener(StreamListener):
             if is_reply:
                 url = "REPLY TO ABOVE " + url
 
-            sendWebhookMessage(user, url, profile_pic, TWEETS_CHANNEL_WEBHOOK)
+            sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
         # if its 1 of the stock people
         else:
             logger.info('!!!------ Stock person, maybe posting to discord')

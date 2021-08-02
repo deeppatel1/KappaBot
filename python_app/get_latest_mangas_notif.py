@@ -43,13 +43,13 @@ def check_if_chapter_exists(manga_name, manga_url, chapter_number):
     print("Checking URL " + url)
     resp = requests.get(url)
 
-    if "is not available yet" in str(resp.content):
-        print("Chapter is not out")
-        return False    
+    if resp.status_code == 200 and not "is not available yet" in str(resp.content):
+        print("Chapter is out")
+        return True    
 
     else:
-        print("chapter is out")
-        return True
+        print("chapter is not out")
+        return False
 
 
 def create_embed(manga_name, mangadex_id, chapter_number, fun_manga_url, title, cover_url):

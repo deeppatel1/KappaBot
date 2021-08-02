@@ -126,6 +126,12 @@ def update_stream_start_time(streamer_name, stream_start_string):
 def update_video_id(streamer_name, new_video_id):
     update_specific_field(streamer_name, "video_id", new_video_id)
 
+def update_stream_title(streamer_name, stream_title):
+    update_specific_field(streamer_name, "stream_title", stream_title)
+
+def update_game_played(streamer_name, game_played):
+    update_specific_field(streamer_name, "game_played", game_played)
+
 def add_to_tweeter_tickers(tweeter, ticker, date, current_date_str, full_text, url):
     db_name = "kapp"
     query = "INSERT INTO common_tickers(tweeter, ticker, date, date_time, tweet_text, tweet_url) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\',\'" + current_date_str + "\',\'" + full_text + "\',\'" + url +"\')"

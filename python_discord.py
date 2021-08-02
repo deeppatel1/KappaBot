@@ -68,13 +68,22 @@ async def weeb(ctx):
     all_embeds.clear()
 
 
+DEFAULT_NUMBER_OF_GAMES_TO_RETURN = 10
 @bot.command(name="league", brief="Prints upcoming league schedule. Add name of league to only include that league. Ex: !league lcs")
-async def league(ctx, arg=None):
-    future_games, future_embeds = get_future_league_games(arg)
-    for x in range(0, len(future_embeds)):
-        if x < 7:
-            # await ctx.send(future_games[x])
-            await ctx.send(embed=future_embeds[x])
+async def league(ctx, arg=None, arg2=DEFAULT_NUMBER_OF_GAMES_TO_RETURN):
+    future_games, future_embeds = get_future_league_games(arg2, league=arg)
+    final_string_to_send = ""
+
+    for game in future_games:
+        final_string_to_send = final_string_to_send + "\n" + game
+    
+    await ctx.send(final_string_to_send)
+
+
+    # for x in range(0, len(future_embeds)):
+    #     if x < arg2:
+    #         await ctx.send(future_games[x])
+    #         # await ctx.send(embed=future_embeds[x])
 
 
 @bot.command(name="live", brief="Prints live streamers")

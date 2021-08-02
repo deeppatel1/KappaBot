@@ -1,4 +1,5 @@
 import datetime
+import time
 import discord
 import requests
 from bs4 import BeautifulSoup
@@ -15,22 +16,28 @@ handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
+GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season%2CLCS%2F2021+Season%2FChampionship%2CLEC%2F2021+Season%2FSummer+Playoffs&wpRunQuery=Run+query&pf_free_text="
+
 relevant_teams = [
     "TSM",
-    "FLY",
+    "GGS",
     "C9",
     "CLG",
     "TL",
     "EG",
     "100",
+    "IMT",
+
     "G2",
     "FNC",
+    "MAD",
+    "RGE",
+
     "DK",
     "T1",
     "HLE",
 
     "RNG",
-    "MAD",
     "PSG",
     "UOL",
     "INF",
@@ -59,7 +66,7 @@ emoji_id = {
     "tl": 729060542995497076,
     "imt": 729060542765072436,
     "dig": 729060542819467284,
-    "100~1:": 729060542873862155,
+    "100t": 729060542873862155,
     "clg": 729060542848958595,
     "gg": 729060543113068554,
 
@@ -92,12 +99,11 @@ emoji_id = {
 
     "rng": 836479419081555990,
 
-    "100": "test",
     "lec": 802762920168521738
 }
 
 
-def generate_embeds(list_of_games):
+def generate_embeds(list_of_games, how_many_games_to_return):
     versus_strings = []
     all_embeds = []
     for game in list_of_games:
@@ -113,10 +119,10 @@ def generate_embeds(list_of_games):
         league_and_versus = game_info[0]
 
         for team in relevant_teams:
-            if team.lower() in full_string.lower() and len(all_embeds) < 7:
+            if team.lower() in full_string.lower() and len(all_embeds) < how_many_games_to_return:
 
                 date = game_info[1]
-                time = game_info[2]
+                # time = game_info[2]
 
                 league = ''
 
@@ -140,16 +146,14 @@ def generate_embeds(list_of_games):
                 left_team_og_string = left_team
                 right_team_og_string = right_team
 
+                if str(left_team) == "100":
+                    left_team = "100t"
 
-                if left_team != "100":
-                    left_team_emoji = left_team.lower()
-                else:
-                    left_team_emoji = "100~1"
-                
-                if right_team != "100":
-                    right_team_emoji = right_team.lower()
-                else:
-                    right_team_emoji = "100~1"
+                if str(right_team) == "100":
+                    right_team = "100t"
+
+                left_team_emoji = left_team.lower()
+                right_team_emoji = right_team.lower()
 
                 if emoji_id.get(left_team_emoji):
                     left_team_emoji = "<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">"
@@ -162,24 +166,23 @@ def generate_embeds(list_of_games):
                     right_team_emoji = right_team_emoji.upper()
                 
                 vs_emoji = "<:versus:" + str(emoji_id.get("vs")) + ">"
-                
-                if left_team_emoji == "<:100~1:None>":
-                    left_team_emoji = ":100:"
-                if right_team_emoji == "<:100~1:None>":
-                    right_team_emoji = ":100:"
 
-                versus_strig = league_emoji + "       " + left_team_emoji + vs_emoji + right_team_emoji
+                versus_strig = league_emoji + "\t\t" + left_team_emoji + vs_emoji + right_team_emoji + " "
 
                 game_date_time = datetime.datetime.strptime(date_time_str, "%Y-%m-%d %H:%M")
+                
+                versus_strig = versus_strig + "  " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
+
+
                 # , title="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", description="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + "> test"
                 #embed = discord.Embed(timestamp=game_date_time, description=league_emoji + "     " + left_team_emoji + " vs " + right_team_emoji)
                 # left_team_og_string.upper() + " vs " + right_team_og_string.upper()
-                embed = discord.Embed(timestamp=game_date_time, description=versus_strig)
+                embed = discord.Embed(description=versus_strig)
                 #embed.set_thumbnail(url="https://am-a.akamaihd.net/image/?resize=120:&f=http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592516205122_LCK-01-FullonDark.png")
                 #embed.add_field(name="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", value=".")
                 #embed.add_field(name="<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">", value=".")
                 
-                # versus_strings.append(versus_strig)
+                versus_strings.append(versus_strig)
                 all_embeds.append(embed)
                 break
 
@@ -188,8 +191,8 @@ def generate_embeds(list_of_games):
 
 
 
-def get_future_league_games(league=None):
-    schedule = requests.get("https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season&wpRunQuery=Run+query&pf_free_text=").text
+def get_future_league_games(how_many_games_to_return, league=None):
+    schedule = requests.get(GAMEPEDIA_URL).text
     soup = BeautifulSoup(schedule, 'html.parser')
 
     content = soup.find(id='mw-content-text').get_text()
@@ -198,9 +201,6 @@ def get_future_league_games(league=None):
     all_matches_after_now = []
 
     games = []
-
-    print("leagueee")
-    print(league)
 
 
     if league:
@@ -224,9 +224,6 @@ def get_future_league_games(league=None):
             elif "MSI" in k:
                 games.append(k)
 
-    print("Gamessss")
-    print(games)
-
     now = datetime.datetime.now()
     for game_line in games:
         game_data = game_line.split(",")
@@ -246,7 +243,7 @@ def get_future_league_games(league=None):
             list_counter = list_counter + 1  
 
     all_matches_after_now.sort(key=lambda r: r.datetime)
-    return generate_embeds(all_matches_after_now)
+    return generate_embeds(all_matches_after_now, how_many_games_to_return)
 
 
 
@@ -254,220 +251,3 @@ if __name__ == "__main__":
     [b, a] = get_future_league_games()
     for a in range(0,5):
         logger.info(b[a])
-
-"""
-old code
-def get_games(count_games_to_return):
-
-    all_games_to_return = []
-
-    schedule = requests.get("https://lol.gamepedia.com/Special:RunQuery/MatchCalendarExport?MCE%5B1%5D=LCS%2F2021+Season%2FLock+In&pfRunQueryFormName=MatchCalendarExport").text
-    soup = BeautifulSoup(schedule, 'html.parser')
-
-    content = soup.find(id='mw-content-text').get_text()
-    list_content = content.split("\n")
-
-    games = [k for k in list_content if "LCS" in k]
-
-    now = datetime.datetime.now()
-
-    for game in games:
-        if game:
-            logger.info(game)
-            game_data = game.split(",")
-            tourney_and_competitors = game_data[0].split(" - ")
-            tourney = tourney_and_competitors[0]
-            competitors =  tourney_and_competitors[1]
-
-            left_team = ":" + competitors.split(" vs ")[0] + ":"
-            right_team = ":" + competitors.split(" vs ")[1] + ":"
-
-            if left_team != "100":
-                left_team_emoji = left_team.lower()
-            else:
-                left_team_emoji = "100~1"
-            
-            if right_team != "100":
-                right_team_emoji = right_team.lower()
-            else:
-                right_team_emoji = "100~1"
-
-            left_team_emoji = "<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">"
-            right_team_emoji = "<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">"
-            vs_emoji = "<:versus:" + str(emoji_id.get("vs")) + ">"
-            
-            if left_team_emoji == "<:100~1:None>":
-                left_team_emoji = ":100:"
-            if right_team_emoji == "<:100~1:None>":
-                right_team_emoji = ":100:"
-
-            versus_strig = left_team_emoji + vs_emoji + right_team_emoji
-
-            date_time = game_data[-5:]
-            date_time_obj = datetime.datetime(int(date_time[0]), int(date_time[1]), int(date_time[2]), int(date_time[3]), int(date_time[4]))
-
-            # match_string = team1 + " vs " + team2
-
-            if date_time_obj > now and len(all_games_to_return) < count_games_to_return:
-                seconds_till = (date_time_obj-now).total_seconds()
-
-                day = seconds_till // (24 * 3600)
-                
-                time = seconds_till % (24 * 3600)
-                hour = time // 3600
-                time %= 3600
-                minutes = time // 60
-                time %= 60
-
-                time_until = "in %d days %d hours %d minutes" % (day, hour, minutes)
-
-                embed = discord.Embed(colour=discord.Colour(0xc7cf39), description=versus_strig, timestamp=date_time_obj)
-
-                # all_games_to_return.append(tourney_and_competitors + " --- " + date_time_obj.strftime("%d-%b-%Y %H:%M") + " --- " + time_until)
-                all_games_to_return.append(embed)
-
-    return all_games_to_return
-
-get_future_league_games()
-
-def get_future_league_games():
-
-    list_of_files = glob.glob('python_app/league_schedule/*.csv')  # create the list of file
-    all_matches_after_now = []
-    list_counter = 0
-    for file_name in list_of_files:
-        FI = open(file_name, 'r')
-        for line in FI:
-            game_info_list = line.split(',')
-
-            date = game_info_list[1]
-            time = game_info_list[2]
-
-            date_time_str = date + ' ' + time
-            date_time = datetime.datetime.strptime(date_time_str.strip('\n'),'%Y-%m-%d %H:%M')
-
-            now = datetime.datetime.now()
-
-            if date_time > now:
-                game_obj = game(date_time + datetime.timedelta(hours=3), line.strip('\n'))
-                all_matches_after_now.append(game_obj)    
-                list_counter = list_counter + 1        
-        
-        FI.close()
-
-    all_matches_after_now.sort(key=lambda r: r.datetime)
-    return generate_embeds(all_matches_after_now)
-
-
-emoji_id = {
-    "lcs": 729112464834166824,
-    "lck": 729112464775446628,
-
-    "vs": 729131117436731403,
-
-    "c9": 728503911765246013,
-    "tsm": 729060542693638276,
-    "fly": 729060542861410459,
-    "eg": 729060542404362322,
-    "tl": 729060542995497076,
-    "imt": 729060542765072436,
-    "dig": 729060542819467284,
-    "100~1:": 729060542873862155,
-    "clg": 729060542848958595,
-    "gg": 729060543113068554,
-
-    "af": 729109817398001765,
-    "sp": 729109817016451113,
-    "dyn": 729109817011994724,
-    "kt": 729109816710267054,
-    "dwg": 729109815460233246,
-    "hle": 729109815451713636,
-    "sb": 729109815439261696,
-    "gen": 729109815409770496,
-    "t1": 729109815543988224,
-    "drx": 729109815384604753
-}
-
-class game:
-    def __init__(self, datetime, full_line):
-        self.datetime = datetime
-        self.full_line = full_line
-
-def get_future_league_games():
-
-    list_of_files = glob.glob('python_app/league_schedule/*.csv')  # create the list of file
-    all_matches_after_now = []
-    list_counter = 0
-    for file_name in list_of_files:
-        FI = open(file_name, 'r')
-        for line in FI:
-            game_info_list = line.split(',')
-
-            date = game_info_list[1]
-            time = game_info_list[2]
-
-            date_time_str = date + ' ' + time
-            date_time = datetime.datetime.strptime(date_time_str.strip('\n'),'%Y-%m-%d %H:%M')
-
-            now = datetime.datetime.now()
-
-            if date_time > now:
-                game_obj = game(date_time + datetime.timedelta(hours=3), line.strip('\n'))
-                all_matches_after_now.append(game_obj)    
-                list_counter = list_counter + 1        
-        
-        FI.close()
-
-    all_matches_after_now.sort(key=lambda r: r.datetime)
-    return generate_embeds(all_matches_after_now)
-
-def generate_embeds(list_of_games):
-    versus_strings = []
-    all_embeds = []
-    for game in list_of_games:
-        full_string = game.full_line
-        game_info = full_string.split(',')
-        league_and_versus = game_info[0]
-        date = game_info[1]
-        time = game_info[2]
-
-        league = "lcs" if "LCS" in league_and_versus else "lck"
-        league_emoji = "<:" + league + ":" + str(emoji_id.get(league)) + ">" 
-
-        left_team = league_and_versus.split(" ")[-3]
-        right_team = league_and_versus.split(" ")[-1]
-
-        if left_team != "100":
-            left_team_emoji = left_team.lower()
-        else:
-            left_team_emoji = "100~1"
-        
-        if right_team != "100":
-            right_team_emoji = right_team.lower()
-        else:
-            right_team_emoji = "100~1"
-
-        left_team_emoji = "<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">"
-        right_team_emoji = "<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">"
-        vs_emoji = "<:versus:" + str(emoji_id.get("vs")) + ">"
-        
-        if left_team_emoji == "<:100~1:None>":
-            left_team_emoji = ":100:"
-        if right_team_emoji == "<:100~1:None>":
-            right_team_emoji = ":100:"
-
-        versus_strig = league_emoji + "       " + left_team_emoji + vs_emoji + right_team_emoji
-
-        game_date_time = datetime.datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
-        # , title="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", description="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + "> test"
-        #embed = discord.Embed(timestamp=game_date_time, description=league_emoji + "     " + left_team_emoji + " vs " + right_team_emoji)
-        embed = discord.Embed(timestamp=game_date_time + datetime.timedelta(hours=3))
-        #embed.set_thumbnail(url="https://am-a.akamaihd.net/image/?resize=120:&f=http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592516205122_LCK-01-FullonDark.png")
-        #embed.add_field(name="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", value=".")
-        #embed.add_field(name="<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">", value=".")
-        versus_strings.append(versus_strig)
-        all_embeds.append(embed)
-
-    return versus_strings, all_embeds
-
-"""

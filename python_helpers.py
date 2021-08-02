@@ -1,7 +1,9 @@
 import discord, json
 import requests
 import yfinance as yf
-import maya
+import datetime
+# import maya
+import time
 from bs4 import BeautifulSoup
 from python_app.streamers_tracker import (
     get_platform_streamers,
@@ -161,10 +163,14 @@ def get_all_live_embed():
         name = streamer[0]
         viewer_count = streamer[4]
         stream_start_time_string = streamer[9]
+        stream_title = streamer[10]
+        game = streamer[11]
 
-        slang_string = maya.parse(stream_start_time_string).slang_time()
-
-        embed.add_field(name=name, value="[" + viewer_count + " viewers](https://twitch.tv/" + name + ") \nsince " + slang_string)
+        # slang_string = maya.parse(stream_start_time_string).slang_time()
+        game_date_time = datetime.datetime.strptime(stream_start_time_string, "%Y-%m-%dT%H:%M:%S%z")
+        since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
+        
+        embed.add_field(name=name, value=stream_title + "\n" + "[" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
     if not is_anyone_online:
         embed = discord.Embed(tite="no ones online...")
         embed.add_field(name="no one online", value="...")

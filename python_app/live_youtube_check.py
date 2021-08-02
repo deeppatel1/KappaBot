@@ -132,25 +132,6 @@ def get_last_youtube_video_id(channel_id):
     return url
 
 
-# def get_who_to_at(who_to_at_string):
-
-#     if who_to_at_string == "everyone":
-#         return "@everyone"
-
-#     final_who_to_at_string = ""
-
-#     if "deep" in who_to_at_string:
-#         final_who_to_at_string = final_who_to_at_string + " " + "<@173611085671170048>"
-
-#     if "ragen" in who_to_at_string:
-#         final_who_to_at_string = final_who_to_at_string + " " + "<@173610714433454084>"
-    
-#     if "priyam" in who_to_at_string:
-#         final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
-
-#     return final_who_to_at_string
-
-
 def check_youtube_live(channel_id):
     api_key = config.get("gKey")
 
