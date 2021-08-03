@@ -171,6 +171,10 @@ def generate_embeds(list_of_games, how_many_games_to_return):
 
                 game_date_time = datetime.datetime.strptime(date_time_str, "%Y-%m-%d %H:%M")
                 
+                # convert to UTC time for the thinggie
+
+                game_date_time = game_date_time - datetime.timedelta(hours=4)
+
                 versus_strig = versus_strig + "  " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
 
 

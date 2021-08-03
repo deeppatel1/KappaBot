@@ -168,9 +168,12 @@ def get_all_live_embed():
 
         # slang_string = maya.parse(stream_start_time_string).slang_time()
         game_date_time = datetime.datetime.strptime(stream_start_time_string, "%Y-%m-%dT%H:%M:%S%z")
+
+        game_date_time = game_date_time - datetime.timedelta(hours=4)
+
         since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
         
-        embed.add_field(name=name, value=stream_title + "\n" + "[" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
+        embed.add_field(name= "```> " + name + " <```", value="`" + stream_title + "`" + "\n" + "[" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
     if not is_anyone_online:
         embed = discord.Embed(tite="no ones online...")
         embed.add_field(name="no one online", value="...")
