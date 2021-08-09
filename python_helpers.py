@@ -173,7 +173,7 @@ def get_all_live_embed():
 
         since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
         
-        embed.add_field(name= "```> " + name + " <```", value="`" + stream_title + "`" + "\n" + "[" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
+        embed.add_field(name= name, value="> " + stream_title + "" + "\n" + " > [" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
     if not is_anyone_online:
         embed = discord.Embed(tite="no ones online...")
         embed.add_field(name="no one online", value="...")

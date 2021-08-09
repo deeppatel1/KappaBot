@@ -9,3 +9,4 @@ python_app/__pycache__/
 /pages
 /venv
 main_bot.txt
+__pycache__/
