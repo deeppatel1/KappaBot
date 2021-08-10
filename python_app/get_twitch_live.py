@@ -16,7 +16,7 @@ handler = RotatingFileHandler('logs/get-twitch-live.log', maxBytes=7000000, back
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-WEBHOOKS_TO_POST = [webhooks.TWITCH]
+WEBHOOKS_TO_POST = [webhooks.TWITCH.value]
 
 
 def get_auth_token():
