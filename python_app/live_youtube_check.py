@@ -1,16 +1,13 @@
-import json
-import requests
-import sched
-import time
-import time
+import json, requests, sched, time, logging
 # from bs4 import BeautifulSoup
 from discord import RequestsWebhookAdapter, Webhook
 from bs4 import BeautifulSoup
+from WEBHOOKS import webhooks
 from streamers_tracker import add_utube_link, does_utube_link_exist, get_platform_streamers, get_video_id, update_video_id, get_who_to_at
+from logging.handlers import RotatingFileHandler
+
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
-import logging
-from logging.handlers import RotatingFileHandler
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -23,12 +20,6 @@ handler = RotatingFileHandler('logs/live-youtube-check.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-# WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/807510380380684308/7giR3QmowgmXGv1F1ZgrI-wxpzpYSYAuvIE7Efv3YJCK7dVURNxWoM0LA4C0OhP27tde"]
-# WEBHOOKS_TO_POST = [config.get("youtube-videos")]
-# WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
-
-MAIN_SERVER_WEBHOOK = config.get("main-server-webhook")
-YOUTUBE_VIDEOS_WEBHOOK = config.get("youtube-videos")
 
 def get_latest_video_in_channel(channel_id):
     api_key = config.get("gKey")
@@ -49,21 +40,12 @@ def get_latest_video_in_channel(channel_id):
         
         resp = json.dumps(resp.json())
         resp = json.loads(resp)
-        # logger.info('---')
-        # logger.info('---')
-        # logger.info('---')
-        # logger.info('---')
-        # logger.info('---')
         logger.info(resp)
 
         first_url = resp["items"][0]["id"]["videoId"]
         title = resp["items"][0]["snippet"]["title"]
 
     else:
-
-        # logger.info('!!!!')
-        # logger.info(resp.status_code)
-        # logger.info(resp.text)
         return None, None
 
     logger.info('got title, first_url' )
@@ -194,7 +176,7 @@ def start_youtube_checks(scheduler):
             #         logger.info("ICE is online! with URL : " + live_url)
             #         update_video_id(name, live_url)
             #         if not is_online:
-            #             sendWebhookMessage(MAIN_SERVER_WEBHOOK, "<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
+            #             sendWebhookMessage(w, "<@173610714433454084> <@173611085671170048> " + name + " IS LIVE " + "https://www.youtube.com/watch?v=" + live_url)
             #         update_streamer_online_status(name, "TRUE")
             #     if not live_url:
             #         logger.info("ICE is offline!!!")
@@ -207,7 +189,7 @@ def start_youtube_checks(scheduler):
                 # print("output")
                 # print(does_utube_link_exist(last_youtube_video))
                 # if not does_utube_link_exist(last_youtube_video):
-                sendWebhookMessage(YOUTUBE_VIDEOS_WEBHOOK, name, last_youtube_video + " " + who_to_at_discord_ats)
+                sendWebhookMessage(webhooks.YOUTUBE_VIDS, name, last_youtube_video + " " + who_to_at_discord_ats)
 
                 add_utube_link(last_youtube_video)
                 update_video_id(name, last_youtube_video)

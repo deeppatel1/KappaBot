@@ -5,6 +5,7 @@ with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
 from logging.handlers import RotatingFileHandler
+from WEBHOOKS import webhooks
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -15,7 +16,7 @@ handler = RotatingFileHandler('logs/get-twitch-live.log', maxBytes=7000000, back
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-WEBHOOKS_TO_POST = [config.get("twitch-webhook")]
+WEBHOOKS_TO_POST = [webhooks.TWITCH]
 
 
 def get_auth_token():
@@ -130,9 +131,8 @@ def start_checks():
 
 
 def sendWebhookMessage(body_to_post):
-    for webhook in WEBHOOKS_TO_POST:
-        webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
-        webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
+    webhook = Webhook.from_url(url = webhooks.TWITCH, adapter = RequestsWebhookAdapter())
+    webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
 
 start_checks()

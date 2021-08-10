@@ -1,19 +1,6 @@
 
 # from run_db_operations import execute_select_query, execute_insert_query
 import json, psycopg2
-"""
-WE HAVE INFO FOR::::::
-
--- loltyler1
--- grossie_gore
--- doublelit
--- xqcow
--- imls
--- itachipower
--- ice
--- deep
-
-"""
 
 with open('./configuration.json') as json_file :
     config = json.load(json_file)

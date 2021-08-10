@@ -7,6 +7,7 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 from streamers_tracker import add_to_tweeter_tickers
 from logging.handlers import RotatingFileHandler
+from WEBHOOKS import webhooks
 import logging
 
 logging.basicConfig(
@@ -107,10 +108,6 @@ calls_people = {
 
 all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
 
-TWEETS_CHANNEL_WEBHOOK = config.get("tweets")
-MAC_TWEETS_ONLY_CHANNEL_WEBHOOK = config.get("mac-tweets-channel")
-STOCKS_STUFF_WEBHOOK = config.get("stock-stuff")
-STOCKS_CALLS_WEBHOOK = config.get("stock-calls")
 
 # WANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
 WANTED_CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
@@ -144,7 +141,13 @@ class listener(StreamListener):
 
             is_reply = True if json_data.get("in_reply_to_status_id") else False
 
-            discord_channel_to_post = TWEETS_CHANNEL_WEBHOOK if str(user) != "macaiyla" else MAC_TWEETS_ONLY_CHANNEL_WEBHOOK
+
+            if str(user) == "macaiyla":
+                discord_channel_to_post = webhooks.MAC_TWEETS.value
+            elif str(user) == "xQc" or str(user) == "xQCOWUpdates":
+                discord_channel_to_post = webhooks.XQC_TWEETS.value
+            else:
+                discord_channel_to_post = webhooks.TWEETS.value
 
             print("Posting it at " + str(discord_channel_to_post))
             if is_reply:
@@ -158,7 +161,8 @@ class listener(StreamListener):
 
             if is_reply:
                 url = "REPLY TO ABOVE " + url
-
+            print("DISCORD CHANNEL TO POST")
+            print(discord_channel_to_post)
             sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
         # if its 1 of the stock people
         else:
@@ -199,16 +203,16 @@ class listener(StreamListener):
                         logger.info(each_element + " added to db!")
 
             if should_send_to_discord:
-                # sendWebhookMessage(user, full_text, None, STOCKS_STUFF_WEBHOOK)          
+                # sendWebhookMessage(user, full_text, None, webhooks.MULA_BABY)          
                 # If the tweeter poster is posting a option (right now, we've hardcoded 2 people who post options)
                 if str(id_str) in calls_people.keys():
-                    sendWebhookMessage(user, url, None, STOCKS_CALLS_WEBHOOK)
+                    sendWebhookMessage(user, url, None, webhooks.MULA_BABY)
 
     def on_error(self, status):
         logger.info("!!!!! something happend GASP")
         logger.info(status)
         
-        # sendWebhookMessage(None, "420 420 420 420!!!! error in starting the tweet bot", None, STOCKS_STUFF_WEBHOOK)
+        # sendWebhookMessage(None, "420 420 420 420!!!! error in starting the tweet bot", None, webhooks.MULA_BABY)
 
 
 auth = OAuthHandler(ckey, csecret)

@@ -1,11 +1,22 @@
 from discord import RequestsWebhookAdapter, Webhook
+from enum import Enum
 import json
+
 
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
-WEBHOOKS_TO_POST = [config.get("main-server-webhook")]
-# WEBHOOKS_TO_POST = ["https://discordapp.com/api/webhooks/807510380380684308/7giR3QmowgmXGv1F1ZgrI-wxpzpYSYAuvIE7Efv3YJCK7dVURNxWoM0LA4C0OhP27tde"]
+class webhooks(Enum):
+    MAIN_SERVER = config.get("main-server-webhook")
+    TWEETS = config.get("tweets")
+    YOUTUBE_VIDS = config.get("youtube-videos")
+    TWITCH = config.get("twitch-webhook")
+    MULA_BABY = config.get("stock-calls")
+    MAC_TWEETS = config.get("mac-tweets-channel")
+    XQC_TWEETS = config.get("xqc-tweets-channel")
+
+
+WEBHOOKS_TO_POST = [webhooks.MAIN_SERVER]
 
 def sendWebhookMessage(username: str, avatar_url: str, content=None):
     for webhook in WEBHOOKS_TO_POST:
