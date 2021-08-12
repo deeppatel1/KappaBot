@@ -189,7 +189,7 @@ def start_youtube_checks(scheduler):
                 # print("output")
                 # print(does_utube_link_exist(last_youtube_video))
                 # if not does_utube_link_exist(last_youtube_video):
-                sendWebhookMessage(webhooks.YOUTUBE_VIDS, name, last_youtube_video + " " + who_to_at_discord_ats)
+                sendWebhookMessage(webhooks.YOUTUBE_VIDS.value, name, last_youtube_video + " " + who_to_at_discord_ats)
 
                 add_utube_link(last_youtube_video)
                 update_video_id(name, last_youtube_video)

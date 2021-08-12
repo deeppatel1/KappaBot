@@ -31,6 +31,17 @@ def execute_insert_query(database, query):
         print("error! " + str(error))
 
 
+def delete_all_values_in_twitch_last_live():
+    query = "DELETE FROM \"twitch_last_live\""
+    try:
+        cursor, connection = connect("kapp")
+        cursor.execute(query)
+        connection.commit()
+    except Exception as error:
+        print("error! " + str(error))
+
+
+
 def execute_select_query(database, query):
     try:
         cursor, connection = connect(database)
@@ -79,6 +90,14 @@ def does_utube_link_exist(link):
 
     return False
 
+def get_last_twitch_id():
+    query = "SELECT * FROM twitch_last_live"
+    resp = execute_select_query("kapp", query)
+    return resp[0][0] if resp else []
+
+"""
+Update specific fields
+"""
 
 def add_utube_link(link):
     db_name = "kapp"
@@ -86,9 +105,6 @@ def add_utube_link(link):
     return execute_insert_query(db_name, query)
 
 
-"""
-Update specific fields
-"""
 def update_specific_field(streamer_name, field_to_update, new_value):
     db_name = "kapp"
     query = "UPDATE streamer_tracker SET " + field_to_update + "=\'" + new_value + "\' WHERE name=\'" + streamer_name + "\'"
@@ -122,6 +138,12 @@ def update_game_played(streamer_name, game_played):
 def add_to_tweeter_tickers(tweeter, ticker, date, current_date_str, full_text, url):
     db_name = "kapp"
     query = "INSERT INTO common_tickers(tweeter, ticker, date, date_time, tweet_text, tweet_url) VALUES (\'" + tweeter + "\',\'" + ticker + "\',\'" + date + "\',\'" + current_date_str + "\',\'" + full_text + "\',\'" + url +"\')"
+    return execute_insert_query(db_name, query)
+
+
+def update_twitch_id_field(id):
+    db_name = "kapp"
+    query = "INSERT INTO twitch_last_live(id) VALUES (\'" + id + "\')"
     return execute_insert_query(db_name, query)
 
 """
@@ -238,3 +260,8 @@ def get_who_to_at(who_to_at_string):
         final_who_to_at_string = final_who_to_at_string + " " + "<@173628297979232257>"
 
     return final_who_to_at_string
+
+
+if __name__ == "__main__":
+    print(get_last_twitch_id())
+    delete_all_values_in_twitch_last_live()

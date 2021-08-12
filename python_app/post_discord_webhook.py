@@ -16,29 +16,32 @@ class webhooks(Enum):
     XQC_TWEETS = config.get("xqc-tweets-channel")
 
 
-WEBHOOKS_TO_POST = [webhooks.MAIN_SERVER]
+WEBHOOKS_TO_POST = [webhooks.MAIN_SERVER.value]
 
-def sendWebhookMessage(username: str, avatar_url: str, content=None):
+def sendWebhookMessage(username: str, avatar_url: str, content=None, wait=False):
     for webhook in WEBHOOKS_TO_POST:
         print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
-        send_the_message(username, avatar_url, webhook, content=content)
+        send_the_message(username, avatar_url, webhook, content=content, wait=wait)
 
 
-def sendWebhookListEmbeds(username: str, avatar_url: str, embeds, content=None):
+def sendWebhookListEmbeds(username: str, avatar_url: str, embeds, content=None, wait=False):
     for webhook in WEBHOOKS_TO_POST:
         print("Sending an embed to " + str(webhook))
-        send_the_message(username, avatar_url, webhook, content=None, embeds=embeds)
+        send_the_message(username, avatar_url, webhook, content=None, embeds=embeds, wait=wait)
 
 
-def send_the_message(username, avatar_url, webhook, content=None, embeds=None):
+def send_the_message(username, avatar_url, webhook, content=None, embeds=None, wait=False):
     
     try:
         if content and not embeds:
             print("sending to webhook " + webhook)
             webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
             print("Sending to Webhook " +  str(webhook) + " content: " + str(content))
-            webhook.send(content, username=username, avatar_url=avatar_url)
-        
+            
+            if wait:
+                return webhook.send(content, username=username, avatar_url=avatar_url, wait=wait)
+            else:
+                webhook.send(content, username=username, avatar_url=avatar_url)
         else:
             if not content:
                 content = ""
@@ -49,6 +52,17 @@ def send_the_message(username, avatar_url, webhook, content=None, embeds=None):
             print(webhook)
             webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
             print("Sending to Webhook content: " + str(content))
-            webhook.send(content=content, embeds=embeds, username=username, avatar_url=avatar_url)
+
+            if wait:
+               return webhook.send(content=content, embeds=embeds, username=username, avatar_url=avatar_url, wait=wait)
+            else:
+                webhook.send(content=content, embeds=embeds, username=username, avatar_url=avatar_url)
+
     except:
         pass
+
+
+
+if __name__ == "__main__":
+    a =  "https://discordapp.com/api/webhooks/795476109164412948/RnGxDxa7rIkMZJGQiUOxWS6JdjaWrMdDeqN937d1Vo-ISKpet4nY0lkhbnxv4mzQ3s4J"
+    print(send_the_message("aa", "https://i.imgur.com/c7EbcqP.jpeg", webhook=a, content="test", wait=True))

@@ -8,6 +8,14 @@ from .post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
 
 cli = MangaDexPy.MangaDex()
 
+# 
+# 
+# Call https://www.reddit.com/r/manga/search.json?q=[disc]solo_leveling&limit=1&sort=new&restrict_sr=on
+# 
+# check if the URL is in the database, if it is, don't do anything
+# if it isnt, add it to DB, along with chapter name, chapter link, and chapter number
+# 
+
 
 def all_fun_manga_check():
 

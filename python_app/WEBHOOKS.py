@@ -12,3 +12,4 @@ class webhooks(Enum):
     MULA_BABY = config.get("stock-calls")
     MAC_TWEETS = config.get("mac-tweets-channel")
     XQC_TWEETS = config.get("xqc-tweets-channel")
+    ELON_TWEETS = config.get("elon-channel")

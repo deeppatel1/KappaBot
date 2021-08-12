@@ -11,6 +11,9 @@ from python_app.streamers_tracker import (
     get_top_stocks,
     get_specific_tickers,
     get_most_pumped,
+    get_last_twitch_id,
+    delete_all_values_in_twitch_last_live,
+    update_twitch_id_field
 )
 from python_app.post_discord_webhook import send_the_message
 from python_app.get_latest_mangas_notif import all_fun_manga_check
@@ -39,9 +42,18 @@ async def on_ready():
     while True:
         embed = get_all_live_embed()
         channel = bot.get_channel(TWITCH_CHANNEL_ID)
-        await channel.send(
-            embed=embed, delete_after=float(REFRESH_WHOS_LIVE_SECONDS) + float(0.15)
-        )
+
+        # get previous twitch id
+        id = get_last_twitch_id()
+        if id:
+            msg = await channel.fetch_message(int(id))
+            await msg.delete()
+            delete_all_values_in_twitch_last_live()
+
+        sent_message = await channel.send(embed=embed)
+        print("--- id of message that will be deleted later")
+        print(sent_message.id)
+        update_twitch_id_field(str(sent_message.id))
         await asyncio.sleep(REFRESH_WHOS_LIVE_SECONDS)
 
 
@@ -143,18 +155,18 @@ async def ticker(ctx, arg=None):
 
 @bot.command(name="pumped", brief="Check which stocks are pumped")
 async def pumped(ctx):
-    msg = message.content
-    msg_array = msg.split(" ")
+    # msg = message.content
+    # msg_array = msg.split(" ")
     from_date = None
     to_date = None
 
-    if len(msg_array) == 2:
-        from_date = msg_array[1]
-        ticker = msg_array[0]
+    # if len(msg_array) == 2:
+    #     from_date = msg_array[1]
+    #     ticker = msg_array[0]
 
-    else:
-        from_date = None
-        ticker = message.content
+    # else:
+    #     from_date = None
+    #     ticker = message.content
 
     if not from_date:
         now = datetime.today() - timedelta(days=3)
@@ -176,7 +188,8 @@ async def check_fun_manga():
 check_fun_manga.start()
 
 
-subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
+
+# subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
 bot.run(config.get("discordclientlogin"))
 
 

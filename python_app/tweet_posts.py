@@ -41,7 +41,9 @@ people_to_follow = {
     "1615735502": "solonoid12",
     "936128517460201473": "SpicaLoL",
     "785651770697523200": "xQc",
-    "1282068738959749120": "xQCOWUpdates"
+    "1282068738959749120": "xQCOWUpdates",
+    "234644705": "TLCoreJJ",
+    "964529942": "TeamLiquidLOL"
 }
 
 stocks_peeps = {
@@ -64,7 +66,6 @@ stocks_peeps = {
     "16851206" : "patternprofits", 
     "3083109892" : "avataraidan",
     "1615735502": "solonoid12",
-    "985721299078070272" : "thetaWarrior",
     "427693716": "PandaOptions",
     "728291846": "d_pavlos",
     "150094848": "sssvenky",
@@ -86,7 +87,10 @@ stocks_peeps = {
     "1240151681851146247": "pKdayTrading1",
     "1285245919609462786": "TheATMTrades",
     "345525945": "TicTockTik",
-    "1018324467758465024": "EliteOptions2"
+    "1018324467758465024": "EliteOptions2",
+    "964529942": "JohnsCharts",
+    "1072667998966743041": "optionsprochick",
+    "985721299078070272": "ThetaWarrior"
 }
 
 
@@ -94,7 +98,6 @@ calls_people = {
     "52166809": "traderstewie",
     "1615735502": "solonoid12",
     "748611168168644612": "walrustrades",
-    "3083109892" : "avataraidan",
     "1231876668865695744": "iTradeContracts",
     "1240151681851146247": "pKdayTrading1",
     "1285245919609462786": "TheATMTrades",
@@ -102,7 +105,10 @@ calls_people = {
     "1007420368288714754": "tradingthomas3",
     "1310326298527571971": "Albert_Trades",
     "1300807912835690497": "taytrades11",
-    "1018324467758465024": "EliteOptions2"
+    "1018324467758465024": "EliteOptions2",
+    "964529942": "JohnsCharts",
+    "1072667998966743041": "optionsprochick",
+    "985721299078070272": "ThetaWarrior"
 }
 
 
@@ -121,12 +127,8 @@ def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
 class listener(StreamListener):
     def on_data(self, data):
         json_data = json.loads(data)
-        # logger.info("---> Got data from: " + json_data.get("user").get("screen_name") + " " + json_data.get("created_at"))
-        # take out replies
-        # if json_data.get("in_reply_to_status_id"):
-        #     logger.info("Taken out because it was a reply to status_id:")
-        #     return
-        # only use if original tweeter is 1 of the people we want
+        if "delete" in json_data:
+            return
         id_str = json_data.get("user").get("id_str")
         if id_str not in all_tweeters_to_follow:
             # logger.info("---X----Taken out due to to id_str not being 1 to follow: " + id_str)
@@ -142,10 +144,12 @@ class listener(StreamListener):
             is_reply = True if json_data.get("in_reply_to_status_id") else False
 
 
-            if str(user) == "macaiyla":
+            if str(user).lower() == "macaiyla":
                 discord_channel_to_post = webhooks.MAC_TWEETS.value
-            elif str(user) == "xQc" or str(user) == "xQCOWUpdates":
+            elif str(user).lower() == "xqc" or str(user).lower() == "xqcowupdates":
                 discord_channel_to_post = webhooks.XQC_TWEETS.value
+            elif str(user).lower() == "elonmusk":
+                discord_channel_to_post = webhooks.ELON_TWEETS.value
             else:
                 discord_channel_to_post = webhooks.TWEETS.value
 
@@ -203,17 +207,13 @@ class listener(StreamListener):
                         logger.info(each_element + " added to db!")
 
             if should_send_to_discord:
-                # sendWebhookMessage(user, full_text, None, webhooks.MULA_BABY)          
-                # If the tweeter poster is posting a option (right now, we've hardcoded 2 people who post options)
                 if str(id_str) in calls_people.keys():
-                    sendWebhookMessage(user, url, None, webhooks.MULA_BABY)
+                    sendWebhookMessage(user, url, None, webhooks.MULA_BABY.value)
 
     def on_error(self, status):
         logger.info("!!!!! something happend GASP")
         logger.info(status)
         
-        # sendWebhookMessage(None, "420 420 420 420!!!! error in starting the tweet bot", None, webhooks.MULA_BABY)
-
 
 auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
