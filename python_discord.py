@@ -189,7 +189,7 @@ check_fun_manga.start()
 
 
 
-# subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
+subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
 bot.run(config.get("discordclientlogin"))
 
 
