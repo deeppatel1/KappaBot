@@ -213,7 +213,10 @@ class listener(StreamListener):
     def on_error(self, status):
         logger.info("!!!!! something happend GASP")
         logger.info(status)
-        
+        if status != 200:
+            discord_to_message = "TWITTER STUFF STOPPED WORKING FIX ASAP AHHHHHHH ERROR CODE !: " + str(status) + " Check for details https://developer.twitter.com/en/docs/twitter-ads-api/response-codes"
+            sendWebhookMessage("error", discord_to_message, "https://exploringtm1.com/wp-content/uploads/2021/07/TM1-TI-Error-Codes.jpg", webhooks.MAIN_SERVER.value)
+            return False
 
 auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
