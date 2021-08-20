@@ -42,8 +42,7 @@ people_to_follow = {
     "936128517460201473": "SpicaLoL",
     "785651770697523200": "xQc",
     "1282068738959749120": "xQCOWUpdates",
-    "234644705": "TLCoreJJ",
-    "964529942": "TeamLiquidLOL"
+    "234644705": "TLCoreJJ"
 }
 
 stocks_peeps = {
