@@ -16,7 +16,8 @@ handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season%2CLCS%2F2021+Season%2FChampionship%2CLEC%2F2021+Season%2FSummer+Playoffs&wpRunQuery=Run+query&pf_free_text="
+GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season%2CLCS%2F2021+Season%2FChampionship%2CLEC%2F2021+Season%2FSummer+Playoffs%2C+LCK%2F2021+Season%2FSummer+Playoffs&wpRunQuery=Run+query&pf_free_text=&mobileaction=toggle_view_desktop"
+
 
 relevant_teams = [
     "TSM",
