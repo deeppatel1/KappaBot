@@ -165,8 +165,11 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             embed.add_field(name="Episode " + str(total_episodes - 1), value="[Watch this episode](" + str(second_last_episode_str) + ")")
             
     elif status == "NOT_YET_RELEASED":
-        embed = discord.Embed(description=":alarm_clock:  " + name, timestamp=datetime.utcfromtimestamp(airdate))
-        embed.set_footer(text="Episode " + str(next_episode) + " will air ")
+        if airdate:
+            embed = discord.Embed(description=":alarm_clock:  " + name, timestamp=datetime.utcfromtimestamp(airdate))
+            embed.set_footer(text="Episode " + str(next_episode) + " will air ")
+        else:
+            embed = discord.Embed(description=":alarm_clock:  " + name + " NOT KNOWN")
         if image:
             embed.set_image(url=image)
 
