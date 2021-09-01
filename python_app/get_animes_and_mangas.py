@@ -147,11 +147,12 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             second_last_episode_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + second_last_episode_str
 
     else:
-        last_episode_aired_str = str(total_episodes)
-        second_last_episode_str = str(total_episodes-1)
-                
-        last_episode_aired_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + last_episode_aired_str
-        second_last_episode_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + second_last_episode_str
+        if total_episodes:
+            last_episode_aired_str = str(total_episodes)
+            second_last_episode_str = str(total_episodes-1)
+                    
+            last_episode_aired_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + last_episode_aired_str
+            second_last_episode_str = "https://9anime.to/watch/" + watch_anime_url + "/ep-" + second_last_episode_str
 
 
     if status == "FINISHED":
