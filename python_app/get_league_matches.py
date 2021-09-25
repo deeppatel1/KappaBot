@@ -16,7 +16,7 @@ handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2021+Season%2FSummer+Season%2CLEC%2F2021+Season%2FSummer+Season%2CLCK%2F2021+Season%2FSummer+Season%2CLCS%2F2021+Season%2FChampionship%2CLEC%2F2021+Season%2FSummer+Playoffs%2C+LCK%2F2021+Season%2FSummer+Playoffs&wpRunQuery=Run+query&pf_free_text=&mobileaction=toggle_view_desktop"
+GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=2021+Season+World+Championship%2FPlay-In%2C+2021+Season+World+Championship%2FMain+Event&wpRunQuery=Run+query&pf_free_text="
 
 
 relevant_teams = [
@@ -130,14 +130,19 @@ def generate_embeds(list_of_games, how_many_games_to_return):
                 if "lcs".lower() in league_and_versus.lower():
                     league = 'lcs'
                 
-                if "lec".lower() in league_and_versus.lower():
+                elif "lec".lower() in league_and_versus.lower():
                     league = 'lec'
                 
-                if "lck".lower() in league_and_versus.lower():
+                elif "lck".lower() in league_and_versus.lower():
                     league = 'lck'
 
-                if "msi".lower() in league_and_versus.lower():
+                
+
+                elif "msi".lower() in league_and_versus.lower():
                     league = 'msi'
+
+                else:
+                    league = 'worlds'
 
                 league_emoji = "<:" + league + ":" + str(emoji_id.get(league)) + ">"
 
@@ -227,6 +232,8 @@ def get_future_league_games(how_many_games_to_return, league=None):
             elif "LEC 2021" in k:
                 games.append(k)
             elif "MSI" in k:
+                games.append(k)
+            elif "Worlds 2021" in k:
                 games.append(k)
 
     now = datetime.datetime.now()
