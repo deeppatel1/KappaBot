@@ -18,7 +18,7 @@ logger.addHandler(handler)
 
 GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=2021+Season+World+Championship%2FPlay-In%2C+2021+Season+World+Championship%2FMain+Event&wpRunQuery=Run+query&pf_free_text="
 
-
+relevant_worlds_teams = ["TSM", "C9", "TL", "SKT", "FPX"]
 relevant_teams = [
     "TSM",
     "GGS",
@@ -182,6 +182,10 @@ def generate_embeds(list_of_games, how_many_games_to_return):
                 game_date_time = game_date_time - datetime.timedelta(hours=4)
 
                 versus_strig = versus_strig + "  " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
+
+
+                if left_team.lower() in relevant_worlds_teams or right_team.lower() in relevant_worlds_teams:
+                    versus_strig = versus_strig + " 👈"
 
 
                 # , title="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", description="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + "> test"
