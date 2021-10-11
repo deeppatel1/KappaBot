@@ -193,6 +193,7 @@ subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
 bot.run(config.get("discordclientlogin"))
 
 
+
 # @client.event
 # async def on_message(message):
 #     if message.content.startswith('!logstocks'):
