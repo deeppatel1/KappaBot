@@ -169,7 +169,7 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
             embed = discord.Embed(description=":alarm_clock:  " + name, timestamp=datetime.utcfromtimestamp(airdate))
             embed.set_footer(text="Episode " + str(next_episode) + " will air ")
         else:
-            embed = discord.Embed(description=":alarm_clock:  " + name + " NOT KNOWN")
+            embed = discord.Embed(description=":question:  " + name + " Airdate NOT yet known")
         if image:
             embed.set_image(url=image)
 

@@ -1,11 +1,12 @@
 import json, datetime
+from re import L
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 from discord import RequestsWebhookAdapter, Webhook
 from tweepy import OAuthHandler
 from tweepy import Stream
 from tweepy.streaming import StreamListener
-from streamers_tracker import add_to_tweeter_tickers
+from streamers_tracker import add_to_tweeter_tickers, get_who_to_at
 from logging.handlers import RotatingFileHandler
 from WEBHOOKS import webhooks
 import logging
@@ -164,9 +165,23 @@ class listener(StreamListener):
 
             if is_reply:
                 url = "REPLY TO ABOVE " + url
+
             print("DISCORD CHANNEL TO POST")
             print(discord_channel_to_post)
             sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
+
+
+            if json_data.get("truncated"):
+                full_text = json_data.get("extended_tweet").get("full_text")
+            else:
+                full_text = json_data.get("text")
+
+            # special case, if "now live" exists in an xqc updates tweet, ragen is @ ed
+            if str(user).lower() == "xqc":
+                if ("now live" in full_text) or ("is live" in full_text):
+                    sendWebhookMessage(user, get_who_to_at("ragen"), profile_pic, discord_channel_to_post)
+
+
         # if its 1 of the stock people
         else:
             logger.info('!!!------ Stock person, maybe posting to discord')

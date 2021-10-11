@@ -18,6 +18,7 @@ logger.addHandler(handler)
 
 GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=2021+Season+World+Championship%2FPlay-In%2C+2021+Season+World+Championship%2FMain+Event&wpRunQuery=Run+query&pf_free_text="
 
+relevant_worlds_teams = ["100T", "C9", "TL", "T1", "FPX"]
 
 relevant_teams = [
     "TSM",
@@ -57,6 +58,7 @@ emoji_id = {
     "lcs": 799520852990754818,
     "lck": 804921471335661588,
     "msi": 836447489749155860,
+    "worlds": 891512201549070396,
 
     "vs": 729131117436731403,
 
@@ -119,82 +121,69 @@ def generate_embeds(list_of_games, how_many_games_to_return):
         game_info = full_string.split(',')
         league_and_versus = game_info[0]
 
-        for team in relevant_teams:
-            if team.lower() in full_string.lower() and len(all_embeds) < how_many_games_to_return:
+        # for team in relevant_teams:
+            # if team.lower() in full_string.lower() and len(all_embeds) < how_many_games_to_return:
+        if len(all_embeds) < how_many_games_to_return:
+            date = game_info[1]
+            # time = game_info[2]
+            league = ''
+            if "lcs".lower() in league_and_versus.lower():
+                league = 'lcs'
+            
+            elif "lec".lower() in league_and_versus.lower():
+                league = 'lec'
+            
+            elif "lck".lower() in league_and_versus.lower():
+                league = 'lck'
+            
+            elif "msi".lower() in league_and_versus.lower():
+                league = 'msi'
+            else:
+                league = 'worlds'
+            league_emoji = "<:" + league + ":" + str(emoji_id.get(league)) + ">"
+            left_team = league_and_versus.split(" ")[-3]
+            right_team = league_and_versus.split(" ")[-1]
+            left_team_og_string = left_team
+            right_team_og_string = right_team
+            if str(left_team) == "100":
+                left_team = "100t"
+            if str(right_team) == "100":
+                right_team = "100t"
+            left_team_emoji = left_team.lower()
+            right_team_emoji = right_team.lower()
+            if emoji_id.get(left_team_emoji):
+                left_team_emoji = "<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">"
+            else:
+                left_team_emoji = left_team_emoji.upper()
+            if emoji_id.get(right_team_emoji):
+                right_team_emoji = "<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">"
+            else:
+                right_team_emoji = right_team_emoji.upper()
+            
+            vs_emoji = "<:versus:" + str(emoji_id.get("vs")) + ">"
+            versus_strig = league_emoji + "\t\t" + left_team_emoji + vs_emoji + right_team_emoji + " "
 
-                date = game_info[1]
-                # time = game_info[2]
+            game_date_time = datetime.datetime.strptime(date_time_str, "%Y-%m-%d %H:%M")
+            
+            # convert to UTC time for the thinggie
+            game_date_time = game_date_time - datetime.timedelta(hours=4)
+            versus_strig = versus_strig + "  " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
 
-                league = ''
-
-                if "lcs".lower() in league_and_versus.lower():
-                    league = 'lcs'
-                
-                elif "lec".lower() in league_and_versus.lower():
-                    league = 'lec'
-                
-                elif "lck".lower() in league_and_versus.lower():
-                    league = 'lck'
-
-                
-
-                elif "msi".lower() in league_and_versus.lower():
-                    league = 'msi'
-
-                else:
-                    league = 'worlds'
-
-                league_emoji = "<:" + league + ":" + str(emoji_id.get(league)) + ">"
-
-                left_team = league_and_versus.split(" ")[-3]
-                right_team = league_and_versus.split(" ")[-1]
-
-                left_team_og_string = left_team
-                right_team_og_string = right_team
-
-                if str(left_team) == "100":
-                    left_team = "100t"
-
-                if str(right_team) == "100":
-                    right_team = "100t"
-
-                left_team_emoji = left_team.lower()
-                right_team_emoji = right_team.lower()
-
-                if emoji_id.get(left_team_emoji):
-                    left_team_emoji = "<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">"
-                else:
-                    left_team_emoji = left_team_emoji.upper()
-
-                if emoji_id.get(right_team_emoji):
-                    right_team_emoji = "<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">"
-                else:
-                    right_team_emoji = right_team_emoji.upper()
-                
-                vs_emoji = "<:versus:" + str(emoji_id.get("vs")) + ">"
-
-                versus_strig = league_emoji + "\t\t" + left_team_emoji + vs_emoji + right_team_emoji + " "
-
-                game_date_time = datetime.datetime.strptime(date_time_str, "%Y-%m-%d %H:%M")
-                
-                # convert to UTC time for the thinggie
-
-                game_date_time = game_date_time - datetime.timedelta(hours=4)
-
-                versus_strig = versus_strig + "  " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
+            if (left_team.upper() in relevant_worlds_teams) or (right_team.upper() in relevant_worlds_teams):
+                versus_strig = versus_strig + " 👈"
 
 
-                # , title="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", description="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + "> test"
-                #embed = discord.Embed(timestamp=game_date_time, description=league_emoji + "     " + left_team_emoji + " vs " + right_team_emoji)
-                # left_team_og_string.upper() + " vs " + right_team_og_string.upper()
-                embed = discord.Embed(description=versus_strig)
-                #embed.set_thumbnail(url="https://am-a.akamaihd.net/image/?resize=120:&f=http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592516205122_LCK-01-FullonDark.png")
-                #embed.add_field(name="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", value=".")
-                #embed.add_field(name="<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">", value=".")
-                
-                versus_strings.append(versus_strig)
-                all_embeds.append(embed)
-                break
+            # , title="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", description="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + "> test"
+            #embed = discord.Embed(timestamp=game_date_time, description=league_emoji + "     " + left_team_emoji + " vs " + right_team_emoji)
+            # left_team_og_string.upper() + " vs " + right_team_og_string.upper()
+            embed = discord.Embed(description=versus_strig)
+            #embed.set_thumbnail(url="https://am-a.akamaihd.net/image/?resize=120:&f=http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592516205122_LCK-01-FullonDark.png")
+            #embed.add_field(name="<:" + left_team_emoji + ":" + str(emoji_id.get(left_team_emoji)) + ">", value=".")
+            #embed.add_field(name="<:" + right_team_emoji + ":" + str(emoji_id.get(right_team_emoji)) + ">", value=".")
+            
+            versus_strings.append(versus_strig)
+            all_embeds.append(embed)
+            # break
 
     print(all_embeds)
     return versus_strings, all_embeds

@@ -34,8 +34,8 @@ def all_fun_manga_check():
 
         if new_chapter_out_wow:
             
-            title = get_official_manga_title(mangadex_id)
-            cover_url = get_last_cover(mangadex_id)
+            title = get_official_manga_title(mangadex_id) if get_official_manga_title(mangadex_id) else manga_name
+            cover_url = get_last_cover(mangadex_id) if get_last_cover(mangadex_id) else None
             embed = create_embed(manga_name, mangadex_id, next_chapter_number, fun_manga_url, title, cover_url)
             
             who_to_at_str = get_who_to_at(who_to_at)
@@ -66,27 +66,34 @@ def create_embed(manga_name, mangadex_id, chapter_number, fun_manga_url, title, 
     
     embed=discord.Embed(title="Chapter " + str(chapter_number) + " is out, click to read", url=url_of_chapter)
     embed.set_author(name=title)
-    embed.set_thumbnail(url=cover_url)
+
+    if cover_url:
+        embed.set_thumbnail(url=cover_url)  
     
     return embed
 
 
 def get_last_cover(mangadex_id):
     
-    manga = cli.get_manga(mangadex_id)
-    covers = manga.get_covers()
-    
-    if covers:
-        return covers[-1].url
+    try:
+        manga = cli.get_manga(mangadex_id)
+        covers = manga.get_covers()
+        
+        if covers:
+            return covers[-1].url
 
-    return None
-
+        return None
+    except:
+        return None
 
 def get_official_manga_title(mangadex_id):
-    manga = cli.get_manga(mangadex_id)
-    title = manga.title
+    try:
+        manga = cli.get_manga(mangadex_id)
+        title = manga.title
 
-    return title.get("en")
+        return title.get("en")
 
+    except:
+        return None
 
 # all_fun_manga_check()
