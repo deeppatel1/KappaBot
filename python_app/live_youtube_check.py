@@ -201,7 +201,7 @@ def sendWebhookMessage(webhook, name, body_to_post):
 
     webhook = Webhook.from_url(url = webhook, adapter = RequestsWebhookAdapter())
 
-    webhook.send(body_to_post, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
+    webhook.send(body_to_post, username=name, avatar_url="https://upload.wikimedia.org/wikipedia/commons/9/99/Paul_denino_13-01-19.jpg")
 
 
 def start_live_checks():
