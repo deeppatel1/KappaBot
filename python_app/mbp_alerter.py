@@ -53,7 +53,7 @@ def check_all_models_avaliability(scheduler):
 
                 print(macbook_max_color + " " + avaliability + " at " + store)
 
-    scheduler.enter(15, 1, check_all_models_avaliability, (scheduler,))
+    scheduler.enter(300, 1, check_all_models_avaliability, (scheduler,))
 
 def sendWebhookMessage(body_to_post):
     webhook = Webhook.from_url(url = webhooks.M1_CHANNEL.value, adapter = RequestsWebhookAdapter())
