@@ -262,6 +262,28 @@ def get_who_to_at(who_to_at_string):
     return final_who_to_at_string
 
 
+########
+########
+########
+######## M1 ALERTER QUERIES
+########
+########
+########
+########
+
+
+def get_model_avaliability(model, location):
+    db_name = "kapp"
+    query = f"SELECT * FROM public.m1_checker WHERE model='{model}' AND location='{location}'"
+    return execute_select_query(db_name, query)
+
+
+def update_model_avaliablity(model, location, is_avaliable):
+    db_name = "kapp"
+    query = f"UPDATE public.m1_checker SET avaliable = '{is_avaliable}' WHERE model = '{model}' AND location = '{location}'"
+    return execute_insert_query(db_name, query)
+
+
 if __name__ == "__main__":
-    print(get_last_twitch_id())
-    delete_all_values_in_twitch_last_live()
+    update_model_avaliablity('MK1A3LL/A', 'BRIDGEWATER', 'test')
+    print(get_model_avaliability('MK1A3LL/A', "BRIDGEWATER"))

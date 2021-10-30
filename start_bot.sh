@@ -15,3 +15,4 @@ python3 python_discord.py &
 python3 python_app/live_youtube_check.py &
 python3 python_app/get_twitch_live.py &
 python3 python_app/post_anime_episode_updates.py
+python3 python_app/mbp_alerter.py

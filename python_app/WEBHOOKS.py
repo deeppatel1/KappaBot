@@ -13,3 +13,4 @@ class webhooks(Enum):
     MAC_TWEETS = config.get("mac-tweets-channel")
     XQC_TWEETS = config.get("xqc-tweets-channel")
     ELON_TWEETS = config.get("elon-channel")
+    M1_CHANNEL = config.get("m1-checker")
