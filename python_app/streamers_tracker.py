@@ -41,6 +41,16 @@ def delete_all_values_in_twitch_last_live():
         print("error! " + str(error))
 
 
+def delete_all_values_in_m1_last_posted():
+    query = "DELETE FROM \"m1_last_check\""
+    try:
+        cursor, connection = connect("kapp")
+        cursor.execute(query)
+        connection.commit()
+    except Exception as error:
+        print("error! " + str(error))
+
+
 
 def execute_select_query(database, query):
     try:
@@ -284,6 +294,24 @@ def update_model_avaliablity(model, location, is_avaliable):
     return execute_insert_query(db_name, query)
 
 
+def get_all_m1_status():
+    query = "SELECT * FROM m1_checker"    
+    db_name = "kapp"
+
+    return execute_select_query(db_name, query)
+
+
+def get_last_m1_check_message():
+    query = "SELECT * FROM m1_last_check"
+    resp = execute_select_query("kapp", query)
+    return resp[0][0] if resp else []
+
+
+def update_m1_last_live_field(id):
+    db_name = "kapp"
+    query = "INSERT INTO m1_last_check(id) VALUES (\'" + str(id) + "\')"
+    return execute_insert_query(db_name, query)
+
 if __name__ == "__main__":
-    update_model_avaliablity('MK1A3LL/A', 'BRIDGEWATER', 'test')
-    print(get_model_avaliability('MK1A3LL/A', "BRIDGEWATER"))
+    update_m1_last_live_field("aa")
+

@@ -13,7 +13,10 @@ from python_app.streamers_tracker import (
     get_most_pumped,
     get_last_twitch_id,
     delete_all_values_in_twitch_last_live,
-    update_twitch_id_field
+    update_twitch_id_field,
+    get_last_m1_check_message,
+    update_m1_last_live_field,
+    delete_all_values_in_m1_last_posted
 )
 from python_app.post_discord_webhook import send_the_message
 from python_app.get_latest_mangas_notif import all_fun_manga_check
@@ -24,6 +27,7 @@ from python_helpers import (
     pumped_ticker_embed,
     get_all_live_embed,
 )
+from python_app.mbp_alerter import check_all_models_avaliability, get_all_current_status_embed
 from collections import OrderedDict
 from operator import itemgetter
 
@@ -37,7 +41,8 @@ with open("configuration.json") as json_file:
 async def on_ready():
 
     TWITCH_CHANNEL_ID = 813935859002900500
-    REFRESH_WHOS_LIVE_SECONDS = 300
+    M1_CHANNEL_ID = 904122267049545749
+    REFRESH_WHOS_LIVE_SECONDS = 120
 
     while True:
         embed = get_all_live_embed()
@@ -46,7 +51,7 @@ async def on_ready():
         # get previous twitch id
         id = get_last_twitch_id()
         if id:
-            msg = await channel.fetch_message(int(id))
+            msg = await channel.fetch_message(str(id))
             await msg.delete()
             delete_all_values_in_twitch_last_live()
 
@@ -54,6 +59,30 @@ async def on_ready():
         print("--- id of message that will be deleted later")
         print(sent_message.id)
         update_twitch_id_field(str(sent_message.id))
+
+        # 
+        # the mbp alerter logic goes here
+        # 
+
+        check_all_models_avaliability()
+        channel = bot.get_channel(M1_CHANNEL_ID)
+        
+        m1_check_embed = get_all_current_status_embed()
+        id = get_last_m1_check_message()
+        print('///')
+        print(id)
+        if id:
+            msg = await channel.fetch_message(str(id))
+            await msg.delete()
+            delete_all_values_in_m1_last_posted()
+            # delete
+        
+        sent_message = await channel.send(embed=m1_check_embed)
+        print("---- id of the message to be deleted")
+        print(sent_message.id)
+        update_m1_last_live_field(str(sent_message.id))
+
+
         await asyncio.sleep(REFRESH_WHOS_LIVE_SECONDS)
 
 

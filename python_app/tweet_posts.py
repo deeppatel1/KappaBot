@@ -100,8 +100,6 @@ calls_people = {
     "748611168168644612": "walrustrades",
     "1231876668865695744": "iTradeContracts",
     "1240151681851146247": "pKdayTrading1",
-    "1285245919609462786": "TheATMTrades",
-    "345525945": "TicTockTik",
     "1007420368288714754": "tradingthomas3",
     "1310326298527571971": "Albert_Trades",
     "1300807912835690497": "taytrades11",
