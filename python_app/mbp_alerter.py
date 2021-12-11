@@ -51,7 +51,7 @@ def check_all_models_avaliability():
                 if older_avaliability != avaliability:
                     # status has changed, update and tell discord
                     print("status has changed!")
-                    if "NJ" not in state:
+                    if state == "NJ":
                         sendWebhookMessage(f'{macbook_max_color} {avaliability} -at- {store} @everyone', webhooks.M1_CONNECT.value)
                     else:
                         sendWebhookMessage(f'{macbook_max_color} {avaliability} -at- {store} @everyone', webhooks.M1_CHANNEL.value)
