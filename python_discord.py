@@ -2,6 +2,7 @@ import json
 import asyncio
 import discord
 import subprocess
+import pytz
 from discord.ext import commands, tasks
 from pandas.tseries.offsets import BDay
 from datetime import date, datetime, timedelta
@@ -48,7 +49,10 @@ async def on_ready():
         embed = get_all_live_embed()
         channel = bot.get_channel(TWITCH_CHANNEL_ID)
 
+        #
         # get previous twitch id
+        #
+
         id = get_last_twitch_id()
         if id:
             msg = await channel.fetch_message(str(id))
@@ -137,20 +141,35 @@ async def live(ctx):
 async def stocks(ctx, arg1=None, arg2=None):
     from_date = None
     to_date = None
+    source_time_zone = pytz.timezone('US/Eastern')
     if arg1:
         from_date = arg1
     if arg2:
         to_date = arg2
 
     # if no FROM DATE supplied, use 1 that is 2 days ago
-
     if not from_date:
-        now = date.today() - BDay(1) + timedelta(hours=16)
+        # BDay is business date
+        right_now_datetime = datetime.now(source_time_zone)
+        now = right_now_datetime.now(source_time_zone)
+        
+        now = datetime(now.year, now.month, now.day, 22)
+        only_todays_date = datetime(now.year, now.month, now.day)
+
+        if right_now_datetime.weekday() < 5 and right_now_datetime.hour > 16:
+            now = only_todays_date + timedelta(hours=16)
+        elif right_now_datetime.weekday() < 5 and right_now_datetime.hour > 9:
+            now = only_todays_date + timedelta(hours=9)
+        else:
+            now = only_todays_date - BDay(1) + timedelta(hours=16)
+
         print("Getting stocks after ")
         print(now)
+
         year = now.year
         month = now.month
         day = now.day
+ 
         hours = now.hour
         minutes = now.minute
 

@@ -2,7 +2,8 @@ import discord, json
 import requests
 import yfinance as yf
 import datetime
-# import maya
+import maya
+import pytz
 import time
 from bs4 import BeautifulSoup
 from python_app.streamers_tracker import (
@@ -73,36 +74,38 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         tweeeters = stock[1]
         tweeter_str = ', '.join(tweeeters)
         times_mentioned = stock[2]
-        ticker_without_dollar = ticker[1:]
 
-        ticker_info = yf.Ticker(ticker_without_dollar)
+        if times_mentioned > 2:
+            ticker_without_dollar = ticker[1:]
 
-        try:
-            todays_data = ticker_info.history(period='1d')
-            # print('todays data')
-            # print(todays_data)
+            ticker_info = yf.Ticker(ticker_without_dollar)
 
-
-        except Exception as error:
-            print("Error?")
-            print(error)
-            continue
+            try:
+                todays_data = ticker_info.history(period='1d')
+                # print('todays data')
+                # print(todays_data)
 
 
-        if ticker.upper() not in ["$SPY", "$QQQ"]:
-            if len(todays_data) > 0:
-                todays_close = todays_data['Close'][0]
-                todays_open = todays_data['Open'][0]
-                percent_change = ((todays_close - todays_open)/todays_open)
-                
-                percent_change = "{:.2f}".format(percent_change * 100) + "%"
+            except Exception as error:
+                print("Error?")
+                print(error)
+                continue
 
-                embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
-            else:
 
-                embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
+            if ticker.upper() not in ["$SPY", "$QQQ"]:
+                if len(todays_data) > 0:
+                    todays_close = todays_data['Close'][0]
+                    todays_open = todays_data['Open'][0]
+                    percent_change = ((todays_close - todays_open)/todays_open)
+                    
+                    percent_change = "{:.2f}".format(percent_change * 100) + "%"
 
-    
+                    embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
+                else:
+
+                    embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
+
+        
     return embed
 
 
@@ -116,13 +119,16 @@ def get_ticker_embed(ticker_resp):
         text = tweet[3]
         link = tweet[4]
 
-        if text:
+        maya_slang = maya.parse(date_time)
+
+        if text and date_time:
             if link:
-                field_value = '[' + text + '](' + link + ')'
+                field_date = f'{tweeter_name} - {maya_slang.slang_time()}:'
+                field_value = f'```{text}``` [Link]({link})'
             else:
                 field_value = text
             
-            embed.add_field(name="```" + str(date_time) + " " + tweeter_name + "```", value = field_value)
+            embed.add_field(name=field_date, value = field_value)
 
     return embed
 
@@ -169,7 +175,7 @@ def get_all_live_embed():
         # slang_string = maya.parse(stream_start_time_string).slang_time()
         game_date_time = datetime.datetime.strptime(stream_start_time_string, "%Y-%m-%dT%H:%M:%S%z")
 
-        game_date_time = game_date_time - datetime.timedelta(hours=4)
+        game_date_time = game_date_time - datetime.timedelta(hours=5)
 
         since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
         

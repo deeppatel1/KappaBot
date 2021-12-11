@@ -56,7 +56,6 @@ stocks_peeps = {
     "1260551652479647745": "stockdweebs",
     "914627036081041408": "rebecca_trades",
     "748611168168644612": "walrustrades",
-    "83478764": "mohankonuru",
     "1300807912835690497": "taytrades11",
     "1290864917835390976": "tomikazi1",
     "1310326298527571971": "Albert_Trades",
@@ -90,21 +89,24 @@ stocks_peeps = {
     "1018324467758465024": "EliteOptions2",
     "964529942": "JohnsCharts",
     "1072667998966743041": "optionsprochick",
-    "985721299078070272": "ThetaWarrior"
+    "985721299078070272": "ThetaWarrior",
+    "1345256608901828612": "prophitcy",
+    "1293683312960188416": "PBInvesting",
+    "1075907037438115842": "RealJuicyTradez",
+    "1428534232108961794": "TSDR_trading",
+    "1250830691824283648": "STOCKMKTNewz"
 }
 
 
 calls_people = {
     "52166809": "traderstewie",
     "1615735502": "solonoid12",
-    "748611168168644612": "walrustrades",
     "1231876668865695744": "iTradeContracts",
     "1240151681851146247": "pKdayTrading1",
     "1007420368288714754": "tradingthomas3",
     "1310326298527571971": "Albert_Trades",
     "1300807912835690497": "taytrades11",
     "1018324467758465024": "EliteOptions2",
-    "964529942": "JohnsCharts",
     "1072667998966743041": "optionsprochick",
     "985721299078070272": "ThetaWarrior"
 }

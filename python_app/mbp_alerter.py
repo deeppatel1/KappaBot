@@ -18,9 +18,9 @@ LOCATIONS = {
     "BRIDGEWATER": "08844",
     "CHRISTIANA MALL": "19702",
     "QUAKER BRIDGE": "08648",
-    "EDISON": "08837"
+    "EDISON": "08837",
+    "CHICAGO": "60611"
 }
-
 
 def check_all_models_avaliability():
 
@@ -40,6 +40,7 @@ def check_all_models_avaliability():
 
                 store = details.get("storeName")
                 avaliability = details.get("partsAvailability").get(max_model_number).get("pickupSearchQuote")
+                state = details.get("state")
 
                 # before posting to discord, check existing status of inventory
 
@@ -50,7 +51,10 @@ def check_all_models_avaliability():
                 if older_avaliability != avaliability:
                     # status has changed, update and tell discord
                     print("status has changed!")
-                    sendWebhookMessage(f'{macbook_max_color} {avaliability} -at- {store} @everyone')
+                    if "NJ" not in state:
+                        sendWebhookMessage(f'{macbook_max_color} {avaliability} -at- {store} @everyone', webhooks.M1_CONNECT.value)
+                    else:
+                        sendWebhookMessage(f'{macbook_max_color} {avaliability} -at- {store} @everyone', webhooks.M1_CHANNEL.value)
 
 
                 update_model_avaliablity(max_model_number, area, avaliability)
@@ -59,8 +63,8 @@ def check_all_models_avaliability():
 
     # scheduler.enter(300, 1, check_all_models_avaliability, (scheduler,))
 
-def sendWebhookMessage(body_to_post):
-    webhook = Webhook.from_url(url = webhooks.M1_CHANNEL.value, adapter = RequestsWebhookAdapter())
+def sendWebhookMessage(body_to_post, webhook_url):
+    webhook = Webhook.from_url(url = webhook_url, adapter = RequestsWebhookAdapter())
     webhook.send(body_to_post, username="jobs disciple", avatar_url="https://images-na.ssl-images-amazon.com/images/I/41dKkez-1rL._SX326_BO1,204,203,200_.jpg")
 
 
@@ -80,34 +84,3 @@ def get_all_current_status_embed():
         embed.add_field(name=model_name, value=f'`{avaliability}` at {location}')
 
     return embed
-
-    # is_anyone_online = False
-    # update_youtube_view_count()
-    # for streamer in get_everyone_online():
-    #     is_anyone_online = True
-    #     name = streamer[0]
-    #     viewer_count = streamer[4]
-    #     stream_start_time_string = streamer[9]
-    #     stream_title = streamer[10]
-    #     game = streamer[11]
-
-    #     # slang_string = maya.parse(stream_start_time_string).slang_time()
-    #     game_date_time = datetime.datetime.strptime(stream_start_time_string, "%Y-%m-%dT%H:%M:%S%z")
-
-    #     game_date_time = game_date_time - datetime.timedelta(hours=4)
-
-    #     since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
-        
-    #     embed.add_field(name= name, value="> " + stream_title + "" + "\n" + " > [" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
-    # if not is_anyone_online:
-    #     embed = discord.Embed(tite="no ones online...")
-    #     embed.add_field(name="no one online", value="...")
-    # return embed
-
-# def start_checks():
-#     s = sched.scheduler(time.time, time.sleep)
-#     s.enter(10, 1, check_all_models_avaliability, (s,))
-#     s.run()
-
-
-# start_checks()
