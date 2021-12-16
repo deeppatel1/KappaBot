@@ -155,8 +155,8 @@ def post_manual_discord_reminder(text):
 
 # At startup, run these once:
 post_anime_episodes()
-set_manual_manga_reminder("naruto", 20, "https://www.viz.com/shonenjump/chapters/boruto")
-set_manual_manga_reminder("dragon ball super", 20, "https://www.viz.com/shonenjump/chapters/dragon-ball-super")
+# set_manual_manga_reminder("naruto", 20, "https://www.viz.com/shonenjump/chapters/boruto")
+# set_manual_manga_reminder("dragon ball super", 20, "https://www.viz.com/shonenjump/chapters/dragon-ball-super")
 
 while 1:
     schedule.run_pending()

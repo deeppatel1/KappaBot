@@ -91,10 +91,10 @@ def check_streamer_live(streamer):
             if should_post_to_discord and should_it_post_to_twitch_channel:
                 url = "https://twitch.tv/" + streamer_name
                 who_to_at = get_who_to_at(who_to_at)
-                discord_post = streamer_name + " IS LIVE " + who_to_at + " " + url
+                discord_post = who_to_at + " " + url
                 if filters:
                     discord_post = discord_post + " " + str(filters)
-                sendWebhookMessage(discord_post)
+                sendWebhookMessage(streamer_name, discord_post)
 
         # Update the db now
         print("Updating streamer " + streamer_name)
@@ -130,9 +130,9 @@ def start_checks():
     s.run()
 
 
-def sendWebhookMessage(body_to_post):
+def sendWebhookMessage(streamer_name, body_to_post):
     webhook = Webhook.from_url(url = webhooks.TWITCH.value, adapter = RequestsWebhookAdapter())
-    webhook.send(body_to_post, username="twitch live bot", avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
+    webhook.send(body_to_post, username=f'{streamer_name} is LIVE', avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
 
 start_checks()

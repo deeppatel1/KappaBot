@@ -179,7 +179,7 @@ class listener(StreamListener):
             # special case, if "now live" exists in an xqc updates tweet, ragen is @ ed
             if str(user).lower() == "xqcowupdates":
                 if ("now live" in full_text) or ("is live" in full_text):
-                    sendWebhookMessage(user, get_who_to_at("ragen"), profile_pic, discord_channel_to_post)
+                    sendWebhookMessage("xQc is LIVE", get_who_to_at("ragen"), profile_pic, discord_channel_to_post)
 
 
         # if its 1 of the stock people
