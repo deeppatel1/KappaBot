@@ -1,3 +1,5 @@
+# functionality not needed, code is not being used
+
 import requests
 import discord, json
 import json, sched, time, requests

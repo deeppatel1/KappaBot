@@ -43,7 +43,7 @@ async def on_ready():
 
     TWITCH_CHANNEL_ID = 813935859002900500
     M1_CHANNEL_ID = 904122267049545749
-    REFRESH_WHOS_LIVE_SECONDS = 120
+    REFRESH_WHOS_LIVE_SECONDS = 300
 
     while True:
         embed = get_all_live_embed()
@@ -65,26 +65,26 @@ async def on_ready():
         update_twitch_id_field(str(sent_message.id))
 
         # 
-        # the mbp alerter logic goes here
+        # the mbp alerter logic goes here, not being used no longer! disabling
         # 
 
-        check_all_models_avaliability()
-        channel = bot.get_channel(M1_CHANNEL_ID)
+        # check_all_models_avaliability()
+        # channel = bot.get_channel(M1_CHANNEL_ID)
         
-        m1_check_embed = get_all_current_status_embed()
-        id = get_last_m1_check_message()
-        print('///')
-        print(id)
-        if id:
-            msg = await channel.fetch_message(str(id))
-            await msg.delete()
-            delete_all_values_in_m1_last_posted()
-            # delete
+        # m1_check_embed = get_all_current_status_embed()
+        # id = get_last_m1_check_message()
+        # print('///')
+        # print(id)
+        # if id:
+        #     msg = await channel.fetch_message(str(id))
+        #     await msg.delete()
+        #     delete_all_values_in_m1_last_posted()
+        #     # delete
         
-        sent_message = await channel.send(embed=m1_check_embed)
-        print("---- id of the message to be deleted")
-        print(sent_message.id)
-        update_m1_last_live_field(str(sent_message.id))
+        # sent_message = await channel.send(embed=m1_check_embed)
+        # print("---- id of the message to be deleted")
+        # print(sent_message.id)
+        # update_m1_last_live_field(str(sent_message.id))
 
 
         await asyncio.sleep(REFRESH_WHOS_LIVE_SECONDS)
