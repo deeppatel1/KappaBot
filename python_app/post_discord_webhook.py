@@ -65,4 +65,5 @@ def send_the_message(username, avatar_url, webhook, content=None, embeds=None, w
 
 if __name__ == "__main__":
     a =  "https://discordapp.com/api/webhooks/795476109164412948/RnGxDxa7rIkMZJGQiUOxWS6JdjaWrMdDeqN937d1Vo-ISKpet4nY0lkhbnxv4mzQ3s4J"
-    print(send_the_message("aa", "https://i.imgur.com/c7EbcqP.jpeg", webhook=a, content="test", wait=True))
+    a = send_the_message("aa", "https://i.imgur.com/c7EbcqP.jpeg", webhook=a, content="test", wait=True)
+    print(a.id)

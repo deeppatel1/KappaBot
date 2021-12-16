@@ -43,7 +43,11 @@ people_to_follow = {
     "936128517460201473": "SpicaLoL",
     "785651770697523200": "xQc",
     "1282068738959749120": "xQCOWUpdates",
-    "234644705": "TLCoreJJ"
+    "234644705": "TLCoreJJ",
+    "1063379936856002560": "C9Summit",
+    "1462144869233614854": "C9Berserker",
+    "932465106709082114": "blaber",
+    "741755662384910336": "vulcan"
 }
 
 stocks_peeps = {
@@ -94,7 +98,10 @@ stocks_peeps = {
     "1293683312960188416": "PBInvesting",
     "1075907037438115842": "RealJuicyTradez",
     "1428534232108961794": "TSDR_trading",
-    "1250830691824283648": "STOCKMKTNewz"
+    "1250830691824283648": "STOCKMKTNewz",
+    "1320043277001908227": "darkpoolcharts",
+    "1140440713185787904": "nicabanding",
+    "1461904538793873414": "huncheauxtrades"
 }
 
 
