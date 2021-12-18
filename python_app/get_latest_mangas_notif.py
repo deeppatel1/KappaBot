@@ -1,3 +1,6 @@
+# NOT BEING USED!!!!
+# manga info is fetched from manga subreddit
+
 import requests
 import discord
 import MangaDexPy

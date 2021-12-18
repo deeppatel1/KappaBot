@@ -1,6 +1,8 @@
 
 # from run_db_operations import execute_select_query, execute_insert_query
 import json, psycopg2
+from datetime import timezone
+import datetime
 
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
@@ -184,8 +186,13 @@ def get_online_status(streamer_name):
     return get_streamer_specific_info(streamer_name, "online")
 
 
-
+########
+########
+########
 # STOCK STUFF
+########
+########
+########
 
 def get_top_stocks(from_date = None, to_date = None):
 
@@ -219,7 +226,7 @@ def get_top_stocks(from_date = None, to_date = None):
 def get_specific_tickers(ticker):
     # SELECT tweeter, lower(ticker) AS ticker, date, tweet_text from common_tickers where ticker = '$tsla'
 
-    query = f"SELECT tweeter, ticker, date_time, tweet_text, tweet_url from common_tickers where LOWER(ticker) = '${ticker.lower()}' AND date_time IS NOT NULL ORDER BY date_time DESC limit 15"
+    query = f"SELECT tweeter, ticker, date_time, tweet_text, tweet_url from common_tickers where LOWER(ticker) = '${ticker.lower()}' AND date_time IS NOT NULL ORDER BY date_time DESC limit 8"
     print(query)
     resp = execute_select_query("kapp", query)
     print("---RESP")
@@ -228,7 +235,7 @@ def get_specific_tickers(ticker):
 
 
 def get_most_pumped(after_date):
-    query = 'SELECT DISTINCT f.tweeter, lower(f.ticker), count(f.ticker) from (SELECT * from common_tickers WHERE (date >= \'' + after_date + '\' and tweeter != \'Moonshine\' and lower(ticker) != \'$spy\' and lower(ticker) != \'$qqq\' and char_length(ticker) > 2)) as f GROUP BY tweeter, ticker ORDER BY count DESC limit 10'
+    query = 'SELECT DISTINCT f.tweeter, lower(f.ticker), count(f.ticker) from (SELECT * from common_tickers WHERE (date >= \'' + after_date + '\' and tweeter != \'Moonshine\' and lower(ticker) != \'$spy\' and lower(ticker) != \'$qqq\' and char_length(ticker) > 2)) as f GROUP BY tweeter, ticker ORDER BY count DESC limit 8'
     print(query)
     resp = execute_select_query('kapp', query)
     return resp
@@ -277,8 +284,30 @@ def get_who_to_at(who_to_at_string):
 ########
 ########
 ########
-######## M1 ALERTER QUERIES
+# REDDIT MANGA CHECKER 
 ########
+########
+########
+
+
+def check_reddit_manga_link_exists(link):
+    db_name = "kapp"
+    query = f"SELECT * FROM manga_reddit_chapters where id = \'{link}\'"
+    return execute_select_query(db_name, query)
+
+def add_chapter(chapter_images_link, chapter_title, thumbnail, reddit_link):
+
+    db_name = "kapp"
+    current_datetime = datetime.datetime.now(timezone.utc)
+
+    query = f"INSERT INTO manga_reddit_chapters(id, manga_chapter, manga_chapter_thumbnail, manga_chapter_reddit_link, current_date_time) VALUES (\'{chapter_images_link}\',\'{chapter_title}\',\'{thumbnail}\',\'{reddit_link}\',\'{current_datetime}\')"
+
+    return execute_insert_query(db_name, query) 
+
+########
+########
+########
+# M1 ALERTER QUERIES
 ########
 ########
 ########

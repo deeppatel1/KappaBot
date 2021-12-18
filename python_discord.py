@@ -19,8 +19,9 @@ from python_app.streamers_tracker import (
     update_m1_last_live_field,
     delete_all_values_in_m1_last_posted
 )
+from python_app.get_manga_link_reddit import init_manga_notifications
 from python_app.post_discord_webhook import send_the_message
-from python_app.get_latest_mangas_notif import all_fun_manga_check
+# from python_app.get_latest_mangas_notif import all_fun_manga_check
 from python_helpers import (
     create_webhook_url,
     create_stock_embed,
@@ -229,11 +230,11 @@ async def pumped(ctx):
 
 
 @tasks.loop(hours = 1)
-async def check_fun_manga():
-    all_fun_manga_check()
+async def check_reddit_for_new_manga():
+    init_manga_notifications()
     # work
 
-check_fun_manga.start()
+check_reddit_for_new_manga.start()
 
 
 
