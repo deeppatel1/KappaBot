@@ -4,8 +4,8 @@ from discord import Embed
 import string
 import datetime
 
-from post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
-from streamers_tracker import check_reddit_manga_link_exists, add_chapter, get_all_mangas, get_who_to_at
+from python_app.post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
+from python_app.streamers_tracker import check_reddit_manga_link_exists, add_chapter, get_all_mangas, get_who_to_at
 
 
 class ChapterInfo:

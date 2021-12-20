@@ -47,7 +47,13 @@ people_to_follow = {
     "1063379936856002560": "C9Summit",
     "1462144869233614854": "C9Berserker",
     "932465106709082114": "blaber",
-    "741755662384910336": "vulcan"
+    "741755662384910336": "vulcan",
+    "3092505395": "bwipo",
+    "2460445795": "hanssama",
+    "18208354": "joerogan",
+    "1029142980": "bjergsen",
+    "2431173637": "jensen",
+    "61868550": "closerlol"
 }
 
 stocks_peeps = {
@@ -101,7 +107,20 @@ stocks_peeps = {
     "1250830691824283648": "STOCKMKTNewz",
     "1320043277001908227": "darkpoolcharts",
     "1140440713185787904": "nicabanding",
-    "1461904538793873414": "huncheauxtrades"
+    "1461904538793873414": "huncheauxtrades",
+    "4706746513": "spartantrading",
+    "1448129133142290438": "SnB_Trading",
+    "3690023483": "ryan11d",
+    "1418644403334357004": "the10_percent",
+    "1054561163843751936": "ripster47",
+    "2248020090": "spyhatesme",
+    "1358630527495000065": "xentreT",
+    "706723368939065344": "korinek_trades",
+    "1176866458933981184": "froggytrade",
+    "1263277845549367296": "justDapper",
+    "1226895349039714307": "itzSqueazy",
+    "1095443643358339073": "kliphten",
+    "887754279125221378": "Jake__Wujastyk"
 }
 
 
@@ -115,7 +134,9 @@ calls_people = {
     "1300807912835690497": "taytrades11",
     "1018324467758465024": "EliteOptions2",
     "1072667998966743041": "optionsprochick",
-    "985721299078070272": "ThetaWarrior"
+    "985721299078070272": "ThetaWarrior",
+    "1140440713185787904": "nicabanding",
+    "1461904538793873414": "huncheauxtrades"
 }
 
 
@@ -137,6 +158,7 @@ class listener(StreamListener):
         if "delete" in json_data:
             return
         id_str = json_data.get("user").get("id_str")
+        
         if id_str not in all_tweeters_to_follow:
             # logger.info("---X----Taken out due to to id_str not being 1 to follow: " + id_str)
             return
