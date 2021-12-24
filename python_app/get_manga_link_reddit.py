@@ -7,6 +7,8 @@ import datetime
 from python_app.post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
 from python_app.streamers_tracker import check_reddit_manga_link_exists, add_chapter, get_all_mangas, get_who_to_at
 
+# specific filters
+FILTER_OUT = ["vigilantes", "comikey.com"]
 
 class ChapterInfo:
     def __init__(self, manga_chapter, manga_chapter_thumbnail, manga_chapter_hyperlink, manga_chapter_reddit_link):  
@@ -95,6 +97,12 @@ def make_api_call(manga_name):
     manga_chapter_hyperlink = data.get("url")
     manga_chapter_reddit_link = data.get("permalink")
 
+    # remove unwanted mangas, based on bad websites or the wrong chapter title
+    for filter_key in FILTER_OUT:
+        if filter_key in manga_chapter.lower() or filter_key in manga_chapter_hyperlink.lower():
+            print(f"[X] hit filter {filter_key} in {manga_chapter} or {manga_chapter_hyperlink}")
+            return None
+
     return ChapterInfo(manga_chapter, manga_chapter_thumbnail, manga_chapter_hyperlink, manga_chapter_reddit_link)
 
 
@@ -105,19 +113,23 @@ def is_old_chapter(manga_chapter : ChapterInfo):
     print(f'[..] Checking if manga exists in db: {resp}')
     return bool(resp)
 
+
 def add_chapter_logic(manga_chapter : ChapterInfo):
     add_chapter(manga_chapter.manga_chapter_hyperlink, manga_chapter.manga_chapter, manga_chapter.manga_chapter_thumbnail, manga_chapter.manga_chapter_reddit_link)
 
 
 def send_discord_embed(manga_object, who_to_at):
     embed = Embed(title=manga_object.manga_chapter , description="New Chapter is out!", url=manga_object.manga_chapter_hyperlink)
-    
-    if "http" in manga_object.manga_chapter_hyperlink:
-        embed.set_thumbnail(url=manga_object.manga_chapter_hyperlink)
 
-    sendWebhookMessage(username="uwu", avatar_url=None, content=get_who_to_at(who_to_at))
-    sendWebhookListEmbeds(username="uwu", avatar_url=None, embeds=[embed], content="deep")
-    
+    print("---- thumbnail")
+    print(manga_object.manga_chapter_thumbnail)
+
+    if "http" in manga_object.manga_chapter_thumbnail:
+        embed.set_thumbnail(url=manga_object.manga_chapter_thumbnail)
+
+    sendWebhookMessage(username="uwu", avatar_url="https://c.tenor.com/AR8p1LHTOFEAAAAC/discord-uwu-sweat.jpeg", content=get_who_to_at(who_to_at))
+    sendWebhookListEmbeds(username="uwu", avatar_url="https://c.tenor.com/AR8p1LHTOFEAAAAC/discord-uwu-sweat.jpeg", embeds=[embed])
+
 
 def init_manga_notifications():
     all_mangas = get_all_mangas()
@@ -141,6 +153,6 @@ def init_manga_notifications():
         
         # send to discord
         send_discord_embed(manga_chapter_obj, 'who_to_at_str')
-        
+
 
 init_manga_notifications()
