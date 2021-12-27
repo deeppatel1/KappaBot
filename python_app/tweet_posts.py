@@ -120,7 +120,37 @@ stocks_peeps = {
     "1263277845549367296": "justDapper",
     "1226895349039714307": "itzSqueazy",
     "1095443643358339073": "kliphten",
-    "887754279125221378": "Jake__Wujastyk"
+    "887754279125221378": "Jake__Wujastyk",
+
+    # people from https://twitter.com/chikatrades/status/1474821633130909698
+
+    "1546222940": "dampedspring",
+    "199170156" : "jam_croissant",
+    "102869127" : "mayhem4markets",
+    "4858859837" : "squeezemetrics",
+    "1243218465982480386" : "annaoftheorder",
+    "1156656695038357504" : "spotgamma",
+    "14740370" : "kerberos007",
+    "129960718" : "sanu_kiii",
+    "1187026065660792832" : "strizzij",
+    "1256262531569651712" : "sanntrades",
+    "1279813859348566016" : "nlckstocks",
+    "729435789411618817" : "adammancini4",
+    "1271899909675859968" : "mrfourtoeight",
+    "1161703589942878208" : "garyblack00",
+    "1095931832" : "tricky_ow",
+    "1056178693385711617" : "smashelito",
+    "1437743290489585673" : "aevitas_momo",
+    "1061650783333040129" : "superluckeee",
+    "940789829243195393" : "gr8fuldaytrader",
+    "1240400274977460224" : "zhangstatrades",
+    "2192456106" : "jtraderco",
+    "1599911502" : "_ms_izzy",
+    "992461210556579840" : "redbentrader",
+    "718182886" : "ksidiii",
+    "1022137281719746560" : "vwaptrader1",
+    "17094120" : "xtrends",
+    "31468297" : "yodaflo"
 }
 
 
