@@ -119,7 +119,7 @@ def add_chapter_logic(manga_chapter : ChapterInfo):
 
 
 def send_discord_embed(manga_object, who_to_at):
-    embed = Embed(title=manga_object.manga_chapter , description="New Chapter is out!", url=manga_object.manga_chapter_hyperlink)
+    embed = Embed(title=manga_object.manga_chapter , description="New Chapter is out!", url=manga_object.manga_chapter_hyperlink.replace("amp;", ""))
 
     print("---- thumbnail")
     print(manga_object.manga_chapter_thumbnail)
