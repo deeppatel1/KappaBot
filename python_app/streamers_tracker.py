@@ -343,6 +343,24 @@ def update_m1_last_live_field(id):
     query = "INSERT INTO m1_last_check(id) VALUES (\'" + str(id) + "\')"
     return execute_insert_query(db_name, query)
 
+#####
+#####  MAK USAMA
+#####
+
+def check_post_id_mak_usama(id):
+    db_name = "kapp"
+    query = f"SELECT * FROM mak_discord_post_id WHERE id='{id}'"
+    return execute_select_query(db_name, query)
+
+
+def add_to_mak_usama(id):
+    db_name = "kapp"
+    query = "INSERT INTO mak_discord_post_id(id) VALUES (\'" + str(id) + "\')"
+    return execute_insert_query(db_name, query)
+
+
 if __name__ == "__main__":
     update_m1_last_live_field("aa")
+
+
 

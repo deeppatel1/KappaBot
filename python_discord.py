@@ -8,6 +8,7 @@ from pandas.tseries.offsets import BDay
 from datetime import date, datetime, timedelta
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
+from python_app.check_MAK import init_discord_checks
 from python_app.streamers_tracker import (
     get_top_stocks,
     get_specific_tickers,
@@ -93,6 +94,7 @@ async def on_ready():
 
 @bot.command(name="weeb", brief="Prints episode info about latest stored animes")
 async def weeb(ctx):
+    all_embeds.clear()
     print("started")
     dict_embeds = {}
     load_all_embeds()
@@ -114,7 +116,7 @@ async def weeb(ctx):
     all_embeds.clear()
 
 
-DEFAULT_NUMBER_OF_GAMES_TO_RETURN = 10
+DEFAULT_NUMBER_OF_GAMES_TO_RETURN = 6
 @bot.command(name="league", brief="Prints upcoming league schedule. Add name of league to only include that league. Ex: !league lcs")
 async def league(ctx, arg=None, arg2=DEFAULT_NUMBER_OF_GAMES_TO_RETURN):
     future_games, future_embeds = get_future_league_games(arg2, league=arg)
@@ -234,8 +236,13 @@ async def check_reddit_for_new_manga():
     init_manga_notifications()
     # work
 
-check_reddit_for_new_manga.start()
+@tasks.loop(seconds = 10)
+async def check_discord_stocks_posts():
+    init_discord_checks()
 
+
+check_reddit_for_new_manga.start()
+check_discord_stocks_posts.start()
 
 
 subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])

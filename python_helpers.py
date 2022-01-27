@@ -75,7 +75,7 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
         tweeter_str = ', '.join(tweeeters)
         times_mentioned = stock[2]
 
-        if times_mentioned > 2:
+        if times_mentioned > 3:
             ticker_without_dollar = ticker[1:]
 
             ticker_info = yf.Ticker(ticker_without_dollar)
@@ -93,17 +93,17 @@ def create_stock_embed(stock_prices_list, from_date=None, to_date=None):
 
 
             if ticker.upper() not in ["$SPY", "$QQQ"]:
-                if len(todays_data) > 0:
-                    todays_close = todays_data['Close'][0]
-                    todays_open = todays_data['Open'][0]
-                    percent_change = ((todays_close - todays_open)/todays_open)
+                # if len(todays_data) > 0:
+                #     todays_close = todays_data['Close'][0]
+                #     todays_open = todays_data['Open'][0]
+                #     percent_change = ((todays_close - todays_open)/todays_open)
                     
-                    percent_change = "{:.2f}".format(percent_change * 100) + "%"
+                #     percent_change = "{:.2f}".format(percent_change * 100) + "%"
 
-                    embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
-                else:
+                #     embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Today\'s Change: {percent_change}   Open: {"{:.2f}".format(todays_open)}   Close: {"{:.2f}".format(todays_close)}\n> Tweeted by: {tweeter_str}```',inline=False)
+                # else:
 
-                    embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}```', inline=False)
+                embed.add_field(name=f'**{ticker.upper()}**', value=f'```> Tweeted by count: {times_mentioned}\n> Tweeted by: {tweeter_str}```',inline=False)
 
         
     return embed

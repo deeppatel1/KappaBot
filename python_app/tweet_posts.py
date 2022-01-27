@@ -53,7 +53,8 @@ people_to_follow = {
     "18208354": "joerogan",
     "1029142980": "bjergsen",
     "2431173637": "jensen",
-    "61868550": "closerlol"
+    "61868550": "closerlol",
+    "1105221963075805184": "jojopyunlol"
 }
 
 stocks_peeps = {
@@ -279,9 +280,9 @@ class listener(StreamListener):
                         should_send_to_discord = True
                         logger.info(each_element + " added to db!")
 
-            if should_send_to_discord:
-                if str(id_str) in calls_people.keys():
-                    sendWebhookMessage(user, url, None, webhooks.MULA_BABY.value)
+            # if should_send_to_discord:
+            #     if str(id_str) in calls_people.keys():
+            #         sendWebhookMessage(user, url, None, webhooks.MULA_BABY.value)
 
     def on_error(self, status):
         logger.info("!!!!! something happend GASP")

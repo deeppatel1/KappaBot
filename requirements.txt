@@ -7,7 +7,10 @@ bs4==0.0.1
 tweepy
 psycopg2
 yfinance
+pendulum==2.1.1
 maya
-past
 mangadex
 future
+pytz
+pandas
+yfinance

@@ -2,7 +2,7 @@ import discord
 import requests
 import datetime
 from functools import lru_cache
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from datetime import datetime
 #client = discord.Client()
 from logging.handlers import RotatingFileHandler
@@ -87,30 +87,30 @@ def process_embed(response, watch_anime_url):
                 if type == "MANGA":
                     title = response.get('data').get('Media').get('title').get('romaji')
                     image = response.get('data').get('Media').get('bannerImage')
-                    deal_with_manga(title, image, watch_anime_url)
+                    # deal_with_manga(title, image, watch_anime_url)
 
 
-def deal_with_manga(title, image_link, watch_anime_url):
-    r = requests.get("https://www.mangaeden.com/en/en-manga/" + watch_anime_url)
-    data = r.text
+# def deal_with_manga(title, image_link, watch_anime_url):
+#     r = requests.get("https://www.mangaeden.com/en/en-manga/" + watch_anime_url)
+#     data = r.text
 
-    last_5_chapters = []
-    last_5_chapters_link = []
-    came_out_strings = []
-    counter = 0
-    soup = BeautifulSoup(data)
-    for table_row in soup.find_all("tr"):
-        if table_row.findAll("td", class_="chapterDate") and counter < 2:
-            chapter_and_name = table_row.findAll("b")[0].text
-            chapter_link = table_row.find("a")["href"]
-            came_out = table_row.find("td", class_="chapterDate").text
+#     last_5_chapters = []
+#     last_5_chapters_link = []
+#     came_out_strings = []
+#     counter = 0
+#     soup = BeautifulSoup(data)
+#     for table_row in soup.find_all("tr"):
+#         if table_row.findAll("td", class_="chapterDate") and counter < 2:
+#             chapter_and_name = table_row.findAll("b")[0].text
+#             chapter_link = table_row.find("a")["href"]
+#             came_out = table_row.find("td", class_="chapterDate").text
 
-            came_out_strings.append(came_out)
-            last_5_chapters.append(chapter_and_name)
-            last_5_chapters_link.append(chapter_link)
-            counter = counter + 1
+#             came_out_strings.append(came_out)
+#             last_5_chapters.append(chapter_and_name)
+#             last_5_chapters_link.append(chapter_link)
+#             counter = counter + 1
                 
-    create_manga_embed(title, image_link, last_5_chapters, last_5_chapters_link, came_out_strings)
+#     create_manga_embed(title, image_link, last_5_chapters, last_5_chapters_link, came_out_strings)
 
 
 def create_manga_embed(name, image_link, mangas_and_chapter, links, came_out_strings):
