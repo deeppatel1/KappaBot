@@ -78,7 +78,9 @@ def init_discord_checks():
                     # post to discord, important person!
                     add_to_mak_usama(post_id)
                     print("Posted to discord and saved to db")
-                    sendWebhookMessage(who_posted_name, when_posted_datetime_string + "      " + post.get("content"), who_posted_pic_link, webhooks.MULA_BABY.value)
+                    content = post.get("content")
+                    content = content.replace("@everyone", "")
+                    sendWebhookMessage(who_posted_name, when_posted_datetime_string + "      " + content, who_posted_pic_link, webhooks.MULA_BABY.value)
         else:
             print("API CALL FAILED")
             print(response.text)
