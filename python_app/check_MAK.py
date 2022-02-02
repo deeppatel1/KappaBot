@@ -15,6 +15,7 @@ import pytz
 relevant_channels_dict = {
     "934280148147142686": "swing_trading",
     "912756512429068329": "trading_floor",
+    "932382106942853130": "mak_tweet_bot"
 }
 
 relevant_people_dict = {
@@ -81,6 +82,10 @@ def init_discord_checks():
                     content = post.get("content")
                     content = content.replace("@everyone", "")
                     sendWebhookMessage(who_posted_name, when_posted_datetime_string + "      " + content, who_posted_pic_link, webhooks.MULA_BABY.value)
+
+                    # if mak tweet bot, go to special server
+                    if who_posted_id == '932382106942853130':
+                        sendWebhookMessage(who_posted_name, when_posted_datetime_string + "      " + content, who_posted_pic_link, '938323454602670132')
         else:
             print("API CALL FAILED")
             print(response.text)
