@@ -15,13 +15,13 @@ import pytz
 relevant_channels_dict = {
     "934280148147142686": "swing_trading",
     "912756512429068329": "trading_floor",
-    "932382106942853130": "mak_tweet_bot"
 }
 
 relevant_people_dict = {
     "714337095552073760": "MAK_Usama",
     "751564764244869282": "MrMonroe",
-    "173611085671170048": "Deep"
+    "173611085671170048": "Deep",
+    "932382106942853130": "mak_tweet_bot"
 }
 
 
@@ -85,7 +85,7 @@ def init_discord_checks():
 
                     # if mak tweet bot, go to special server
                     if who_posted_id == '932382106942853130':
-                        sendWebhookMessage(who_posted_name, when_posted_datetime_string + "      " + content, who_posted_pic_link, '938323454602670132')
+                        sendWebhookMessage(who_posted_name, when_posted_datetime_string + "      " + content, who_posted_pic_link, "https://canary.discord.com/api/webhooks/938614417652867073/xaDcxR__ZE4dDp0_VHR-nbeBeHS4WqLWdqeRjDMVtBWlaSOFc5pXnyaxouFUlyZxikI8")
         else:
             print("API CALL FAILED")
             print(response.text)
