@@ -15,3 +15,4 @@ class webhooks(Enum):
     ELON_TWEETS = config.get("elon-channel")
     M1_CHANNEL = config.get("m1-checker")
     M1_CONNECT = config.get("m1-connect")
+    SPECIAL_MAK_SERVER = config.get("mak-private-server")
