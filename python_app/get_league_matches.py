@@ -31,21 +31,21 @@ relevant_teams = [
 
     "G2",
     "FNC",
-    "MAD",
+    "RGE",
     "VIT",
 
     "DK",
     "T1",
     "HLE",
 
-    "RNG",
-    "PSG",
-    "UOL",
-    "INF",
-    "IW",
-    "PNG",
-    "DFM",
-    "PGG"
+    # "RNG",
+    # "PSG",
+    # "UOL",
+    # "INF",
+    # "IW",
+    # "PNG",
+    # "DFM",
+    # "PGG"
 ]
 
 class game:
