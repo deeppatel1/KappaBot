@@ -16,7 +16,7 @@ handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LCS%2F2022+Season%2FLock+In%2CLEC%2F2022+Season%2FSpring+Season%2CLCS%2F2022+Season%2FSpring+Season&wpRunQuery=Run+query&pf_free_text="
+GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LEC%2F2022+Season%2FSpring+Season%2CLCS%2F2022+Season%2FSpring+Season%2CLEC%2F2022+Season%2FSpring+Playoffs%2CLCK%2F2022+Season%2FSpring+Playoffs&wpRunQuery=Run+query&pf_free_text="
 
 
 relevant_teams = [
@@ -175,7 +175,7 @@ def generate_embeds(list_of_games, how_many_games_to_return):
                 
                 # convert to UTC time for the hover time !
 
-                game_date_time = game_date_time - datetime.timedelta(hours=5)
+                game_date_time = game_date_time - datetime.timedelta(hours=4)
 
                 versus_strig = versus_strig + "  " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
 
@@ -254,6 +254,6 @@ def get_future_league_games(how_many_games_to_return, league=None):
 
 
 if __name__ == "__main__":
-    [b, a] = get_future_league_games()
+    [b, a] = get_future_league_games(5)
     for a in range(0,5):
         logger.info(b[a])

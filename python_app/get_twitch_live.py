@@ -4,6 +4,7 @@ from streamers_tracker import get_platform_streamers, update_stream_start_time, 
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
+import copy
 from logging.handlers import RotatingFileHandler
 from WEBHOOKS import webhooks
 
@@ -42,6 +43,8 @@ def check_streamer_live(streamer):
     filters = streamer[6]
     who_to_at = streamer[7]
     should_it_post_to_twitch_channel = streamer[8]
+
+    existing_twitch_title = streamer[10]
 
     auth_token = get_auth_token()
 
@@ -90,19 +93,24 @@ def check_streamer_live(streamer):
 
             if should_post_to_discord and should_it_post_to_twitch_channel:
                 url = "https://twitch.tv/" + streamer_name
-                who_to_at = get_who_to_at(who_to_at)
+                who_to_at = get_who_to_at(who_to_at) if who_to_at else ""
                 discord_post = who_to_at + " " + url
                 if filters:
                     discord_post = discord_post + " " + str(filters)
-                sendWebhookMessage(streamer_name, discord_post)
+                sendWebhookMessage(webhooks.TWITCH.value, streamer_name, discord_post)
 
         # Update the db now
+        new_title = str(resp.get("data")[0]["title"])
         print("Updating streamer " + streamer_name)
         update_streamer_online_status(streamer_name, "TRUE")
         update_viewer_count(streamer_name,  str(resp.get("data")[0]["viewer_count"]))
         update_stream_start_time(streamer_name, str(resp.get("data")[0]["started_at"]))
-        update_stream_title(streamer_name, str(resp.get("data")[0]["title"]))
+        update_stream_title(streamer_name, new_title)
         update_game_played(streamer_name, str(resp.get("data")[0]["game_name"]))
+
+        # annouce a game is live... maybe
+        annouce_game_live(streamer_id, existing_twitch_title, new_title)
+
 
     else:
         logger.info("streamer " + streamer_name + " is offline")
@@ -117,6 +125,8 @@ def check_all_streamers(scheduler):
     # First, get all twitch streamers saved in the db
     all_twitch_streamers = []
     streamer_infos = get_platform_streamers("twitch")
+    print("streamer infoffff")
+    print(streamer_infos)
     for streamer in streamer_infos:
         logger.info("--- Twitch Live Check for " + streamer[0])
         check_streamer_live(streamer)
@@ -124,15 +134,63 @@ def check_all_streamers(scheduler):
     scheduler.enter(600, 1, check_all_streamers, (scheduler,))
 
 
+MAIN_TEAMS = {"tsm", "c9", "eg", "tl", "g2", "fnc", "vit", "skt", "drx", "geng"}
+
+def annouce_game_live(streamer_id, old_title, new_title):
+
+    watch_link = "https://lolesports.com/live/"
+
+    main_leagues = {
+        "lec": "1076110847947300865",
+        "lck": "1285050175266799616",
+        "lcs": "2867491"
+    }
+
+    main_teams = copy.deepcopy(MAIN_TEAMS)
+
+    # check if streamer id is lcs, lec, lck. if not, get out
+    if str(streamer_id) not in main_leagues.values():
+        return None
+
+    # if title hasn't changed, ignore
+    if old_title == new_title:
+        return None
+
+    new_title = new_title.lower()
+
+    broken = False
+
+    for team in main_teams:
+        if team in new_title:
+            main_teams.remove(team)
+            for other_team in main_teams:
+                # okay relevant teams, post now
+                if other_team in new_title:
+                    annouce_link_url = f'{team.upper()} vs {other_team.upper()} is about to start! YT Link: {watch_link}'
+                    sendWebhookMessage(webhooks.MAIN_SERVER.value, f"{team.upper()} vs {other_team.upper()}", annouce_link_url)
+                    # print("breaking now")
+
+                    broken = True
+                    break
+                # print("inner")
+        if broken:
+            break
+        # print("outer")
+            
+
 def start_checks():
     s = sched.scheduler(time.time, time.sleep)
     s.enter(10, 1, check_all_streamers, (s,))
     s.run()
 
 
-def sendWebhookMessage(streamer_name, body_to_post):
-    webhook = Webhook.from_url(url = webhooks.TWITCH.value, adapter = RequestsWebhookAdapter())
+def sendWebhookMessage(where_to, streamer_name, body_to_post):
+    webhook = Webhook.from_url(url = where_to, adapter = RequestsWebhookAdapter())
     webhook.send(body_to_post, username=f'{streamer_name} is LIVE', avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
 
 start_checks()
+
+if __name__ == "__main__":
+    print("starting main script run")
+    annouce_game_live("1285050175266799616", "aa", "GENG vs SKT")

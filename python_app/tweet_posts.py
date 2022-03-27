@@ -54,7 +54,11 @@ people_to_follow = {
     "1029142980": "bjergsen",
     "2431173637": "jensen",
     "61868550": "closerlol",
-    "1105221963075805184": "jojopyunlol"
+    "1105221963075805184": "jojopyunlol",
+
+
+    "1338693158536945665": "ChampionsQueue",
+    "1505406256151883779": "ChampQueueBot"
 }
 
 stocks_peeps = {
@@ -210,6 +214,8 @@ class listener(StreamListener):
                 discord_channel_to_post = webhooks.XQC_TWEETS.value
             elif str(user).lower() == "elonmusk":
                 discord_channel_to_post = webhooks.ELON_TWEETS.value
+            elif str(user).lower() == "championsqueue":
+                discord_channel_to_post = webhooks.CHAMPIONS_QUEUE.value
             else:
                 discord_channel_to_post = webhooks.TWEETS.value
 
@@ -240,6 +246,8 @@ class listener(StreamListener):
             if str(user).lower() == "xqcowupdates":
                 if ("now live" in full_text) or ("is live" in full_text):
                     sendWebhookMessage("xQc is LIVE", get_who_to_at("ragen"), profile_pic, discord_channel_to_post)
+
+
 
 
         # if its 1 of the stock people
@@ -289,7 +297,7 @@ class listener(StreamListener):
         logger.info(status)
         if status != 200:
             discord_to_message = "TWITTER STUFF STOPPED WORKING FIX ASAP AHHHHHHH ERROR CODE !: " + str(status) + " Check for details https://developer.twitter.com/en/docs/twitter-ads-api/response-codes"
-            sendWebhookMessage("error", discord_to_message, "https://exploringtm1.com/wp-content/uploads/2021/07/TM1-TI-Error-Codes.jpg", webhooks.MAIN_SERVER.value)
+            sendWebhookMessage("error", discord_to_message, "https://exploringtm1.com/wp-content/uploads/2021/07/TM1-TI-Error-Codes.jpg", webhooks.TWEETS.value)
             return False
 
 auth = OAuthHandler(ckey, csecret)
