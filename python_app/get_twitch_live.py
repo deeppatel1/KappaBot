@@ -134,26 +134,34 @@ def check_all_streamers(scheduler):
     scheduler.enter(600, 1, check_all_streamers, (scheduler,))
 
 
-MAIN_TEAMS = {"tsm", "c9", "eg", "tl", "g2", "fnc", "vit", "skt", "drx", "geng"}
+MAIN_TEAMS = {"tsm", "c9", "eg", "tl", "g2", "fnc", "vit", "skt", "drx", "geng", "gen", "sk", "t1", "100"}
 
 def annouce_game_live(streamer_id, old_title, new_title):
 
     watch_link = "https://lolesports.com/live/"
 
     main_leagues = {
-        "lec": "1076110847947300865",
-        "lck": "1285050175266799616",
-        "lcs": "2867491"
+        "lec": "124422593",
+        "lck": "124425501",
+        "lcs": "124420521"
     }
 
     main_teams = copy.deepcopy(MAIN_TEAMS)
 
+    # print("---streamer id")
+    # print(streamer_id)
+    # print(main_leagues.values())
     # check if streamer id is lcs, lec, lck. if not, get out
-    if str(streamer_id) not in main_leagues.values():
+    if str(str(streamer_id)) not in main_leagues.values():
+        print("Not a valid league. exiting")
         return None
 
-    # if title hasn't changed, ignore
     if old_title == new_title:
+        print("Title not changed, leaving")
+        return None
+
+    if "rebroadcast" in new_title.lower():
+        print("its a rebroadcast, ignore now")
         return None
 
     new_title = new_title.lower()
@@ -161,12 +169,12 @@ def annouce_game_live(streamer_id, old_title, new_title):
     broken = False
 
     for team in main_teams:
-        if team in new_title:
+        if team in new_title and team + "a" not in new_title:
             main_teams.remove(team)
             for other_team in main_teams:
                 # okay relevant teams, post now
-                if other_team in new_title:
-                    annouce_link_url = f'{team.upper()} vs {other_team.upper()} is about to start! YT Link: {watch_link}'
+                if other_team in new_title and other_team + "a" not in new_title:
+                    annouce_link_url = f'{team.upper()} vs {other_team.upper()} is about to start! YT Link: {watch_link} @everyone'
                     sendWebhookMessage(webhooks.MAIN_SERVER.value, f"{team.upper()} vs {other_team.upper()}", annouce_link_url)
                     # print("breaking now")
 
@@ -191,6 +199,6 @@ def sendWebhookMessage(where_to, streamer_name, body_to_post):
 
 start_checks()
 
-if __name__ == "__main__":
-    print("starting main script run")
-    annouce_game_live("1285050175266799616", "aa", "GENG vs SKT")
+# if __name__ == "__main__":
+#     print("starting main script run")
+#     annouce_game_live("1285050175266799616", "aa", "GENG vs SKT")

@@ -16,7 +16,7 @@ handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LEC%2F2022+Season%2FSpring+Season%2CLCS%2F2022+Season%2FSpring+Season%2CLEC%2F2022+Season%2FSpring+Playoffs%2CLCK%2F2022+Season%2FSpring+Playoffs&wpRunQuery=Run+query&pf_free_text="
+GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LEC%2F2022+Season%2FSpring+Season%2CLCS%2F2022+Season%2FSpring+Season%2CLEC%2F2022+Season%2FSpring+Playoffs%2CLCK%2F2022+Season%2FSpring+Playoffs%2CLCS%2F2022+Season%2FSpring+Playoffs&wpRunQuery=Run+query&pf_free_text="
 
 
 relevant_teams = [

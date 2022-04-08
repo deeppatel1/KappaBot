@@ -8,6 +8,7 @@ class webhooks(Enum):
     MAIN_SERVER = config.get("main-server-webhook")
     TWEETS = config.get("tweets")
     YOUTUBE_VIDS = config.get("youtube-videos")
+    XQC_YOUTUBE_VIDS = config.get("xqc-youtube-channel")
     TWITCH = config.get("twitch-webhook")
     MULA_BABY = config.get("stock-calls")
     MAC_TWEETS = config.get("mac-tweets-channel")
@@ -16,4 +17,5 @@ class webhooks(Enum):
     M1_CHANNEL = config.get("m1-checker")
     M1_CONNECT = config.get("m1-connect")
     SPECIAL_MAK_SERVER = config.get("mak-private-server")
+    MAK_SERVER_MAIN_BUYS_SELLS = config.get("mak-private-sever-main-buys-sells")
     CHAMPIONS_QUEUE = config.get("champions-queue")

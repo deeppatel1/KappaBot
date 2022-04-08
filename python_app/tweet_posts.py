@@ -57,7 +57,7 @@ people_to_follow = {
     "1105221963075805184": "jojopyunlol",
 
 
-    "1338693158536945665": "ChampionsQueue",
+    # "1338693158536945665": "ChampionsQueue",
     "1505406256151883779": "ChampQueueBot"
 }
 
@@ -215,6 +215,8 @@ class listener(StreamListener):
             elif str(user).lower() == "elonmusk":
                 discord_channel_to_post = webhooks.ELON_TWEETS.value
             elif str(user).lower() == "championsqueue":
+                discord_channel_to_post = webhooks.CHAMPIONS_QUEUE.value
+            elif str(user).lower() == "champqueuebot":
                 discord_channel_to_post = webhooks.CHAMPIONS_QUEUE.value
             else:
                 discord_channel_to_post = webhooks.TWEETS.value

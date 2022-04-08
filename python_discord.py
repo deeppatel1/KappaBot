@@ -204,6 +204,14 @@ async def ticker(ctx, arg=None):
     await ctx.send(embed=ticker_embed)
 
 
+@bot.command(name="kill", brief="kills irl :)")
+async def kill(ctx, arg=None):
+    await ctx.send("triangulating position")
+    await ctx.send("💣💣💣💣💣💣💣initiating air strike")
+    await ctx.send("🚀🚀🚀🚀🚀🚀🚀🚀🚀")
+    await ctx.send("💥💥💥💥💥💥💥💥💥")
+
+
 @bot.command(name="pumped", brief="Check which stocks are pumped")
 async def pumped(ctx):
     # msg = message.content

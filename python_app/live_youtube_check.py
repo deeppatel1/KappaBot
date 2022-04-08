@@ -186,10 +186,14 @@ def start_youtube_checks(scheduler):
             last_youtube_video = get_filtered_video(name, channel_id, filter_str)
             if last_youtube_video and last_youtube_video != last_video_id and not does_utube_link_exist(last_youtube_video):
                 who_to_at_discord_ats = get_who_to_at(who_to_at_str)
+
+                if name == "xqc":
+                    sendWebhookMessage(webhooks.XQC_YOUTUBE_VIDS , name, last_youtube_video + " " + who_to_at_discord_ats)
+                else:
                 # print("output")
                 # print(does_utube_link_exist(last_youtube_video))
                 # if not does_utube_link_exist(last_youtube_video):
-                sendWebhookMessage(webhooks.YOUTUBE_VIDS.value, name, last_youtube_video + " " + who_to_at_discord_ats)
+                    sendWebhookMessage(webhooks.YOUTUBE_VIDS.value, name, last_youtube_video + " " + who_to_at_discord_ats)
 
                 add_utube_link(last_youtube_video)
                 update_video_id(name, last_youtube_video)

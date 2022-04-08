@@ -86,6 +86,15 @@ def init_discord_checks():
                     # if mak tweet bot, go to special server
                     if who_posted_id == '932382106942853130':
                         sendWebhookMessage(who_posted_name, when_posted_datetime_string + "  @everyone    " + content, who_posted_pic_link, webhooks.SPECIAL_MAK_SERVER.value)
+
+                        # if text contains special buys and sells, then post in the main channel...
+                        if any(x in content.lower() for x in ["#alert", "sold", "bought", "images.tradewithmak", ".png"]):
+                            if ".png" in content:
+                                sendWebhookMessage(who_posted_name, content, who_posted_pic_link, webhooks.MAK_SERVER_MAIN_BUYS_SELLS.value)
+                            else:
+                                sendWebhookMessage(who_posted_name, when_posted_datetime_string + "  @everyone    " + content, who_posted_pic_link, webhooks.MAK_SERVER_MAIN_BUYS_SELLS.value)
+
+
         else:
             print("API CALL FAILED")
             print(response.text)

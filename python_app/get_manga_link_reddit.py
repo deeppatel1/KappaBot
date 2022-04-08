@@ -152,7 +152,7 @@ def init_manga_notifications():
         add_chapter_logic(manga_chapter_obj)
         
         # send to discord
-        send_discord_embed(manga_chapter_obj, 'who_to_at_str')
+        send_discord_embed(manga_chapter_obj, get_who_to_at(who_to_at))
 
 
 init_manga_notifications()
