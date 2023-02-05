@@ -10,6 +10,7 @@ from streamers_tracker import add_to_tweeter_tickers, get_who_to_at
 from logging.handlers import RotatingFileHandler
 from WEBHOOKS import webhooks
 import logging
+import time
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -22,10 +23,12 @@ handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%
 logger.addHandler(handler)
 
 
-atoken = config.get("twitterAccessToken")
-asecret = config.get("twitterTokenSecret")
-ckey = config.get("twitterApiKey")
-csecret = config.get("twitterApiKeySecret")
+API_KEY = config.get("twitterApiKeySOLONOID")
+API_KEY_SECRET = config.get("twitterApiKeySecretSOLONOID")
+
+ACCESS_TOKEN = config.get("twitterAccessTokenSOLONOID")
+ACCESS_TOKEN_SECRET = config.get("twitterTokenSecretSOLONOID")
+
 
 people_to_follow = {
     "736784706486734852": "realiceposeidon",
@@ -38,26 +41,29 @@ people_to_follow = {
     "44196397": "elon",
     "273519109": "ls",
     "1947617514": "grossie_gore",
-    "2790180781": "Alphari",
+    # "2790180781": "Alphari",
     "1615735502": "solonoid12",
     "936128517460201473": "SpicaLoL",
     "785651770697523200": "xQc",
-    "1282068738959749120": "xQCOWUpdates",
+    "1282068738959749120": "xqcupdates",
     "234644705": "TLCoreJJ",
     "1063379936856002560": "C9Summit",
     "1462144869233614854": "C9Berserker",
     "932465106709082114": "blaber",
     "741755662384910336": "vulcan",
-    "3092505395": "bwipo",
-    "2460445795": "hanssama",
+    # "3092505395": "bwipo",
+    # "2460445795": "hanssama",
     "18208354": "joerogan",
     "1029142980": "bjergsen",
     "2431173637": "jensen",
     "61868550": "closerlol",
     "1105221963075805184": "jojopyunlol",
+    "1153269412297789441": "realdannylol",
+
+    "1615940161233162240": "CxStreamUpdates",
 
 
-    # "1338693158536945665": "ChampionsQueue",
+    "1338693158536945665": "ChampionsQueue",
     "1505406256151883779": "ChampQueueBot"
 }
 
@@ -210,7 +216,7 @@ class listener(StreamListener):
 
             if str(user).lower() == "macaiyla":
                 discord_channel_to_post = webhooks.MAC_TWEETS.value
-            elif str(user).lower() == "xqc" or str(user).lower() == "xqcowupdates":
+            elif str(user).lower() == "xqc" or str(user).lower() == "xqcupdates":
                 discord_channel_to_post = webhooks.XQC_TWEETS.value
             elif str(user).lower() == "elonmusk":
                 discord_channel_to_post = webhooks.ELON_TWEETS.value
@@ -227,6 +233,7 @@ class listener(StreamListener):
                 replied_to_id = json_data.get("in_reply_to_status_id")
                 url = "https://twitter.com/" + str(replied_to_user_name) + "/status/" + str(replied_to_id)
                 sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
+                time.sleep(1)
 
             id = json_data.get("id_str")
             url = "https://twitter.com/" + user + "/status/" + id
@@ -234,23 +241,19 @@ class listener(StreamListener):
             if is_reply:
                 url = "REPLY TO ABOVE " + url
 
-            print("DISCORD CHANNEL TO POST")
-            print(discord_channel_to_post)
-            sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
-
-
             if json_data.get("truncated"):
                 full_text = json_data.get("extended_tweet").get("full_text")
             else:
                 full_text = json_data.get("text")
 
+
+            if not any(x in full_text.lower() for x in ["#sponsored", "#ad", "#grubhubpartner", '#awspartner', '@coinbase', '@gfuelenergy', '#rockstarenergypartner', '@mobalyticshq', '@secretlabchairs', '@logitechg', '@microsoft', '@puma']):
+                sendWebhookMessage(user, url, profile_pic, discord_channel_to_post)
+
             # special case, if "now live" exists in an xqc updates tweet, ragen is @ ed
-            if str(user).lower() == "xqcowupdates":
-                if ("now live" in full_text) or ("is live" in full_text):
+            if str(user).lower() == "xqcupdates":
+                if ("now live" in full_text.lower()) or ("is live" in full_text.lower()):
                     sendWebhookMessage("xQc is LIVE", get_who_to_at("ragen"), profile_pic, discord_channel_to_post)
-
-
-
 
         # if its 1 of the stock people
         else:
@@ -302,8 +305,8 @@ class listener(StreamListener):
             sendWebhookMessage("error", discord_to_message, "https://exploringtm1.com/wp-content/uploads/2021/07/TM1-TI-Error-Codes.jpg", webhooks.TWEETS.value)
             return False
 
-auth = OAuthHandler(ckey, csecret)
-auth.set_access_token(atoken, asecret)
+auth = OAuthHandler(API_KEY, API_KEY_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 logger.info('---starting twitter checks')
 twitterStream = Stream(auth, listener())
 twitterStream.filter(follow=all_tweeters_to_follow, is_async=True)

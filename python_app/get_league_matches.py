@@ -16,27 +16,28 @@ handler = RotatingFileHandler('logs/get-league-matches.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-GAMEPEDIA_URL = "https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D=LEC%2F2022+Season%2FSpring+Season%2CLCS%2F2022+Season%2FSpring+Season%2CLEC%2F2022+Season%2FSpring+Playoffs%2CLCK%2F2022+Season%2FSpring+Playoffs%2CLCS%2F2022+Season%2FSpring+Playoffs&wpRunQuery=Run+query&pf_free_text="
+GAMEPEDIA_BASE_URL = 'https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D='
+QUERY = 'LCS/2023 Season/Spring Season,LCK/2023 Season/Spring Season,LEC/2023 Season/Winter Season'
+
+GAMEPEDIA_URL = GAMEPEDIA_BASE_URL + QUERY
 
 
 relevant_teams = [
     "TSM",
-    "GGS",
     "C9",
     "CLG",
     "TL",
     "EG",
     "100",
-    "IMT",
+    "FNC",
 
     "G2",
     "FNC",
-    "RGE",
     "VIT",
 
     "DK",
     "T1",
-    "HLE",
+    "GEN",
 
     # "RNG",
     # "PSG",
@@ -121,6 +122,7 @@ def generate_embeds(list_of_games, how_many_games_to_return):
         league_and_versus = game_info[0]
 
         for team in relevant_teams:
+            # for MSI, add "or True", use:::::: `if ((team.lower() in full_string.lower()) or True) and len(all_embeds) < how_many_games_to_return:`
             if team.lower() in full_string.lower() and len(all_embeds) < how_many_games_to_return:
 
                 date = game_info[1]
@@ -211,9 +213,9 @@ def get_future_league_games(how_many_games_to_return, league=None):
 
     if league:
         if league.upper() == "LEC":
-            league = "LEC 2022"
+            league = "LEC 2023"
         elif league.upper() == "LCK":
-            league = "LCK 2022"
+            league = "LCK 2023"
         for k in list_content:
             if league.upper() in k.upper():
                 games.append(k)
@@ -221,11 +223,11 @@ def get_future_league_games(how_many_games_to_return, league=None):
     else:
 
         for k in list_content:
-            if "LCK 2022" in k:
+            if "LCK 2023" in k:
                 games.append(k)
             elif "LCS" in k:
                 games.append(k)
-            elif "LEC 2022" in k:
+            elif "LEC 2023" in k:
                 games.append(k)
             elif "MSI" in k:
                 games.append(k)

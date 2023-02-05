@@ -132,9 +132,11 @@ def create_anime_embed(name, status, airdate, next_episode, image, thumbnail, to
 
     if next_episode:
         if next_episode < 10:
-            last_episode_aired_str = "0" + str(next_episode-1)
+            last_episode_aired_str = str(next_episode-1)
+            # last_episode_aired_str = "0" + str(next_episode-1)
             if (next_episode - 2 > 0):
-                second_last_episode_str = "0" + str(next_episode - 2)
+                second_last_episode_str = str(next_episode - 2)
+                # second_last_episode_str = "0" + str(next_episode - 2)
             else:
                 second_last_episode_str = None
         else:

@@ -1,12 +1,12 @@
 import json, sched, time, requests
 from discord import RequestsWebhookAdapter, Webhook
-from streamers_tracker import get_platform_streamers, update_stream_start_time, update_streamer_online_status, update_viewer_count, update_viewer_count, get_who_to_at, update_stream_title, update_game_played
+from .streamers_tracker import get_platform_streamers, update_stream_start_time, update_streamer_online_status, update_viewer_count, update_viewer_count, get_who_to_at, update_stream_title, update_game_played
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 import logging
 import copy
 from logging.handlers import RotatingFileHandler
-from WEBHOOKS import webhooks
+from .WEBHOOKS import webhooks
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -121,7 +121,7 @@ def check_streamer_live(streamer):
         update_stream_title(streamer_name, "nothing")
         update_game_played(streamer_name, "nothing")
 
-def check_all_streamers(scheduler):
+def check_all_streamers():
     # First, get all twitch streamers saved in the db
     all_twitch_streamers = []
     streamer_infos = get_platform_streamers("twitch")
@@ -131,7 +131,6 @@ def check_all_streamers(scheduler):
         logger.info("--- Twitch Live Check for " + streamer[0])
         check_streamer_live(streamer)
 
-    scheduler.enter(600, 1, check_all_streamers, (scheduler,))
 
 
 MAIN_TEAMS = {"tsm", "c9", "eg", "tl", "g2", "fnc", "vit", "skt", "drx", "geng", "gen", "sk", "t1", "100"}
@@ -168,28 +167,23 @@ def annouce_game_live(streamer_id, old_title, new_title):
 
     broken = False
 
-    for team in main_teams:
-        if team in new_title and team + "a" not in new_title:
-            main_teams.remove(team)
-            for other_team in main_teams:
-                # okay relevant teams, post now
-                if other_team in new_title and other_team + "a" not in new_title:
-                    annouce_link_url = f'{team.upper()} vs {other_team.upper()} is about to start! YT Link: {watch_link} @everyone'
-                    sendWebhookMessage(webhooks.MAIN_SERVER.value, f"{team.upper()} vs {other_team.upper()}", annouce_link_url)
-                    # print("breaking now")
+    # for team in main_teams:
+    #     if team in new_title and team + "a" not in new_title:
+    #         main_teams.remove(team)
+    #         for other_team in main_teams:
+    #             # okay relevant teams, post now
+    #             if other_team in new_title and other_team + "a" not in new_title:
+    #                 annouce_link_url = f'{team.upper()} vs {other_team.upper()} is about to start! YT Link: {watch_link} @everyone'
+    #                 sendWebhookMessage(webhooks.MAIN_SERVER.value, f"{team.upper()} vs {other_team.upper()}", annouce_link_url)
+    #                 # print("breaking now")
 
-                    broken = True
-                    break
-                # print("inner")
-        if broken:
-            break
-        # print("outer")
+    #                 broken = True
+    #                 break
+    #             # print("inner")
+    #     if broken:
+    #         break
+    #     # print("outer")
             
-
-def start_checks():
-    s = sched.scheduler(time.time, time.sleep)
-    s.enter(10, 1, check_all_streamers, (s,))
-    s.run()
 
 
 def sendWebhookMessage(where_to, streamer_name, body_to_post):
@@ -197,7 +191,6 @@ def sendWebhookMessage(where_to, streamer_name, body_to_post):
     webhook.send(body_to_post, username=f'{streamer_name} is LIVE', avatar_url="https://media-exp1.licdn.com/dms/image/C560BAQHm82ECP8zsGw/company-logo_200_200/0/1593628073916?e=2159024400&v=beta&t=89u72cg5KzjSQ1qwB9xPZYhWvr7jFkD_9mUyFdNFnVw")
 
 
-start_checks()
 
 # if __name__ == "__main__":
 #     print("starting main script run")

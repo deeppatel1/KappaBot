@@ -1,6 +1,5 @@
 import json
 import asyncio
-import discord
 import subprocess
 import pytz
 from discord.ext import commands, tasks
@@ -8,6 +7,9 @@ from pandas.tseries.offsets import BDay
 from datetime import date, datetime, timedelta
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
+from python_app.get_league_matches_lolesports import get_future_games
+from python_app.live_youtube_check import start_youtube_checks
+from python_app.get_twitch_live import check_all_streamers
 from python_app.check_MAK import init_discord_checks
 from python_app.streamers_tracker import (
     get_top_stocks,
@@ -57,9 +59,13 @@ async def on_ready():
 
         id = get_last_twitch_id()
         if id:
-            msg = await channel.fetch_message(str(id))
-            await msg.delete()
-            delete_all_values_in_twitch_last_live()
+            try:
+                msg = await channel.fetch_message(str(id))
+                await msg.delete()
+                delete_all_values_in_twitch_last_live()
+            except:
+                delete_all_values_in_twitch_last_live()
+
 
         sent_message = await channel.send(embed=embed)
         print("--- id of message that will be deleted later")
@@ -118,15 +124,23 @@ async def weeb(ctx):
 
 DEFAULT_NUMBER_OF_GAMES_TO_RETURN = 6
 @bot.command(name="league", brief="Prints upcoming league schedule. Add name of league to only include that league. Ex: !league lcs")
-async def league(ctx, arg=None, arg2=DEFAULT_NUMBER_OF_GAMES_TO_RETURN):
-    future_games, future_embeds = get_future_league_games(arg2, league=arg)
+async def league(ctx, arg=DEFAULT_NUMBER_OF_GAMES_TO_RETURN):
+    # future_games, future_embeds = get_future_league_games(arg2, league=arg)
+    games = get_future_games(int(arg))
+
+    print("Loaded these games:")
+    print(games)
+
     final_string_to_send = ""
 
-    for game in future_games:
-        final_string_to_send = final_string_to_send + "\n" + game
-    
-    await ctx.send(final_string_to_send)
+    if not games:
+        await ctx.send("Lolesports doesn't have any games planned...")
 
+    else:
+        for game in games:
+            final_string_to_send = final_string_to_send + "\n" + game
+
+        await ctx.send(final_string_to_send)
 
     # for x in range(0, len(future_embeds)):
     #     if x < arg2:
@@ -242,18 +256,29 @@ async def pumped(ctx):
 @tasks.loop(hours = 1)
 async def check_reddit_for_new_manga():
     init_manga_notifications()
-    # work
 
-@tasks.loop(seconds = 10)
+@tasks.loop(minutes=4)
+async def start_youtube_vids_check():
+    print("WOAH STARTINGGGGGG")
+    start_youtube_checks()
+
+@tasks.loop(minutes=5)
+async def start_twitch_live_check():
+    check_all_streamers()
+
+@tasks.loop(seconds=10)
 async def check_discord_stocks_posts():
     init_discord_checks()
 
 
+# check_discord_stocks_posts.start()
+
+
+start_twitch_live_check.start()
 check_reddit_for_new_manga.start()
-check_discord_stocks_posts.start()
-
-
 subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
+start_youtube_vids_check.start()
+
 bot.run(config.get("discordclientlogin"))
 
 

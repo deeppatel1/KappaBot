@@ -19,3 +19,5 @@ class webhooks(Enum):
     SPECIAL_MAK_SERVER = config.get("mak-private-server")
     MAK_SERVER_MAIN_BUYS_SELLS = config.get("mak-private-sever-main-buys-sells")
     CHAMPIONS_QUEUE = config.get("champions-queue")
+    SIU = config.get("siu")
+    CLIPS = config.get("clips")

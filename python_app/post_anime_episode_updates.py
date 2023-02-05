@@ -41,6 +41,8 @@ def post_anime_episodes():
             anilist_resp = call_anilist_api(anilist_id)
             anime_object = get_next_airing_date(anilist_resp, anime_name)
             
+            print("********** anime object")
+            print(anime_object)
             if anime_object:
                 do_reminders(anime_object)
 
@@ -129,6 +131,7 @@ def get_next_airing_date(anilist_resp, four_anime_url):
                         episode = next_episode_dict.get("episode")
                         next_airing_date = next_episode_dict.get("airingAt")
 
+                        print(f"--<<>>>--SCHEDULING FOR--:{next_airing_date}")
                         anime_obj = AnimeObject(title = title, status = status, image = image, thumbnail = thumbnail, total_episodes = total_episodes, next_airing_episode = episode, next_airing_date= next_airing_date, four_anime_url = four_anime_url)
                         return anime_obj
 

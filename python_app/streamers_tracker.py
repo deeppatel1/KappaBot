@@ -131,6 +131,14 @@ def update_streamer_online_status(streamer_name, new_status):
 
     update_specific_field(streamer_name, "online", new_status)
 
+def update_streamer_is_annouced(streamer_name, new_status):
+    status_str = "FALSE"
+    
+    if new_status:
+        status_str = "TRUE"
+
+    update_specific_field(streamer_name, "is_annouced", new_status)
+
 def update_viewer_count(streamer_name, new_viewer_count):
     print("UPDATE " + streamer_name + " WITH viewer count " + new_viewer_count)
     update_specific_field(streamer_name, "viewer_count", new_viewer_count)

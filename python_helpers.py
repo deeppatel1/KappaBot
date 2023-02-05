@@ -165,21 +165,25 @@ def get_all_live_embed():
     is_anyone_online = False
     update_youtube_view_count()
     for streamer in get_everyone_online():
+        print(streamer)
         is_anyone_online = True
         name = streamer[0]
         viewer_count = streamer[4]
         stream_start_time_string = streamer[9]
         stream_title = streamer[10]
         game = streamer[11]
+        video_id = streamer[2]
 
         # slang_string = maya.parse(stream_start_time_string).slang_time()
-        game_date_time = datetime.datetime.strptime(stream_start_time_string, "%Y-%m-%dT%H:%M:%S%z")
+        if stream_start_time_string:
+            game_date_time = datetime.datetime.strptime(stream_start_time_string, "%Y-%m-%dT%H:%M:%S%z")
+            game_date_time = game_date_time - datetime.timedelta(hours=5)
+            since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
+            embed.add_field(name= name, value="> " + stream_title + "" + "\n" + " > [" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
+        else:
+            # youtuber, aka ice
+            embed.add_field(name= name, value="> ICE" + "\n" + " > [" + viewer_count + " watching](https://www.youtube.com/watch?v=" + video_id + ") ")
 
-        game_date_time = game_date_time - datetime.timedelta(hours=5)
-
-        since_string = "since " + "<t:" + str(int(time.mktime(game_date_time.timetuple()))) + ":R>"
-        
-        embed.add_field(name= name, value="> " + stream_title + "" + "\n" + " > [" + viewer_count + " watching](https://twitch.tv/" + name + ") " + since_string + " " + " on " + game)
     if not is_anyone_online:
         embed = discord.Embed(tite="no ones online...")
         embed.add_field(name="no one online", value="...")
