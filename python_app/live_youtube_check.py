@@ -25,22 +25,20 @@ handler = RotatingFileHandler('logs/live-youtube-check.log', maxBytes=7000000, b
 handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%M:%S%z"))
 logger.addHandler(handler)
 
-
 # -------------
 # -------------
 # -------------
-# -------------
-# -------------
-AWAKE_VIDEO_CUTOFF = 1000
+AWAKE_VIDEO_CUTOFF = 1300
 # -------------
 # -------------
 # -------------
-ANNOUCED_VIDEO_CUTOFF = 2500
+ANNOUCED_VIDEO_CUTOFF = 2800
 # -------------
 # -------------
 # -------------
 
 
+CLIPS_CHANNELS = ["tyler1clips", "xqcclips", "scuffedcentral", "icepissshorts", "xyzah"]
 
 DEVELOPER_KEY = config.get("gKey")
 YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -304,7 +302,7 @@ def start_youtube_checks():
                 if last_youtube_video and last_youtube_video != last_video_id and not does_utube_link_exist(last_youtube_video):
                     if name == "xqc":
                         sendWebhookMessage(webhooks.XQC_YOUTUBE_VIDS.value , name, last_youtube_video)
-                    elif name == "tyler1clips" or name == "xqcclips" or name == "scuffedcentral" or name == "icepissshorts":
+                    elif name in CLIPS_CHANNELS:
                         sendWebhookMessage(webhooks.CLIPS.value , name, last_youtube_video)
                     else:
                         who_to_at_discord_ats = get_who_to_at(who_to_at_str)
