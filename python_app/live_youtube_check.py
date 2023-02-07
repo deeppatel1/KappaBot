@@ -38,7 +38,7 @@ ANNOUCED_VIDEO_CUTOFF = 2800
 # -------------
 
 
-CLIPS_CHANNELS = ["tyler1clips", "xqcclips", "scuffedcentral", "icepissshorts", "xyzah"]
+CLIPS_CHANNELS = ["tyler1clips", "xqcclips", "scuffedcentral", "icepissshorts", "xyzah", "poseidonice"]
 
 DEVELOPER_KEY = config.get("gKey")
 YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -232,87 +232,91 @@ def start_youtube_checks():
 
         is_annouced = streamer[12]
 
-        if channel_id:
-            # IF ITS ICE, we take BETTER PRECAUTIONS!!!!!!!!!!!!!!! or dip
-            if channel_id == "UCv9Edl_WbtbPeURPtFDo-uA" or channel_id == "UCakgsb0w7QB0VHdnCc-OVEA":
-            #  or channel_id == "UC3Nlcpu-kbLmdhph_BN7OwQ":
-                logger.info("BEGINNING ICE CHECKS")
-                logger.info("BEGINNING ICE CHECKS")
-                logger.info("BEGINNING ICE CHECKS")
+        try:
 
-                new_vid_id, live_viewers, start_time_obj = get_live_video_id_and_concurrent_viewers(channel_id)
+            if channel_id:
+                # IF ITS ICE, we take BETTER PRECAUTIONS!!!!!!!!!!!!!!! or dip
+                if channel_id == "UCv9Edl_WbtbPeURPtFDo-uA" or channel_id == "UCakgsb0w7QB0VHdnCc-OVEA":
+                #  or channel_id == "UC3Nlcpu-kbLmdhph_BN7OwQ":
+                    logger.info("BEGINNING ICE CHECKS")
+                    logger.info("BEGINNING ICE CHECKS")
+                    logger.info("BEGINNING ICE CHECKS")
 
-                print(f'new vid info:::: {new_vid_id} {live_viewers} {start_time_obj}')
+                    new_vid_id, live_viewers, start_time_obj = get_live_video_id_and_concurrent_viewers(channel_id)
+
+                    print(f'new vid info:::: {new_vid_id} {live_viewers} {start_time_obj}')
 
 
-                update_viewer_count(name, str(live_viewers))
+                    update_viewer_count(name, str(live_viewers))
 
 
-                if start_time_obj:
+                    if start_time_obj:
 
-                    # we only care if the stream has been live for atleast 7 mins, to remove all cases where the stream needed to restart!
-                    now = datetime.now()
-                    time_diff = now - start_time_obj
-                    minutes_diff = int(time_diff.total_seconds() / 60)
+                        # we only care if the stream has been live for atleast 7 mins, to remove all cases where the stream needed to restart!
+                        now = datetime.now()
+                        time_diff = now - start_time_obj
+                        minutes_diff = int(time_diff.total_seconds() / 60)
 
-                    if minutes_diff > 7:
-                        if new_vid_id:
-                            update_video_id(name, new_vid_id)
-                            # update_streamer_online_status(name, "TRUE")
+                        if minutes_diff > 7:
+                            if new_vid_id:
+                                update_video_id(name, new_vid_id)
+                                # update_streamer_online_status(name, "TRUE")
+                            else:
+                                update_video_id(name, "NULL")
+                                # update_streamer_online_status(name, "FALSE")
+
+                            if new_vid_id:
+                                logger.info("ICE is online! with URL : " + new_vid_id)
+
+                                # 
+                                # logic to message on twitter and discord that hes awake with > AWAKE_VIDEO_CUTOFF viewers
+                                # 
+                                if ((int(live_viewers)) > AWAKE_VIDEO_CUTOFF) & (not is_online):
+                                    post_discord_message(webhooks.SIU.value, new_vid_id, live_viewers)
+                                if ((int(live_viewers)) <= AWAKE_VIDEO_CUTOFF) & (is_online):
+                                    post_discord_message(webhooks.SIU.value, new_vid_id, live_viewers, is_awake=False)
+
+
+                                if ((int(live_viewers) > AWAKE_VIDEO_CUTOFF)):
+                                    update_streamer_online_status(name, "TRUE")
+                                else:
+                                    update_streamer_online_status(name, "FALSE")
+
+
+                                #
+                                # logic to message on tiwtter and discord that THERES CONTENT with > annouced_video_cutoff viewers
+                                # 
+
+
+                                if ((int(live_viewers)) > ANNOUCED_VIDEO_CUTOFF) & (not is_annouced):
+                                    post_discord_message_that_theres_content(webhooks.SIU.value, new_vid_id, live_viewers)
+                                if ((int(live_viewers)) <= ANNOUCED_VIDEO_CUTOFF) & (is_annouced):
+                                    post_discord_message_that_theres_content(webhooks.SIU.value, new_vid_id, live_viewers, is_content=False)
+
+
+                                if ((int(live_viewers) > ANNOUCED_VIDEO_CUTOFF)):
+                                    update_streamer_is_annouced(name, "TRUE")
+                                else:
+                                    update_streamer_is_annouced(name, "FALSE")
+
+                else:
+                    last_youtube_video = get_filtered_video(name, channel_id, filter_str)
+                    if last_youtube_video and last_youtube_video != last_video_id and not does_utube_link_exist(last_youtube_video):
+                        if name == "xqc":
+                            sendWebhookMessage(webhooks.XQC_YOUTUBE_VIDS.value , name, last_youtube_video)
+                        elif name in CLIPS_CHANNELS:
+                            sendWebhookMessage(webhooks.CLIPS.value , name, last_youtube_video)
                         else:
-                            update_video_id(name, "NULL")
-                            # update_streamer_online_status(name, "FALSE")
+                            who_to_at_discord_ats = get_who_to_at(who_to_at_str)
+                            sendWebhookMessage(webhooks.YOUTUBE_VIDS.value, name, last_youtube_video + " " + who_to_at_discord_ats)
 
-                        if new_vid_id:
-                            logger.info("ICE is online! with URL : " + new_vid_id)
-
-                            # 
-                            # logic to message on twitter and discord that hes awake with > AWAKE_VIDEO_CUTOFF viewers
-                            # 
-                            if ((int(live_viewers)) > AWAKE_VIDEO_CUTOFF) & (not is_online):
-                                post_discord_message(webhooks.SIU.value, new_vid_id, live_viewers)
-                            if ((int(live_viewers)) <= AWAKE_VIDEO_CUTOFF) & (is_online):
-                                post_discord_message(webhooks.SIU.value, new_vid_id, live_viewers, is_awake=False)
-
-
-                            if ((int(live_viewers) > AWAKE_VIDEO_CUTOFF)):
-                                update_streamer_online_status(name, "TRUE")
-                            else:
-                                update_streamer_online_status(name, "FALSE")
-
-
-                            #
-                            # logic to message on tiwtter and discord that THERES CONTENT with > annouced_video_cutoff viewers
-                            # 
-
-
-                            if ((int(live_viewers)) > ANNOUCED_VIDEO_CUTOFF) & (not is_annouced):
-                                post_discord_message_that_theres_content(webhooks.SIU.value, new_vid_id, live_viewers)
-                            if ((int(live_viewers)) <= ANNOUCED_VIDEO_CUTOFF) & (is_annouced):
-                                post_discord_message_that_theres_content(webhooks.SIU.value, new_vid_id, live_viewers, is_content=False)
-
-
-                            if ((int(live_viewers) > ANNOUCED_VIDEO_CUTOFF)):
-                                update_streamer_is_annouced(name, "TRUE")
-                            else:
-                                update_streamer_is_annouced(name, "FALSE")
-
-            else:
-                last_youtube_video = get_filtered_video(name, channel_id, filter_str)
-                if last_youtube_video and last_youtube_video != last_video_id and not does_utube_link_exist(last_youtube_video):
-                    if name == "xqc":
-                        sendWebhookMessage(webhooks.XQC_YOUTUBE_VIDS.value , name, last_youtube_video)
-                    elif name in CLIPS_CHANNELS:
-                        sendWebhookMessage(webhooks.CLIPS.value , name, last_youtube_video)
-                    else:
-                        who_to_at_discord_ats = get_who_to_at(who_to_at_str)
-                        sendWebhookMessage(webhooks.YOUTUBE_VIDS.value, name, last_youtube_video + " " + who_to_at_discord_ats)
-
-                    # print("output")
-                    # print(does_utube_link_exist(last_youtube_video))
-                    # if not does_utube_link_exist(last_youtube_video):
-                    add_utube_link(last_youtube_video)
-                    update_video_id(name, last_youtube_video)
+                        # print("output")
+                        # print(does_utube_link_exist(last_youtube_video))
+                        # if not does_utube_link_exist(last_youtube_video):
+                        add_utube_link(last_youtube_video)
+                        update_video_id(name, last_youtube_video)
+        except Exception:
+            pass
 
 
 def sendWebhookMessage(webhook, name, body_to_post):
