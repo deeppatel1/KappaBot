@@ -257,7 +257,7 @@ async def pumped(ctx):
 async def check_reddit_for_new_manga():
     init_manga_notifications()
 
-@tasks.loop(minutes=4)
+@tasks.loop(minutes=10)
 async def start_youtube_vids_check():
     print("WOAH STARTINGGGGGG")
     start_youtube_checks()
@@ -276,8 +276,9 @@ async def check_discord_stocks_posts():
 
 start_twitch_live_check.start()
 check_reddit_for_new_manga.start()
-subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
 start_youtube_vids_check.start()
+
+subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
 
 bot.run(config.get("discordclientlogin"))
 

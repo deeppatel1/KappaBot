@@ -17,7 +17,7 @@ handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", "%Y-%m-%dT%H:%
 logger.addHandler(handler)
 
 GAMEPEDIA_BASE_URL = 'https://lol.fandom.com/wiki/Special:RunQuery/MatchCalendarExport?pfRunQueryFormName=MatchCalendarExport&MCE%5B1%5D='
-QUERY = 'LCS/2023 Season/Spring Season,LCK/2023 Season/Spring Season,LEC/2023 Season/Winter Season'
+QUERY = 'LCS/2023 Season/Spring Playoffs,LEC/2023 Season/Spring Season,LCK/2023 Season/Spring Playoffs'
 
 GAMEPEDIA_URL = GAMEPEDIA_BASE_URL + QUERY
 
