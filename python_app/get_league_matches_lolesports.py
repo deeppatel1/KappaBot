@@ -6,10 +6,13 @@ from datetime import datetime, timedelta
 API_KEY = '0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z'
 
 # each id is seperated by %... example "WORLDS_ID"%"LCS_ID"
-LEAGUES_IDS = "98767991299243165%2C98767991310872058%2C98767991302996019%2C98767975604431411"
+LEAGUES_IDS = "98767991299243165%2C98767991310872058%2C98767991302996019%2C98767975604431411%98767991325878492"
+
+# only msi for now
+LEAGUES_IDS = "98767991325878492"
 
 
-DIFF_BETWEEN_UTC_AND_EST = 5 # in january this was 5, so after daylight savings (summer) this should be 4
+DIFF_BETWEEN_UTC_AND_EST = 4 # in january this was 5, so after daylight savings (summer) this should be 4
 
 
 class Team:
@@ -105,14 +108,14 @@ def call_lolesports_api():
         "x-api-key": API_KEY
     }
 
+    print(url)
+
     response = requests.get(url, headers=headers)
 
     if not response.ok:
         raise Exception(f" ----> Failed to call lolesports with status code {response.status_code}")
 
     resp = response.json()
-
-    print(resp)
 
     return resp
 
@@ -153,7 +156,8 @@ def parse_future_matches(number_of_games=5):
             team_1_name = match_obj.team_1.name
             team_2_name = match_obj.team_2.name
 
-            if team_1_name.lower() in relevant_teams or team_2_name.lower() in relevant_teams:
+            # if team_1_name.lower() in relevant_teams or team_2_name.lower() in relevant_teams:
+            if True: #for msi or worlds
             
                 team_1_emoji = f'<:{team_1_name}:{str(emoji_id.get(team_1_name.lower()))}>' if team_1_name.lower() in emoji_id else team_1_name.upper()
                 team_2_emoji = f'<:{team_2_name}:{str(emoji_id.get(team_2_name.lower()))}>' if team_2_name.lower() in emoji_id else team_2_name.upper()
@@ -176,3 +180,5 @@ def get_future_games(number_of_games):
     future_matches_strings = parse_future_matches(number_of_games)
     return future_matches_strings
 
+
+get_future_games(5)

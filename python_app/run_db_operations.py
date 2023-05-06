@@ -4,6 +4,11 @@ import psycopg2, json
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
+
+CURSOR = None
+CONNECTION = None
+
+
 def connect(database):
     try:
         connection = psycopg2.connect(user = config.get("PGUSER"),
@@ -23,18 +28,23 @@ def connect(database):
 
 def execute_insert_query(database, query):
     try:
-        cursor, connection = connect(database)
-        cursor.execute(query)
-        connection.commit()
+        if not CURSOR or not CONNECTION:
+            CURSOR, CONNECTION = connect(database)
+        
+        CURSOR.execute(query)
+        CONNECTION.commit()
     except Exception as error:
         print("error! " + str(error))
 
 
 def execute_select_query(database, query):
     try:
-        cursor, connection = connect(database)
-        cursor.execute(query)
-        rows = cursor.fetchall()
+        if not CURSOR or not CONNECTION:
+            CURSOR, CONNECTION = connect(database)
+        
+        CURSOR.execute(query)
+        rows = CURSOR.fetchall()
         return rows
+
     except Exception as error:
         print("error! " + str(error))

@@ -2,8 +2,10 @@ import json
 import asyncio
 import subprocess
 import pytz
+import os
+import signal
 from discord.ext import commands, tasks
-from pandas.tseries.offsets import BDay
+# from pandas.tseries.offsets import BDay
 from datetime import date, datetime, timedelta
 from python_app.get_animes_and_mangas import all_embeds, load_all_embeds
 from python_app.get_league_matches import get_future_league_games
@@ -11,6 +13,7 @@ from python_app.get_league_matches_lolesports import get_future_games
 from python_app.live_youtube_check import start_youtube_checks
 from python_app.get_twitch_live import check_all_streamers
 from python_app.check_MAK import init_discord_checks
+from python_app.xqc_tweets_check import execute
 from python_app.streamers_tracker import (
     get_top_stocks,
     get_specific_tickers,
@@ -22,14 +25,15 @@ from python_app.streamers_tracker import (
     update_m1_last_live_field,
     delete_all_values_in_m1_last_posted
 )
+from python_app.post_anime_episode_updates import run_from_main_script
 from python_app.get_manga_link_reddit import init_manga_notifications
 from python_app.post_discord_webhook import send_the_message
 # from python_app.get_latest_mangas_notif import all_fun_manga_check
 from python_helpers import (
     create_webhook_url,
-    create_stock_embed,
+    # create_stock_embed,
     get_ticker_embed,
-    pumped_ticker_embed,
+    # pumped_ticker_embed,
     get_all_live_embed,
 )
 from python_app.mbp_alerter import check_all_models_avaliability, get_all_current_status_embed
@@ -127,10 +131,8 @@ DEFAULT_NUMBER_OF_GAMES_TO_RETURN = 6
 async def league(ctx, arg=DEFAULT_NUMBER_OF_GAMES_TO_RETURN):
     # future_games, future_embeds = get_future_league_games(arg2, league=arg)
     games = get_future_games(int(arg))
-
-    print("Loaded these games:")
-    print(games)
-
+    # print("Loaded these games:")
+    # print(games)
     final_string_to_send = ""
 
     if not games:
@@ -154,103 +156,116 @@ async def live(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="stocks", brief="Lists top mentioned stocks by furus in the past 2 days")
-async def stocks(ctx, arg1=None, arg2=None):
-    from_date = None
-    to_date = None
-    source_time_zone = pytz.timezone('US/Eastern')
-    if arg1:
-        from_date = arg1
-    if arg2:
-        to_date = arg2
+# @bot.command(name="stocks", brief="Lists top mentioned stocks by furus in the past 2 days")
+# async def stocks(ctx, arg1=None, arg2=None):
+#     from_date = None
+#     to_date = None
+#     source_time_zone = pytz.timezone('US/Eastern')
+#     if arg1:
+#         from_date = arg1
+#     if arg2:
+#         to_date = arg2
 
-    # if no FROM DATE supplied, use 1 that is 2 days ago
-    if not from_date:
-        # BDay is business date
-        right_now_datetime = datetime.now(source_time_zone)
-        now = right_now_datetime.now(source_time_zone)
+#     # if no FROM DATE supplied, use 1 that is 2 days ago
+#     if not from_date:
+#         # BDay is business date
+#         right_now_datetime = datetime.now(source_time_zone)
+#         now = right_now_datetime.now(source_time_zone)
         
-        now = datetime(now.year, now.month, now.day, 22)
-        only_todays_date = datetime(now.year, now.month, now.day)
+#         now = datetime(now.year, now.month, now.day, 22)
+#         only_todays_date = datetime(now.year, now.month, now.day)
 
-        if right_now_datetime.weekday() < 5 and right_now_datetime.hour > 16:
-            now = only_todays_date + timedelta(hours=16)
-        elif right_now_datetime.weekday() < 5 and right_now_datetime.hour > 9:
-            now = only_todays_date + timedelta(hours=9)
-        else:
-            now = only_todays_date - BDay(1) + timedelta(hours=16)
+#         if right_now_datetime.weekday() < 5 and right_now_datetime.hour > 16:
+#             now = only_todays_date + timedelta(hours=16)
+#         elif right_now_datetime.weekday() < 5 and right_now_datetime.hour > 9:
+#             now = only_todays_date + timedelta(hours=9)
+#         else:
+#             now = only_todays_date - BDay(1) + timedelta(hours=16)
 
-        print("Getting stocks after ")
-        print(now)
+#         print("Getting stocks after ")
+#         print(now)
 
-        year = now.year
-        month = now.month
-        day = now.day
+#         year = now.year
+#         month = now.month
+#         day = now.day
  
-        hours = now.hour
-        minutes = now.minute
+#         hours = now.hour
+#         minutes = now.minute
 
 
-        from_date = str(year) + "-" + str(month) + "-" + str(day) + " " + str(hours) + ":" + str(minutes) + ":00"
+#         from_date = str(year) + "-" + str(month) + "-" + str(day) + " " + str(hours) + ":" + str(minutes) + ":00"
 
-    top_stocks = get_top_stocks(from_date, to_date)
-    await ctx.send(embed=create_stock_embed(top_stocks, from_date, to_date))
-    # channels = await ctx.webhooks()
-    # send_the_message(username="pop tickers", \
-    #     webhook=create_webhook_url(channels[0].id, channels[0].token), \
-    #     avatar_url=None, \
-    #     content=top_stocks)
-    # await ctx.send(top_stocks)
-
-
-@bot.command(name="ticker", brief="Prints latest tweets from furus")
-async def ticker(ctx, arg=None):
-    if not arg:
-        await ctx.send("enter a ticker")
-    ticker = arg
-    print("!!! input ticker " + ticker)
-    ticker_info = get_specific_tickers(ticker)
-    if not ticker_info:
-        await ctx.send("no tweets for this ticker found")
-    ticker_embed = get_ticker_embed(ticker_info)
-    if not ticker_embed:
-        await ctx.send("no tweets for this ticker")
-    await ctx.send(embed=ticker_embed)
+#     top_stocks = get_top_stocks(from_date, to_date)
+#     await ctx.send(embed=create_stock_embed(top_stocks, from_date, to_date))
+#     # channels = await ctx.webhooks()
+#     # send_the_message(username="pop tickers", \
+#     #     webhook=create_webhook_url(channels[0].id, channels[0].token), \
+#     #     avatar_url=None, \
+#     #     content=top_stocks)
+#     # await ctx.send(top_stocks)
 
 
-@bot.command(name="kill", brief="kills irl :)")
-async def kill(ctx, arg=None):
-    await ctx.send("triangulating position")
-    await ctx.send("💣💣💣💣💣💣💣initiating air strike")
-    await ctx.send("🚀🚀🚀🚀🚀🚀🚀🚀🚀")
-    await ctx.send("💥💥💥💥💥💥💥💥💥")
+# @bot.command(name="ticker", brief="Prints latest tweets from furus")
+# async def ticker(ctx, arg=None):
+#     if not arg:
+#         await ctx.send("enter a ticker")
+#     ticker = arg
+#     print("!!! input ticker " + ticker)
+#     ticker_info = get_specific_tickers(ticker)
+#     if not ticker_info:
+#         await ctx.send("no tweets for this ticker found")
+#     ticker_embed = get_ticker_embed(ticker_info)
+#     if not ticker_embed:
+#         await ctx.send("no tweets for this ticker")
+#     await ctx.send(embed=ticker_embed)
 
 
-@bot.command(name="pumped", brief="Check which stocks are pumped")
-async def pumped(ctx):
-    # msg = message.content
-    # msg_array = msg.split(" ")
-    from_date = None
-    to_date = None
+# @bot.command(name="kill", brief="kills irl :)")
+# async def kill(ctx, arg=None):
+#     await ctx.send("triangulating position")
+#     await ctx.send("💣💣💣💣💣💣💣initiating air strike")
+#     await ctx.send("🚀🚀🚀🚀🚀🚀🚀🚀🚀")
+#     await ctx.send("💥💥💥💥💥💥💥💥💥")
 
-    # if len(msg_array) == 2:
-    #     from_date = msg_array[1]
-    #     ticker = msg_array[0]
 
-    # else:
-    #     from_date = None
-    #     ticker = message.content
+@bot.command(name="restart", brief="Restart!")
+async def restart(ctx, arg=None):
+    await ctx.send('Restarting...')
+    subprocess.Popen(["sudo", "python3", restart_bot.py])
+    await ctx.send("This should not post if restart happened properly!")
 
-    if not from_date:
-        now = datetime.today() - timedelta(days=3)
-        year = now.year
-        month = now.month
-        day = now.day
-        from_date = str(year) + "-" + str(month) + "-" + str(day)
 
-    resp = get_most_pumped(from_date)
-    embed = pumped_ticker_embed(resp, from_date)
-    await ctx.send(embed=embed)
+
+@bot.command(name="howrestart", brief="How to run this on deeps pi")
+async def help(ctx, arg=None):
+    await ctx.send("Find process by running `ps aux | grep python` and killing it's pid by running `kill <PID>`")
+
+
+# @bot.command(name="pumped", brief="Check which stocks are pumped")
+# async def pumped(ctx):
+#     # msg = message.content
+#     # msg_array = msg.split(" ")
+#     from_date = None
+#     to_date = None
+
+#     # if len(msg_array) == 2:
+#     #     from_date = msg_array[1]
+#     #     ticker = msg_array[0]
+
+#     # else:
+#     #     from_date = None
+#     #     ticker = message.content
+
+#     if not from_date:
+#         now = datetime.today() - timedelta(days=3)
+#         year = now.year
+#         month = now.month
+#         day = now.day
+#         from_date = str(year) + "-" + str(month) + "-" + str(day)
+
+#     resp = get_most_pumped(from_date)
+#     embed = pumped_ticker_embed(resp, from_date)
+#     await ctx.send(embed=embed)
 
 
 @tasks.loop(hours = 1)
@@ -270,18 +285,29 @@ async def start_twitch_live_check():
 async def check_discord_stocks_posts():
     init_discord_checks()
 
+@tasks.loop(minutes=1)
+async def xqc_updates_check():
+    execute()
+
+
+@tasks.loop(hours=24)
+async def check_anime():
+    run_from_main_script()
+
+    
 
 # check_discord_stocks_posts.start()
 
-
-start_twitch_live_check.start()
-check_reddit_for_new_manga.start()
+xqc_updates_check.start()
+# start_twitch_live_check.start()
+# check_reddit_for_new_manga.start()
 start_youtube_vids_check.start()
-
-subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
+# check_anime.start()
 
 bot.run(config.get("discordclientlogin"))
 
+
+# subprocess.Popen(["python3", "python_app/reset_twitter_script.py"])
 
 
 # @client.event

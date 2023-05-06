@@ -11,3 +11,4 @@ python_app/__pycache__/
 main_bot.txt
 __pycache__/
 *.csv
+.DS_Store

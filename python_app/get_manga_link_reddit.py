@@ -133,26 +133,27 @@ def send_discord_embed(manga_object, who_to_at):
 
 def init_manga_notifications():
     all_mangas = get_all_mangas()
-    for manga in all_mangas:
-        name = manga[0]
-        who_to_at = manga[3]
+    if all_mangas:
+        for manga in all_mangas:
+            name = manga[0]
+            who_to_at = manga[3]
 
-        # call reddit, get latest chapter info
-        manga_chapter_obj = make_api_call(name)
+            # call reddit, get latest chapter info
+            manga_chapter_obj = make_api_call(name)
 
-        # if cant for some reason, quit
-        if not manga_chapter_obj:
-            continue
-    
-        # if its an old chapter, quit
-        if is_old_chapter(manga_chapter_obj):
-            continue
-
-        # add new chapter to db
-        add_chapter_logic(manga_chapter_obj)
+            # if cant for some reason, quit
+            if not manga_chapter_obj:
+                continue
         
-        # send to discord
-        send_discord_embed(manga_chapter_obj, get_who_to_at(who_to_at))
+            # if its an old chapter, quit
+            if is_old_chapter(manga_chapter_obj):
+                continue
+
+            # add new chapter to db
+            add_chapter_logic(manga_chapter_obj)
+            
+            # send to discord
+            send_discord_embed(manga_chapter_obj, get_who_to_at(who_to_at))
 
 
 init_manga_notifications()

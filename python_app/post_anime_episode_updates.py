@@ -2,8 +2,8 @@ import discord
 import schedule
 import time
 from datetime import datetime, timedelta
-from get_animes_and_mangas import call_anilist_api
-from post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
+from python_app.get_animes_and_mangas import call_anilist_api
+from python_app.post_discord_webhook import sendWebhookListEmbeds, sendWebhookMessage
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -161,7 +161,13 @@ post_anime_episodes()
 # set_manual_manga_reminder("naruto", 20, "https://www.viz.com/shonenjump/chapters/boruto")
 # set_manual_manga_reminder("dragon ball super", 20, "https://www.viz.com/shonenjump/chapters/dragon-ball-super")
 
-while 1:
+def run_from_main_script():
     schedule.run_pending()
     # logger.info(schedule.next_run())
     time.sleep(900)
+
+
+# while 1:
+#     schedule.run_pending()
+#     # logger.info(schedule.next_run())
+#     time.sleep(900)

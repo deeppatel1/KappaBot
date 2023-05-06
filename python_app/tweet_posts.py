@@ -5,7 +5,7 @@ with open('./configuration.json') as json_file :
 from discord import RequestsWebhookAdapter, Webhook
 from tweepy import OAuthHandler
 from tweepy import Stream
-from tweepy.streaming import StreamListener
+import tweepy
 from streamers_tracker import add_to_tweeter_tickers, get_who_to_at
 from logging.handlers import RotatingFileHandler
 from WEBHOOKS import webhooks
@@ -164,7 +164,6 @@ stocks_peeps = {
     "31468297" : "yodaflo"
 }
 
-
 calls_people = {
     "52166809": "traderstewie",
     "1615735502": "solonoid12",
@@ -181,8 +180,8 @@ calls_people = {
 }
 
 
-all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
-
+# all_tweeters_to_follow = list(people_to_follow.keys()) + list(stocks_peeps.keys())
+all_tweeters_to_follow = list(people_to_follow.keys())
 
 # WANTED_CHARS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "~", "!", "@", "#", "%", "^", "&", "*", "(", ")", "<",">", ":", ";", "'", "\'"]
 WANTED_CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
@@ -193,7 +192,7 @@ def sendWebhookMessage(user_name, body_to_post, photo_pic_url, webhook_url):
     webhook.send(body_to_post, username=user_name, avatar_url=photo_pic_url)
 
 
-class listener(StreamListener):
+class MyStreamListener(tweepy.StreamingClient):
     def on_data(self, data):
         json_data = json.loads(data)
         if "delete" in json_data:
@@ -305,8 +304,43 @@ class listener(StreamListener):
             sendWebhookMessage("error", discord_to_message, "https://exploringtm1.com/wp-content/uploads/2021/07/TM1-TI-Error-Codes.jpg", webhooks.TWEETS.value)
             return False
 
-auth = OAuthHandler(API_KEY, API_KEY_SECRET)
-auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-logger.info('---starting twitter checks')
-twitterStream = Stream(auth, listener())
-twitterStream.filter(follow=all_tweeters_to_follow, is_async=True)
+# auth = OAuthHandler(API_KEY, API_KEY_SECRET)
+# auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+# api = tweepy.API(auth, version="2", tweet_mode="extended")
+
+# # Create a stream listener object
+# my_stream_listener = MyStreamListener(api, tweeters)
+# my_stream = tweepy.StreamingClient(auth=api.auth, callback=my_stream_listener)
+
+
+# logger.info('---starting twitter checks')
+# # Start the stream with the list of tweeters
+# my_stream.filter(follow=[str(api.get_user(screen_name=tweeter).id) for tweeter in tweeters])
+
+
+
+# my_stream_listener = MyStreamListener(
+#     API_KEY,
+#     API_KEY_SECRET,
+#     ACCESS_TOKEN,
+#     ACCESS_TOKEN_SECRET
+# )
+
+# my_stream_listener.filter(track=all_tweeters_to_follow)
+
+listening = MyStreamListener(config.get("twitterBEARERTOKEN"))
+
+all_follows = ",".join(all_tweeters_to_follow)
+
+rule = {
+    "value": f"follow:{all_follows}",
+    "tag": "main"
+}
+
+listening.add_rules([rule])
+
+
+# for tweeter in all_tweeters_to_follow:
+#     listening.add_rules(tweepy.StreamRule(tweeter))
+listening.filter()

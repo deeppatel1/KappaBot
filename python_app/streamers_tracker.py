@@ -7,18 +7,42 @@ import datetime
 with open('./configuration.json') as json_file :
     config = json.load(json_file)
 
+
+
+CURSOR = None
+CONNECTION = None
+
+
 def connect(database):
     try:
+        global CONNECTION 
+        global CURSOR 
+
+        if CURSOR and CONNECTION:
+            return CURSOR, CONNECTION
+
+        print("*****")
+        print(f'***** AUTHENTICATING POSTGRES WITH: {config.get("PGUSER")} {config.get("PGPASSWORD")} {config.get("PGPORT")} {database}')
+        print("*****")
+        print("*****")
+        print("*****")
+        
         connection = psycopg2.connect(user = config.get("PGUSER"),
                                       password = config.get("PGPASSWORD"),
                                       host = config.get("PGHOST"),
                                       port = config.get("PGPORT"),
                                       database = database)
         cursor = connection.cursor()
+
+
+
+        CONNECTION = connection
+        CURSOR = cursor
+
         # Print PostgreSQL Connection properties
         # print ( connection.get_dsn_parameters(),"\n")
         # Print PostgreSQL version
-        return cursor, connection
+        return CURSOR, CONNECTION
 
     except Exception as error:
         print("error! " + str(error))
@@ -106,6 +130,21 @@ def get_last_twitch_id():
     query = "SELECT * FROM twitch_last_live"
     resp = execute_select_query("kapp", query)
     return resp[0][0] if resp else []
+
+
+# for xqc updates script
+
+def get_all_xqc_ow_updates_ids():
+    query = "SELECT * FROM xqc_ow_updates_twitter_ids"
+    resp = execute_select_query("kapp", query)
+    return resp if resp else []
+
+
+def add_to_xqc_ow_updates(id):
+    db_name = "kapp"
+    query = "INSERT INTO xqc_ow_updates_twitter_ids(id) VALUES (\'" + id + "\')"
+    return execute_insert_query(db_name, query)
+
 
 """
 Update specific fields
