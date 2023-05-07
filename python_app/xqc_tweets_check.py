@@ -1,8 +1,8 @@
 from tweety.bot import Twitter
 from discord import RequestsWebhookAdapter, Webhook
-from WEBHOOKS import webhooks
+from .WEBHOOKS import webhooks
 from bs4 import BeautifulSoup
-from streamers_tracker import get_all_xqc_ow_updates_ids, add_to_xqc_ow_updates, get_who_to_at
+from .streamers_tracker import get_all_xqc_ow_updates_ids, add_to_xqc_ow_updates, get_who_to_at
 import tweepy
 import json
 import logging
