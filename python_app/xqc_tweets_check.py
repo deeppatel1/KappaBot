@@ -79,7 +79,7 @@ def execute():
                 guest_token = r.json()["guest_token"]
                 h["x-guest-token"] = guest_token
 
-                with requests.get("https://api.twitter.com/1.1/statuses/show/1633281057566097408.json", headers=h) as tr:
+                with requests.get(f"https://api.twitter.com/1.1/statuses/show/{first_tweet_id}.json", headers=h) as tr:
                     data = tr.json()
                     tweet_text = data.get('text')
 

@@ -4,6 +4,7 @@ import subprocess
 import pytz
 import os
 import signal
+import psutil
 from discord.ext import commands, tasks
 # from pandas.tseries.offsets import BDay
 from datetime import date, datetime, timedelta
@@ -240,6 +241,11 @@ async def restart(ctx, arg=None):
 async def help(ctx, arg=None):
     await ctx.send("Find process by running `ps aux | grep python` and killing it's pid by running `kill <PID>`")
 
+
+@bot.command(name="usage", brief="return usage noob")
+async def usage(ctx, arg=None):
+    ram = psutil.virtual_memory()[2]
+    await ctx.send(f'{ram}%')
 
 # @bot.command(name="pumped", brief="Check which stocks are pumped")
 # async def pumped(ctx):
